@@ -1,9 +1,15 @@
+# Custom Audio Encoder (WP5): speech encoder and content branch, trained with a contrastive loss on top of
+# the frozen VAE of ae_singing.yaml. One optimizer, so a step is a batch here.
 model:
-  base_learning_rate: 4.5e-06
-  target: ldm.models.autoencoder1d.AutoencoderKL
+  base_learning_rate: 7.8125e-07  # read by main.py only; the model uses params.lr
+  target: ldm.models.autoencoder1d_con.AutoencoderKL
   params:
     embed_dim: 20
-    monitor: val/rec_loss
+    monitor: val/loss_contrastive
+    ckpt_path: useful_ckpts/vae_gtsinger.ckpt  # the trained VAE (WP4); it stays frozen
+    contrastive_temp: 0.07
+    lr: 5.0e-05
+    warmup_steps: 1000
     ddconfig:
       double_z: true
       in_channels: 80
@@ -33,56 +39,51 @@ model:
       enc_pre_ln: true
       num_heads: 2
     lossconfig:
-      target: ldm.modules.losses_audio.contperceptual.LPAPSWithDiscriminator
-      params:
-        disc_start: 80001
-        perceptual_weight: 0.0
-        kl_weight: 1.0e-06
-        disc_weight: 0.5
-        disc_in_channels: 1
-        disc_loss: mse
-        disc_factor: 2
-        disc_conditional: false
-        r1_reg_weight: 3
+      target: torch.nn.Identity  # no reconstruction or adversarial loss in this stage
 
 lightning:
+  logger:
+    params:
+      version: 0  # every session of a run appends to the same TensorBoard directory
+  modelcheckpoint:  # rolling checkpoints to resume from: every 250 batches, newest two kept
+    params:
+      filename: '{step:08d}'
+      monitor: step
+      mode: max
+      save_top_k: 2
+      every_n_train_steps: 250
+      save_last: false
   callbacks:
-    image_logger:
-      target: main.AudioLogger
+    progress_bar:  # one progress line per 100 batches in the log file
+      target: pytorch_lightning.callbacks.TQDMProgressBar
       params:
-        for_specs: true
-        increase_log_steps: false
-        batch_frequency: 5000
-        max_images: 8
-        rescale: false
-        melvmin: -5
-        melvmax: 1.5
-        sample_rate: 48000
-        vocoder_cfg:
-          target: vocoder.hifigan.hifigan_nsf.HifiGAN_NSF
-          params:
-            vocoder_ckpt: useful_ckpts/hifigan
-            use_nsf: true
+        refresh_rate: 100
+    metrics_over_trainsteps_checkpoint:  # milestones, weights only, all kept: every 1,000 batches
+      params:
+        every_n_train_steps: 1000
   trainer:
-    sync_batchnorm: false # not working with r1_regularization
     strategy: ddp
+    benchmark: false  # no faster here, and its trial runs take 39 GB at batch 32
+    max_steps: 10000  # 397 batches per epoch, so about 25 epochs
 
 
 data:
   target: main.SpectrogramDataModuleFromConfig
   params:
-    batch_size: 4
-    num_workers: 2
-    spec_dir_path: data/sing
+    batch_size: 64
+    num_workers: 8
+    spec_dir_path: data/con
     mel_num: 80
-    spec_len: 2000
-    spec_crop_len: 2000
+    spec_crop_len: 1000  # frames of singing per clip (5.3 s)
     train:
       target: ldm.data.joinaudiodataset_con.JoinSpecsTrain
       params:
         specs_dataset_cfg: null
+        speech_crop_len: 750  # frames of speech per clip (4 s)
+        num_neg: 2
     validation:
       target: ldm.data.joinaudiodataset_con.JoinSpecsValidation
       params:
         specs_dataset_cfg: null
-
+        speech_crop_len: 750
+        num_neg: 2

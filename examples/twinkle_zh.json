@@ -1,0 +1,15 @@
+{"language": "Chinese", "tempo": 100,
+ "style": {"singer": "female soprano", "emotion": "happy", "singing_method": "pop"},
+ "words": [
+  {"rest": 0.5},
+  {"text": "一", "notes": [["C4", 1]]}, {"text": "闪", "notes": [["C4", 1]]},
+  {"text": "一", "notes": [["G4", 1]]}, {"text": "闪", "notes": [["G4", 1]]},
+  {"text": "亮", "notes": [["A4", 1]]}, {"text": "晶", "notes": [["A4", 1]]},
+  {"text": "晶", "notes": [["G4", 2]]},
+  {"rest": 0.5},
+  {"text": "满", "notes": [["F4", 1]]}, {"text": "天", "notes": [["F4", 1]]},
+  {"text": "都", "notes": [["E4", 1]]}, {"text": "是", "notes": [["E4", 1]]},
+  {"text": "小", "notes": [["D4", 1]]}, {"text": "星", "notes": [["D4", 1]]},
+  {"text": "星", "notes": [["C4", 2]]},
+  {"rest": 0.5}
+ ]}

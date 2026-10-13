@@ -1,0 +1,21 @@
+{"language": "German",
+ "name": "German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0004",
+ "style": {"singer": "female soprano", "emotion": "happy", "singing_method": "bel canto", "technique": "none"},
+ "words": [
+  {"text": "tausend", "notes": [[65, 0.23], [64, 0.27]]},
+  {"text": "träume", "notes": [[62, 0.85]]},
+  {"rest": 0.101, "type": "AP"},
+  {"text": "weit", "notes": [[62, 0.38]]},
+  {"rest": 0.34, "type": "SP"},
+  {"text": "bis", "notes": [[62, 0.321]]},
+  {"text": "zum", "notes": [[65, 0.09]]},
+  {"text": "rand", "notes": [[64, 0.416], [65, 0.304]]},
+  {"text": "der", "notes": [[65, 0.321]]},
+  {"text": "zeit", "notes": [[65, 0.73]]},
+  {"rest": 0.511, "type": "AP"},
+  {"text": "mitten", "notes": [[69, 0.26]]},
+  {"rest": 0.52, "type": "AP"},
+  {"text": "im", "notes": [[69, 0.1]]},
+  {"text": "paradies", "notes": [[69, 0.374], [67, 0.726], [64, 0.89]]},
+  {"rest": 0.742, "type": "AP"}
+ ]}

@@ -16,12 +16,12 @@ import torch.nn as nn
 import warnings
 import math
 import torch.nn.functional as F
-from flash_attn import flash_attn_varlen_func
-from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
 from einops import rearrange
 
 try:
     from flash_attn import flash_attn_func
+    from flash_attn import flash_attn_varlen_func
+    from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
     is_flash_attn = True
 except:
     is_flash_attn = False

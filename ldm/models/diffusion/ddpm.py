@@ -352,7 +352,7 @@ class DDPM(pl.LightningModule):
                  prog_bar=True, logger=True, on_step=True, on_epoch=False)
 
         if self.use_scheduler:
-            lr = self.optimizers().param_groups[0]['lr']
+            lr = self.trainer.optimizers[0].param_groups[0]['lr']  # self.optimizers() shows a stale copy after a resume
             self.log('lr_abs', lr, prog_bar=True, logger=True, on_step=True, on_epoch=False)
 
         return loss
@@ -1403,7 +1403,7 @@ class DiffusionWrapper(pl.LightningModule):
         self.conditioning_key = conditioning_key # 'crossattn' for txt2image, concat for inpainting
         assert self.conditioning_key in [None, 'concat', 'crossattn', 'hybrid', 'adm','film']
 
-    def forward(self, x, t, c_concat: list = None, c_crossattn: list = None,c_film: list = None, name=None, infer=False):
+    def forward(self, x, t, c_concat: list = None, c_crossattn: list = None,c_film: list = None, name=None, infer=False, f0_mode=None):
         x = x.contiguous()  # [B, C, T]
         t = t.contiguous()
         """param x: tensor with shape:[B,C,mel_len,T]"""
@@ -1429,7 +1429,8 @@ class DiffusionWrapper(pl.LightningModule):
                 'c_crossattn': cc,      # text
                 'c_concat': c_concat,    
                 'name': name,
-                'infer': infer
+                'infer': infer,
+                'f0_mode': f0_mode,
             }
             out = self.diffusion_model(x, t, context=cc)
         elif self.conditioning_key == "film":  # The condition is assumed to be a global token, which wil pass through a linear layer and added with the time embedding for the FILM

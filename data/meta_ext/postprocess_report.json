@@ -1,0 +1,87 @@
+{
+ "rows_in": 64699,
+ "rows_out": 64675,
+ "dropped": {
+  "no_mel": 24,
+  "no_prompt": 0
+ },
+ "hours": 84.52,
+ "by_split": {
+  "test_seen": [
+   1147,
+   1.61
+  ],
+  "test_unseen": [
+   4474,
+   6.1
+  ],
+  "train": [
+   57943,
+   75.42
+  ],
+  "valid": [
+   1111,
+   1.38
+  ]
+ },
+ "by_language": {
+  "Chinese": [
+   64675,
+   84.52
+  ]
+ },
+ "by_dataset": {
+  "M4Singer": [
+   20872,
+   29.68
+  ],
+  "OpenSinger": [
+   40076,
+   49.66
+  ],
+  "Opencpop": [
+   3727,
+   5.18
+  ]
+ },
+ "truncated_clips": 0,
+ "pitch": {
+  "M4Singer/Chinese": {
+   "sung_s": 91307.86,
+   "cmp_n": 373382.0,
+   "cmp_exact": 268815.0,
+   "cmp_within1": 342061.0,
+   "cmp_octave": 624.0
+  },
+  "OpenSinger/Chinese": {
+   "sung_s": 155304.34,
+   "missing_s": 155304.34,
+   "filled_f0_s": 117880.34,
+   "filled_borrow_s": 37187.52,
+   "still_missing_s": 236.49
+  },
+  "Opencpop/Chinese": {
+   "sung_s": 15534.49,
+   "cmp_n": 51644.0,
+   "cmp_exact": 38226.0,
+   "cmp_within1": 45846.0,
+   "cmp_octave": 144.0,
+   "missing_s": 1.5,
+   "still_missing_s": 0.15,
+   "filled_f0_s": 0.94,
+   "filled_borrow_s": 0.42
+  }
+ },
+ "captions": {
+  "distinct": 6,
+  "technique": {
+   "no": 64675
+  },
+  "technique_values_by_split": {
+   "test_seen": 1,
+   "test_unseen": 1,
+   "train": 1,
+   "valid": 1
+  }
+ }
+}

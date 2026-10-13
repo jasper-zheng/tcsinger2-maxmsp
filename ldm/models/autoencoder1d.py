@@ -15,6 +15,7 @@ from torch.optim.lr_scheduler import LambdaLR
 from ldm.util import instantiate_from_config
 from utils.commons.rel_transformer import RelTransformerEncoder
 from utils.commons.duration import DurationPredictor, NoteEncoder
+from ldm.data.phone_set import NUM_PH, PH_PAD_ID, NUM_MIDI
 from torch.nn import Embedding
 import math
 
@@ -46,9 +47,9 @@ class AutoencoderKL(pl.LightningModule):
             dropout_rate=ddconfig['predictor_dropout'],
             kernel_size=ddconfig['dur_predictor_kernel'])
         
-        self.note_encoder = NoteEncoder(n_vocab=100, hidden_channels=ddconfig['hidden_size'])
+        self.note_encoder = NoteEncoder(n_vocab=NUM_MIDI, hidden_channels=ddconfig['hidden_size'])
         self.ph_encoder = RelTransformerEncoder(
-                476, ddconfig['hidden_size'], ddconfig['hidden_size'],
+                NUM_PH, ddconfig['hidden_size'], ddconfig['hidden_size'],
                 ddconfig['hidden_size']*4, ddconfig['num_heads'], ddconfig['enc_layers'],
                 ddconfig['enc_ffn_kernel_size'], ddconfig['dropout'], prenet=ddconfig['enc_prenet'], pre_ln=ddconfig['enc_pre_ln'])
         
@@ -121,17 +122,20 @@ class AutoencoderKL(pl.LightningModule):
     def training_step(self, batch, batch_idx, optimizer_idx):
         inputs = self.get_input(batch, self.image_key)
         x, f0, pitches, notedurs, notetypes, ph, ph_durs = inputs
-        reconstructions, posterior = self(x)
-        
-        padding_mask = (ph == 475)
-        pred_durs = self.pred_duration(ph, notedurs, pitches, notetypes, padding_mask)   # (B,T)
-        dur_loss = F.mse_loss(
-                    pred_durs.masked_select(~padding_mask),        # 只计算有效位置
-                    torch.log1p(ph_durs).masked_select(~padding_mask),
-                    reduction='mean'                               # → 标量
-                )
 
         if optimizer_idx == 0:
+            reconstructions, posterior = self(x)
+            # the discriminator pass of this batch reuses these instead of running the VAE again
+            self._disc_inputs = (reconstructions.detach(), DiagonalGaussianDistribution(posterior.parameters.detach()))
+
+            padding_mask = (ph == PH_PAD_ID)
+            pred_durs = self.pred_duration(ph, notedurs, pitches, notetypes, padding_mask)   # (B,T)
+            dur_loss = F.mse_loss(
+                        pred_durs.masked_select(~padding_mask),        # 只计算有效位置
+                        torch.log1p(ph_durs).masked_select(~padding_mask),
+                        reduction='mean'                               # → 标量
+                    )
+
             # train encoder+decoder+logvar
             aeloss, log_dict_ae = self.loss(x, reconstructions, posterior, optimizer_idx, self.global_step,
                                             last_layer=self.get_last_layer(), split="train")
@@ -145,6 +149,7 @@ class AutoencoderKL(pl.LightningModule):
 
         if optimizer_idx == 1:
             # train the discriminator
+            reconstructions, posterior = self._disc_inputs
             discloss, log_dict_disc = self.loss(x, reconstructions, posterior, optimizer_idx, self.global_step,
                                                 last_layer=self.get_last_layer(), split="train")
 
@@ -160,7 +165,7 @@ class AutoencoderKL(pl.LightningModule):
         aeloss, log_dict_ae = self.loss(inputs, reconstructions, posterior, 0, self.global_step,
                                         last_layer=self.get_last_layer(), split="val")
 
-        padding_mask = (ph == 475)        
+        padding_mask = (ph == PH_PAD_ID)        
         pred_durs = self.pred_duration(ph, notedurs, pitches, notetypes, padding_mask)   # (B,T)
 
         dur_loss = F.mse_loss(

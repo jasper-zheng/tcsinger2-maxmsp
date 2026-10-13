@@ -1,0 +1,23 @@
+# Packages missing from the Paperspace image, on top of its torch 2.1.1+cu121 stack.
+# Install with: scripts/setup_env.sh (uses constraints-env.txt to keep the image's torch build).
+pytorch-lightning==1.9.5
+torchmetrics==1.2.1
+einops==0.8.0
+librosa==0.10.1
+numba==0.60.0
+soundfile
+pyloudnorm==0.1.1
+audioread
+torchdyn==1.0.6
+torchlibrosa
+importlib_resources
+ftfy
+icecream
+pytorch-memlab
+# RMVPE F0 extractor (GTSinger/Tech-Recognition/modules/pe/rmvpe)
+pyworld
+pretty_midi
+# prebuilt drop-in for webrtcvad (the sdist does not build on this image's Python 3.11)
+webrtcvad-wheels==2.0.14.post1
+# Chinese lyrics to pinyin initials and finals for the inference front-end (WP7, ldm/infer/g2p.py)
+pypinyin==0.55.0

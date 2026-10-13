@@ -1,0 +1,207 @@
+{
+ "rows_in": 28565,
+ "rows_out": 28521,
+ "dropped": {
+  "no_mel": 16,
+  "no_prompt": 28
+ },
+ "hours": 80.31,
+ "by_split": {
+  "test_seen": [
+   1002,
+   3.03
+  ],
+  "test_unseen": [
+   676,
+   2.44
+  ],
+  "train": [
+   25983,
+   72.42
+  ],
+  "valid": [
+   860,
+   2.42
+  ]
+ },
+ "by_language": {
+  "Chinese": [
+   7139,
+   16.6
+  ],
+  "English": [
+   4822,
+   13.04
+  ],
+  "French": [
+   2536,
+   8.49
+  ],
+  "German": [
+   3389,
+   9.03
+  ],
+  "Italian": [
+   1832,
+   6.57
+  ],
+  "Japanese": [
+   1990,
+   6.39
+  ],
+  "Korean": [
+   2252,
+   7.98
+  ],
+  "Russian": [
+   1684,
+   4.3
+  ],
+  "Spanish": [
+   2877,
+   7.91
+  ]
+ },
+ "truncated_clips": 451,
+ "pitch": {
+  "Chinese": {
+   "sung_s": 55233.2,
+   "cmp_n": 208660.0,
+   "cmp_exact": 154951.0,
+   "cmp_within1": 191011.0,
+   "cmp_octave": 386.0
+  },
+  "English": {
+   "sung_s": 39702.85,
+   "cmp_n": 190899.0,
+   "cmp_exact": 125316.0,
+   "cmp_within1": 165218.0,
+   "cmp_octave": 170.0
+  },
+  "French": {
+   "sung_s": 24281.91,
+   "cmp_n": 76323.0,
+   "cmp_exact": 53101.0,
+   "cmp_within1": 65898.0,
+   "cmp_octave": 111.0,
+   "missing_s": 0.06,
+   "still_missing_s": 0.06
+  },
+  "German": {
+   "sung_s": 26565.0,
+   "cmp_n": 108997.0,
+   "cmp_exact": 63504.0,
+   "cmp_within1": 86185.0,
+   "cmp_octave": 389.0
+  },
+  "Italian": {
+   "sung_s": 21470.46,
+   "cmp_n": 65883.0,
+   "cmp_exact": 44290.0,
+   "cmp_within1": 57469.0,
+   "cmp_octave": 142.0
+  },
+  "Japanese": {
+   "sung_s": 19680.32,
+   "cmp_n": 71958.0,
+   "cmp_exact": 45876.0,
+   "cmp_within1": 59396.0,
+   "cmp_octave": 149.0,
+   "missing_s": 549.45,
+   "filled_f0_s": 528.08,
+   "filled_borrow_s": 13.86,
+   "still_missing_s": 7.51
+  },
+  "Korean": {
+   "sung_s": 23918.23,
+   "cmp_n": 113621.0,
+   "cmp_exact": 71053.0,
+   "cmp_within1": 96239.0,
+   "cmp_octave": 280.0,
+   "missing_s": 2143.6,
+   "filled_f0_s": 2037.17,
+   "filled_borrow_s": 87.93,
+   "still_missing_s": 18.5
+  },
+  "Russian": {
+   "sung_s": 10664.31,
+   "cmp_n": 48484.0,
+   "cmp_exact": 27046.0,
+   "cmp_within1": 37259.0,
+   "cmp_octave": 178.0
+  },
+  "Spanish": {
+   "sung_s": 23237.02,
+   "cmp_n": 119076.0,
+   "cmp_exact": 65408.0,
+   "cmp_within1": 94731.0,
+   "cmp_octave": 431.0
+  }
+ },
+ "captions": {
+  "distinct": 254,
+  "technique": {
+   "none": 10916,
+   "mix": 8970,
+   "falsetto": 3702,
+   "pharyngeal": 1732,
+   "breathy": 1291,
+   "mix and breathy": 377,
+   "none then mix": 307,
+   "mix then none": 255,
+   "falsetto and breathy": 204,
+   "none then falsetto": 113,
+   "mix and pharyngeal": 106,
+   "falsetto then none": 85,
+   "none then pharyngeal": 79,
+   "falsetto then mix": 64,
+   "breathy then none": 48,
+   "mix then falsetto": 48,
+   "pharyngeal then none": 45,
+   "none then breathy": 42,
+   "breathy then pharyngeal": 12,
+   "mix then pharyngeal": 12,
+   "none then falsetto and breathy": 10,
+   "pharyngeal then mix": 9,
+   "falsetto and breathy then none": 8,
+   "mix and pharyngeal then mix": 8,
+   "mix then mix and pharyngeal": 8,
+   "breathy then falsetto and breathy": 6,
+   "mix and breathy then none": 5,
+   "falsetto then falsetto and breathy": 5,
+   "falsetto and breathy then mix and breathy": 5,
+   "none then mix and breathy": 4,
+   "breathy then mix": 4,
+   "mix then mix and falsetto": 4,
+   "none then mix and pharyngeal": 3,
+   "falsetto and breathy then breathy": 3,
+   "mix and breathy then breathy": 3,
+   "mix then breathy": 3,
+   "falsetto and breathy then falsetto": 3,
+   "pharyngeal then breathy": 3,
+   "mix and pharyngeal then pharyngeal": 3,
+   "mix and pharyngeal then none": 2,
+   "mix and breathy then mix": 2,
+   "breathy then falsetto": 2,
+   "mix and breathy then falsetto and breathy": 2,
+   "pharyngeal then falsetto and pharyngeal": 2,
+   "mix then mix and breathy": 2,
+   "pharyngeal then breathy and pharyngeal": 1,
+   "falsetto then breathy": 1,
+   "falsetto then mix and falsetto": 1,
+   "breathy then mix and breathy": 1
+  },
+  "technique_values_by_split": {
+   "test_seen": 19,
+   "test_unseen": 12,
+   "train": 49,
+   "valid": 19
+  }
+ },
+ "speech": {
+  "rows_in": 12278,
+  "rows_out": 12034,
+  "no_mel": 244,
+  "hours": 19.7
+ }
+}

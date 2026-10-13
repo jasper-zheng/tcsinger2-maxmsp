@@ -1,0 +1,14 @@
+{"language": "Italian",
+ "name": "Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Control_Group#0003",
+ "style": {"singer": "male bass", "emotion": "happy", "singing_method": "bel canto", "technique": "none"},
+ "words": [
+  {"text": "dell'", "notes": [[52, 0.88]]},
+  {"text": "alba", "notes": [[51, 0.63]]},
+  {"text": "che", "notes": [[50, 0.46]]},
+  {"text": "piange", "notes": [[51, 1.017]]},
+  {"rest": 0.298, "type": "AP"},
+  {"text": "dell'alba", "notes": [[52, 0.906], [51, 0.54]]},
+  {"text": "che", "notes": [[50, 0.47]]},
+  {"text": "piange", "notes": [[51, 0.755], [49, 0.822], [47, 1.522]]},
+  {"rest": 0.812, "type": "SP"}
+ ]}

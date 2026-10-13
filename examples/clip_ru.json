@@ -1,0 +1,9 @@
+{"language": "Russian",
+ "name": "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0002",
+ "style": {"singer": "female alto", "emotion": "happy", "singing_method": "pop", "technique": "none"},
+ "words": [
+  {"text": "я", "notes": [[68, 0.15]]},
+  {"text": "словно", "notes": [[68, 2.358], [65, 0.214]]},
+  {"text": "очнулась", "notes": [[65, 3.002]]},
+  {"rest": 0.461, "type": "SP"}
+ ]}

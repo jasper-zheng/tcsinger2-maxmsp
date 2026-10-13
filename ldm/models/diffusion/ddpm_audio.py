@@ -466,7 +466,8 @@ class LatentDiffusion_audio(DDPM):
                 'c_concat': cond['acoustic'],
                 'c_crossattn': cond['caption'],
                 'name': cond['name'],
-                'infer': cond['infer']
+                'infer': cond['infer'],
+                'f0_mode': cond.get('f0_mode'),
             }
         else:
             if not isinstance(cond, list):

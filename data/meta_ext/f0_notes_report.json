@@ -1,0 +1,18 @@
+{
+ "manifest": "data/sing_ext/new.tsv",
+ "dataset": "M4Singer",
+ "splits": [
+  "valid",
+  "test_seen",
+  "test_unseen"
+ ],
+ "clips": 2577,
+ "sung_hours": 3.11,
+ "time_exact": 0.7558,
+ "time_within_1_semitone": 0.9293,
+ "time_within_2_semitones": 0.9656,
+ "time_octave_off": 0.0031,
+ "time_without_pitch": 0.0085,
+ "phonemes_with_several_score_notes": 0.0945,
+ "words_with_two_pitches": 0.0
+}

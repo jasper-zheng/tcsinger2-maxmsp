@@ -1,5 +1,8 @@
 import sys
-from preprocess.NAT_mel import MelNet
+try:
+    from preprocess.NAT_mel import MelNet
+except ImportError:  # run as `python preprocess/mel_spec_48k.py`: preprocess/preprocess.py shadows the package
+    from NAT_mel import MelNet
 import os
 from tqdm import tqdm
 from glob import glob
@@ -169,6 +172,11 @@ def process_audio_by_tsv(rank, args, skip_counter, lock):
     sr = args.audio_sample_rate
     dataset = tsv_dataset(args.tsv_path, sr=sr, mode=args.mode, hop_size=args.hop_size,
                           target_mel_length=args.batch_max_length)
+    if args.save_mel and not args.save_resample:  # resume: clips whose mel is already there are not loaded again
+        n_all = len(dataset.audio_paths)
+        dataset.audio_paths = [p for p in dataset.audio_paths if not os.path.exists(os.path.join(
+            args.save_path, f'mel{args.mode}{sr}', os.path.relpath(p, args.data_root)[:-4] + '_mel.npy'))]
+        print(f'{n_all} clips, {n_all - len(dataset.audio_paths)} already done')
     sampler = DistributedSampler(dataset, shuffle=False) if args.num_gpus > 1 else None
     loader = DataLoader(dataset, sampler=sampler, batch_size=1, num_workers=16, drop_last=False)
 
@@ -219,7 +227,8 @@ def process_audio_by_tsv(rank, args, skip_counter, lock):
                             raise ValueError(f'mode:{mode} is not supported')
                     mel_spec = mel_spec[:, :batch_max_length]
                     os.makedirs(mel_dir_name, exist_ok=True)
-                    np.save(mel_path, mel_spec)
+                    np.save(mel_path + '.tmp.npy', mel_spec)  # written whole or not at all
+                    os.replace(mel_path + '.tmp.npy', mel_path)
 
     print(f'Process {rank} finished. Skipped {skip_counter.value} files.')
 
@@ -286,6 +295,8 @@ def parse_args():
     parser.add_argument("--tsv_path", type=str)
     parser.add_argument("--num_gpus", type=int, default=1)
     parser.add_argument("--max_duration", type=int, default=20)
+    parser.add_argument("--data_root", type=str, required=True, help="root directory that all audio_path entries live under")
+    parser.add_argument("--save_path", type=str, default='data/processed', help="mels go to <save_path>/mel<mode><sr>/<path relative to data_root>")
     return parser.parse_args()
 
 
@@ -298,8 +309,8 @@ if __name__ == '__main__':
 
     num_gpus = pargs.num_gpus
     batch_max_length = int(pargs.max_duration * 48000 / 256) 
-    data_root = '/root/autodl-tmp/data'
-    save_path = '/root/autodl-tmp/tcsinger2/processed'
+    data_root = pargs.data_root
+    save_path = pargs.save_path
 
     args = {
         'audio_sample_rate': 48000,

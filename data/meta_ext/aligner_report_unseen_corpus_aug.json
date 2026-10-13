@@ -1,0 +1,131 @@
+{
+ "ckpt": "useful_ckpts/aligner_zh_noocp_aug.pt",
+ "groups": {
+  "Opencpop/test_seen": {
+   "clips": 124,
+   "failed": 0,
+   "boundaries": 2282,
+   "median_error_ms": 27.2,
+   "within_20ms": 0.4067,
+   "within_50ms": 0.7905,
+   "within_50ms_next_to_rest": 0.7793,
+   "within_50ms_between_phonemes": 0.7945,
+   "within_100ms": 0.9531,
+   "frames_with_the_annotated_phoneme": 0.8765,
+   "rest_time_found": 0.8975,
+   "sung_time_called_rest": 0.0095,
+   "score_own_text": {
+    "1": -0.738,
+    "5": -0.471,
+    "50": -0.171
+   },
+   "score_other_text": {
+    "50": -4.799,
+    "95": -3.0,
+    "99": -2.364
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0,
+     1.0
+    ],
+    "-2.0": [
+     0.0,
+     0.9919
+    ],
+    "-2.5": [
+     0.0,
+     0.9758
+    ],
+    "-3.0": [
+     0.0,
+     0.9435
+    ]
+   }
+  },
+  "Opencpop/train": {
+   "clips": 3477,
+   "failed": 0,
+   "boundaries": 66016,
+   "median_error_ms": 28.3,
+   "within_20ms": 0.386,
+   "within_50ms": 0.7781,
+   "within_50ms_next_to_rest": 0.7787,
+   "within_50ms_between_phonemes": 0.7779,
+   "within_100ms": 0.942,
+   "frames_with_the_annotated_phoneme": 0.8651,
+   "rest_time_found": 0.8907,
+   "sung_time_called_rest": 0.0067,
+   "score_own_text": {
+    "1": -1.387,
+    "5": -0.824,
+    "50": -0.214
+   },
+   "score_other_text": {
+    "50": -4.658,
+    "95": -1.744,
+    "99": -0.294
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0066,
+     0.9617
+    ],
+    "-2.0": [
+     0.0026,
+     0.9381
+    ],
+    "-2.5": [
+     0.0009,
+     0.8947
+    ],
+    "-3.0": [
+     0.0003,
+     0.8291
+    ]
+   }
+  },
+  "Opencpop/valid": {
+   "clips": 126,
+   "failed": 0,
+   "boundaries": 2289,
+   "median_error_ms": 27.0,
+   "within_20ms": 0.3976,
+   "within_50ms": 0.799,
+   "within_50ms_next_to_rest": 0.7947,
+   "within_50ms_between_phonemes": 0.8005,
+   "within_100ms": 0.9559,
+   "frames_with_the_annotated_phoneme": 0.8603,
+   "rest_time_found": 0.8455,
+   "sung_time_called_rest": 0.0048,
+   "score_own_text": {
+    "1": -1.102,
+    "5": -0.623,
+    "50": -0.193
+   },
+   "score_other_text": {
+    "50": -5.153,
+    "95": -2.302,
+    "99": -1.503
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0,
+     0.9841
+    ],
+    "-2.0": [
+     0.0,
+     0.9603
+    ],
+    "-2.5": [
+     0.0,
+     0.9127
+    ],
+    "-3.0": [
+     0.0,
+     0.8651
+    ]
+   }
+  }
+ }
+}

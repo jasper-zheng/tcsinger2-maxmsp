@@ -1,0 +1,299 @@
+{
+ "ckpt": "useful_ckpts/aligner_zh.pt",
+ "groups": {
+  "GTSinger/test_seen": {
+   "clips": 99,
+   "failed": 0,
+   "boundaries": 2712,
+   "median_error_ms": 15.3,
+   "within_20ms": 0.5811,
+   "within_50ms": 0.833,
+   "within_50ms_next_to_rest": 0.9222,
+   "within_50ms_between_phonemes": 0.8152,
+   "within_100ms": 0.9469,
+   "frames_with_the_annotated_phoneme": 0.9192,
+   "rest_time_found": 0.9488,
+   "sung_time_called_rest": 0.0056,
+   "score_own_text": {
+    "1": -1.152,
+    "5": -0.559,
+    "50": -0.205
+   },
+   "score_other_text": {
+    "50": -4.683,
+    "95": -2.866,
+    "99": -2.061
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0101,
+     1.0
+    ],
+    "-2.0": [
+     0.0,
+     0.9899
+    ],
+    "-2.5": [
+     0.0,
+     0.9798
+    ],
+    "-3.0": [
+     0.0,
+     0.9091
+    ]
+   }
+  },
+  "GTSinger/valid": {
+   "clips": 126,
+   "failed": 0,
+   "boundaries": 4955,
+   "median_error_ms": 10.7,
+   "within_20ms": 0.6975,
+   "within_50ms": 0.9189,
+   "within_50ms_next_to_rest": 0.9567,
+   "within_50ms_between_phonemes": 0.913,
+   "within_100ms": 0.9758,
+   "frames_with_the_annotated_phoneme": 0.9094,
+   "rest_time_found": 0.9644,
+   "sung_time_called_rest": 0.0057,
+   "score_own_text": {
+    "1": -0.677,
+    "5": -0.539,
+    "50": -0.286
+   },
+   "score_other_text": {
+    "50": -4.254,
+    "95": -2.968,
+    "99": -2.699
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0,
+     1.0
+    ],
+    "-2.0": [
+     0.0,
+     1.0
+    ],
+    "-2.5": [
+     0.0,
+     1.0
+    ],
+    "-3.0": [
+     0.0,
+     0.9365
+    ]
+   }
+  },
+  "M4Singer/test_seen": {
+   "clips": 431,
+   "failed": 0,
+   "boundaries": 7434,
+   "median_error_ms": 15.0,
+   "within_20ms": 0.5998,
+   "within_50ms": 0.8609,
+   "within_50ms_next_to_rest": 0.8141,
+   "within_50ms_between_phonemes": 0.8699,
+   "within_100ms": 0.9489,
+   "frames_with_the_annotated_phoneme": 0.9084,
+   "rest_time_found": 0.9513,
+   "sung_time_called_rest": 0.0119,
+   "score_own_text": {
+    "1": -1.496,
+    "5": -0.924,
+    "50": -0.238
+   },
+   "score_other_text": {
+    "50": -4.843,
+    "95": -2.18,
+    "99": -0.376
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0116,
+     0.9745
+    ],
+    "-2.0": [
+     0.0023,
+     0.9652
+    ],
+    "-2.5": [
+     0.0023,
+     0.9188
+    ],
+    "-3.0": [
+     0.0023,
+     0.8469
+    ]
+   }
+  },
+  "M4Singer/test_unseen": {
+   "clips": 1688,
+   "failed": 0,
+   "boundaries": 32511,
+   "median_error_ms": 16.7,
+   "within_20ms": 0.5617,
+   "within_50ms": 0.8442,
+   "within_50ms_next_to_rest": 0.8238,
+   "within_50ms_between_phonemes": 0.8475,
+   "within_100ms": 0.9404,
+   "frames_with_the_annotated_phoneme": 0.8842,
+   "rest_time_found": 0.9584,
+   "sung_time_called_rest": 0.0132,
+   "score_own_text": {
+    "1": -1.651,
+    "5": -0.926,
+    "50": -0.275
+   },
+   "score_other_text": {
+    "50": -4.449,
+    "95": -1.837,
+    "99": -0.434
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.016,
+     0.9686
+    ],
+    "-2.0": [
+     0.0047,
+     0.9419
+    ],
+    "-2.5": [
+     0.0024,
+     0.8945
+    ],
+    "-3.0": [
+     0.0006,
+     0.8223
+    ]
+   }
+  },
+  "M4Singer/valid": {
+   "clips": 458,
+   "failed": 0,
+   "boundaries": 7897,
+   "median_error_ms": 16.0,
+   "within_20ms": 0.579,
+   "within_50ms": 0.8523,
+   "within_50ms_next_to_rest": 0.8291,
+   "within_50ms_between_phonemes": 0.8565,
+   "within_100ms": 0.9421,
+   "frames_with_the_annotated_phoneme": 0.8983,
+   "rest_time_found": 0.9565,
+   "sung_time_called_rest": 0.0124,
+   "score_own_text": {
+    "1": -2.009,
+    "5": -1.01,
+    "50": -0.273
+   },
+   "score_other_text": {
+    "50": -4.653,
+    "95": -2.008,
+    "99": -1.119
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0218,
+     0.976
+    ],
+    "-2.0": [
+     0.0131,
+     0.9498
+    ],
+    "-2.5": [
+     0.0066,
+     0.9061
+    ],
+    "-3.0": [
+     0.0,
+     0.8537
+    ]
+   }
+  },
+  "Opencpop/test_seen": {
+   "clips": 124,
+   "failed": 0,
+   "boundaries": 2282,
+   "median_error_ms": 8.2,
+   "within_20ms": 0.7397,
+   "within_50ms": 0.8948,
+   "within_50ms_next_to_rest": 0.9582,
+   "within_50ms_between_phonemes": 0.8723,
+   "within_100ms": 0.9628,
+   "frames_with_the_annotated_phoneme": 0.9266,
+   "rest_time_found": 0.9722,
+   "sung_time_called_rest": 0.009,
+   "score_own_text": {
+    "1": -1.043,
+    "5": -0.499,
+    "50": -0.134
+   },
+   "score_other_text": {
+    "50": -4.899,
+    "95": -2.803,
+    "99": -2.319
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0081,
+     1.0
+    ],
+    "-2.0": [
+     0.0,
+     0.9919
+    ],
+    "-2.5": [
+     0.0,
+     0.9756
+    ],
+    "-3.0": [
+     0.0,
+     0.9187
+    ]
+   }
+  },
+  "Opencpop/valid": {
+   "clips": 126,
+   "failed": 0,
+   "boundaries": 2289,
+   "median_error_ms": 8.2,
+   "within_20ms": 0.7462,
+   "within_50ms": 0.9135,
+   "within_50ms_next_to_rest": 0.9789,
+   "within_50ms_between_phonemes": 0.8918,
+   "within_100ms": 0.9742,
+   "frames_with_the_annotated_phoneme": 0.9227,
+   "rest_time_found": 0.9616,
+   "sung_time_called_rest": 0.0083,
+   "score_own_text": {
+    "1": -0.759,
+    "5": -0.4,
+    "50": -0.153
+   },
+   "score_other_text": {
+    "50": -5.067,
+    "95": -2.16,
+    "99": -1.616
+   },
+   "score_threshold": {
+    "-1.5": [
+     0.0,
+     1.0
+    ],
+    "-2.0": [
+     0.0,
+     0.9683
+    ],
+    "-2.5": [
+     0.0,
+     0.9048
+    ],
+    "-3.0": [
+     0.0,
+     0.8651
+    ]
+   }
+  }
+ }
+}

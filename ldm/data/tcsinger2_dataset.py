@@ -5,6 +5,8 @@ from typing import TypeVar, Optional, Iterator
 import logging
 import pandas as pd
 from ldm.data.joinaudiodataset_anylen import *
+from ldm.data.phone_set import language_set, ph2id, PH_PAD_ID, MIDI_PAD_ID
+from ldm.data.captions import caption_from_row, sample_caption
 import glob
 import math
 import ast
@@ -18,486 +20,134 @@ sys.path.insert(0, '.')  # nopep8
 adapted from joinaudiodataset_struct_sample_anylen.py
 """
 
-language_set = ['Chinese','English','French','German','Italian','Japanese','Korean','Russian','Spanish']
 
-ph_set = [
-    "tʰ_ko",
-    "ɔ_it",
-    "d_it",
-    "dʑ_ja",
-    "ɣ_es",
-    "in",
-    "ʒ_fr",
-    "tʲ_ko",
-    "p_it",
-    "ɕ͈_ko",
-    "t͡ʃː_it",
-    "UW1",
-    "dʲ_ko",
-    "IH2",
-    "NG",
-    "ZH",
-    "ɡ_es",
-    "ɾ_ja",
-    "ɛ_ko",
-    "IH1",
-    "j",
-    "ʎ_fr",
-    "ɨː_ja",
-    "kː_it",
-    "a",
-    "OW1",
-    "f",
-    "AO0",
-    "ou",
-    "k_ja",
-    "l_it",
-    "o_ja",
-    "F",
-    "ʂː_ru",
-    "AW1",
-    "i_ko",
-    "ɰ_ko",
-    "tɕ_ru",
-    "uai",
-    "z_it",
-    "ie",
-    "u_ko",
-    "mː_it",
-    "ʃ_it",
-    "j_fr",
-    "ch",
-    "n_es",
-    "ɛ_de",
-    "ɴ_ja",
-    "tɕʷ_ko",
-    "b_it",
-    "iou",
-    "IY1",
-    "ɛ_fr",
-    "k͈ʷ_ko",
-    "s̪_ru",
-    "b_ja",
-    "aj_de",
-    "c_ru",
-    "e_it",
-    "pf_de",
-    "ç_es",
-    "<SP>",
-    "v_it",
-    "ŋ_fr",
-    "ʔ_ja",
-    "S",
-    "tː_ja",
-    "ɑ_fr",
-    "x_es",
-    "r_es",
-    "sh",
-    "ɡ_fr",
-    "ʌː_ko",
-    "ɟ_es",
-    "zʲ_ru",
-    "AW0",
-    "AA0",
-    "Y",
-    "ɟ_de",
-    "e_ru",
-    "ə_ru",
-    "P",
-    "t_de",
-    "f_ru",
-    "l_fr",
-    "k_ko",
-    "ɐ_ru",
-    "t͡s_it",
-    "UH0",
-    "s_ja",
-    "ʃ_fr",
-    "β_es",
-    "n_ja",
-    "AY2",
-    "ʌ_ko",
-    "p_ko",
-    "dʲ_ru",
-    "ŋ_de",
-    "iang",
-    "b_ru",
-    "o",
-    "AA2",
-    "a_ru",
-    "t",
-    "o_ru",
-    "x_ru",
-    "ɛ̃_fr",
-    "oː_ko",
-    "AE1",
-    "v",
-    "D",
-    "z̪_ru",
-    "b_es",
-    "UW2",
-    "uo",
-    "EY1",
-    "œ_de",
-    "øː_de",
-    "yː_de",
-    "CH",
-    "o_fr",
-    "bʲ_ja",
-    "u",
-    "sː_it",
-    "<AP>",
-    "w_es",
-    "UH2",
-    "ø_fr",
-    "ʎ_es",
-    "ɪ_de",
-    "er",
-    "k_de",
-    "ç_ru",
-    "L",
-    "ʐ_ru",
-    "G",
-    "ʑ_ja",
-    "sʲ_ru",
-    "t_fr",
-    "dː_it",
-    "ɥ_fr",
-    "s_fr",
-    "x_de",
-    "ɨ_ru",
-    "EY2",
-    "kʰ_de",
-    "ə_fr",
-    "l",
-    "ð_es",
-    "n̪ː_ru",
-    "a_it",
-    "ɕː_ru",
-    "z_de",
-    "w_ja",
-    "ɲ_ja",
-    "r_ru",
-    "TH",
-    "rː_ru",
-    "t͈_ko",
-    "j_ja",
-    "t_ko",
-    "w_fr",
-    "AW2",
-    "uː_ko",
-    "t̪ː_ru",
-    "c_ko",
-    "OY1",
-    "e_es",
-    "ʁ_fr",
-    "ŋ_ko",
-    "eː_ko",
-    "ɔ̃_fr",
-    "fʲ_ru",
-    "j_es",
-    "ʃ_de",
-    "mː_ko",
-    "d",
-    "ɲ_ko",
-    "OW0",
-    "j_it",
-    "AY1",
-    "h_ja",
-    "dz_ja",
-    "f_es",
-    "AA1",
-    "ʎ_ru",
-    "k_fr",
-    "cʰ_de",
-    "ɲ_fr",
-    "c͈_ko",
-    "θ_es",
-    "pː_it",
-    "d_ko",
-    "pʰ_de",
-    "e_ko",
-    "d̪_es",
-    "EH0",
-    "m_es",
-    "ɲ_de",
-    "UW0",
-    "ɫ_ru",
-    "ŋ_es",
-    "ɔ_de",
-    "M",
-    "B",
-    "tʃ_fr",
-    "V",
-    "pʲ_ko",
-    "IY0",
-    "eː_ja",
-    "aː_ja",
-    "sʰ_ko",
-    "ɨ̥_ja",
-    "z_fr",
-    "d_de",
-    "m_fr",
-    "s͈_ko",
-    "uang",
-    "k",
-    "eː_de",
-    "hː_it",
-    "ɵ_ru",
-    "m_it",
-    "ʏ_de",
-    "f_it",
-    "ɕ_ja",
-    "ɰ̃_ja",
-    "uei",
-    "i",
-    "ei",
-    "ɴː_ja",
-    "tɕ_ko",
-    "ʊ_ru",
-    "OY2",
-    "i_es",
-    "IY2",
-    "ian",
-    "u_fr",
-    "pʷ_ko",
-    "ɦ_ko",
-    "j_ko",
-    "rʲ_ru",
-    "c_es",
-    "iao",
-    "en",
-    "t_ja",
-    "y_fr",
-    "ə_de",
-    "tɕ͈_ko",
-    "AE0",
-    "tɕ_ja",
-    "d̪_ru",
-    "a_de",
-    "ER1",
-    "tʃ_es",
-    "ɪ_ru",
-    "ɸʷ_ko",
-    "ER2",
-    "ç_de",
-    "tɕʰ_ko",
-    "ɥ_ko",
-    "T",
-    "EH1",
-    "d_ja",
-    "ɲ_it",
-    "DH",
-    "eng",
-    "ç_ko",
-    "tː_it",
-    "i_it",
-    "ɲː_ru",
-    "h",
-    "o_it",
-    "vʲ_ru",
-    "sʷ_ko",
-    "AH0",
-    "oː_ja",
-    "ç_ja",
-    "ɕʰ_ko",
-    "uː_de",
-    "ɸ_ja",
-    "q",
-    "fː_it",
-    "m_ko",
-    "ɐ_de",
-    "k̚_ko",
-    "g",
-    "x_ko",
-    "s_ko",
-    "ɕ_ru",
-    "tʃ_de",
-    "i_ja",
-    "N",
-    "JH",
-    "IH0",
-    "t̪s̪ː_ru",
-    "dʑ_ko",
-    "n̩_de",
-    "n_de",
-    "t̚_ko",
-    "AH1",
-    "t͡ʃ_it",
-    "zh",
-    "ʐː_ru",
-    "o_es",
-    "c_fr",
-    "ʁ_de",
-    "vn",
-    "n_fr",
-    "ɯ̥_ja",
-    "ɟ_ja",
-    "r_it",
-    "an",
-    "lː_it",
-    "ang",
-    "a_fr",
-    "ɡ_de",
-    "r",
-    "nː_ja",
-    "ɐ_ko",
-    "k_ru",
-    "R",
-    "u_it",
-    "AE2",
-    "f_fr",
-    "rː_it",
-    "ɾʲ_ja",
-    "p_ja",
-    "bʲ_ru",
-    "tʷ_ko",
-    "mʲ_ja",
-    "æ_ru",
-    "e_fr",
-    "m_de",
-    "m_ru",
-    "n",
-    "ɟʝ_es",
-    "t̪_es",
-    "ia",
-    "n_it",
-    "iong",
-    "ɡ_it",
-    "u_ru",
-    "v_ru",
-    "ɲ_ru",
-    "ɔʏ_de",
-    "tʰ_de",
-    "mʲ_ru",
-    "pʰ_ko",
-    "ʎ_it",
-    "t̪s̪_ru",
-    "HH",
-    "m̩_de",
-    "a_ja",
-    "ɛː_ko",
-    "OW2",
-    "uen",
-    "t̪_ru",
-    "e_ja",
-    "p_de",
-    "i_ru",
-    "bʲ_ko",
-    "j_de",
-    "AH2",
-    "k_it",
-    "ɯ_ja",
-    "oː_de",
-    "EY0",
-    "d͡ʒ_it",
-    "ɨ_ja",
-    "aː_de",
-    "p̚_ko",
-    "s_it",
-    "ɛ_it",
-    "ai",
-    "l_es",
-    "k_es",
-    "K",
-    "ʉ_ru",
-    "o_ko",
-    "EH2",
-    "v_de",
-    "ɾ_ko",
-    "s",
-    "p_ru",
-    "UH1",
-    "ts_ja",
-    "i̥_ja",
-    "ts_de",
-    "ʂ_ru",
-    "z",
-    "b_de",
-    "pʲ_ru",
-    "Z",
-    "v_fr",
-    "aw_de",
-    "k͈_ko",
-    "f_de",
-    "n̪_ru",
-    "œ_fr",
-    "ɟ_fr",
-    "SH",
-    "d͡ʒː_it",
-    "ɾʲ_ko",
-    "ua",
-    "mʲ_ko",
-    "ɨː_ko",
-    "h_de",
-    "pː_ja",
-    "c",
-    "s_de",
-    "l_de",
-    "m",
-    "j_ru",
-    "cʰ_ko",
-    "ɾ_es",
-    "p",
-    "w_ko",
-    "p_es",
-    "ER0",
-    "ɨ_ko",
-    "z_ja",
-    "b_fr",
-    "s̪ː_ru",
-    "ɡ_ja",
-    "s_es",
-    "ʝ_es",
-    "c_ja",
-    "h_ko",
-    "d_fr",
-    "kʷ_ko",
-    "ɲ_es",
-    "iː_ja",
-    "uan",
-    "van",
-    "ao",
-    "AO1",
-    "ve",
-    "e",
-    "mʲ_fr",
-    "t͈ʲ_ko",
-    "ɡ_ru",
-    "ʊ_de",
-    "AY0",
-    "n_ko",
-    "ing",
-    "kʰ_ko",
-    "W",
-    "iː_de",
-    "nː_it",
-    "p͈_ko",
-    "ɟ_ru",
-    "a_es",
-    "x",
-    "ɔ_fr",
-    "m_ja",
-    "i_fr",
-    "ɛ_ru",
-    "ɑ̃_fr",
-    "ong",
-    "bː_it",
-    "t_it",
-    "AO2",
-    "tsʲ_ru",
-    "u_es",
-    "p_fr",
-    "iː_ko",
-    "b",
-    "ɭ_ko"
-]
+SAMPLE_RATE, HOP_SIZE = 48000, 256
+BLUR_KEEP = 24  # frames of a phoneme piece that keep their label when the boundaries are blurred
+
+
+def frame_tracks(ph_ids, ph_durs, ep_pitches, spec_len=None):
+    """Per-frame tracks of a clip from its phoneme pieces (ids, seconds, note pitches).
+
+    Returns (mel2ph, ph_array, ep_pitches_array), each [spec_len]: the 1-based piece number (0 = none),
+    the phoneme id (PH_PAD_ID = none) and the MIDI pitch (MIDI_PAD_ID = none) of every mel frame.
+    spec_len None: as many frames as the pieces fill. Used by the dataset and by ldm/infer."""
+    if spec_len is None:
+        spec_len = sum(int(dur * SAMPLE_RATE / HOP_SIZE + 0.5) for dur in ph_durs if dur > 0)
+    mel2ph = np.zeros((spec_len,), dtype=np.int32)
+    current_frame = 0
+    for i_ph, dur in enumerate(ph_durs):
+        # 如果 dur = -1，表示无效持续时间，可根据需要决定跳过或赋为0
+        if dur <= 0:
+            continue
+        # 持续时间转为mel帧数
+        frames = int(dur * SAMPLE_RATE / HOP_SIZE + 0.5)
+        end_frame = current_frame + frames
+        if end_frame > spec_len:
+            # 如果超过mel长度，则截断
+            end_frame = spec_len
+        # 通常mel2ph从1开始编号音素
+        mel2ph[current_frame:end_frame] = i_ph + 1
+        current_frame = end_frame
+        if current_frame >= spec_len:
+            break
+
+    ph_array = np.full((spec_len,), PH_PAD_ID, dtype=np.int32)
+    ep_pitches_array = np.full((spec_len,), MIDI_PAD_ID, dtype=np.int32)
+    for i in range(spec_len):
+        p = mel2ph[i] - 1
+        if p >= 0:
+            ph_array[i] = ph_ids[p]
+            ep_pitches_array[i] = ep_pitches[p]
+    return mel2ph, ph_array, ep_pitches_array
+
+
+def blur_boundaries(mel2ph, ph_array, ep_pitches_array, centre=False):
+    """Boundary blurring, in place: of every run of one piece longer than BLUR_KEEP frames only BLUR_KEEP
+    frames keep their piece, phoneme and pitch, the rest become padding. The kept stretch lies at a
+    random position (training) or in the middle of the run (centre=True, inference)."""
+    spec_len = len(mel2ph)
+
+    def mask(start_idx, length):
+        if centre:
+            seg_start = start_idx + (length - BLUR_KEEP) // 2
+        else:
+            seg_start = np.random.randint(start_idx, start_idx + length - BLUR_KEEP + 1)
+        seg_end = seg_start + BLUR_KEEP
+        # mask前后多余的部分
+        for mask_range in [range(start_idx, seg_start), range(seg_end, start_idx + length)]:
+            mel2ph[mask_range] = 0
+            ph_array[mask_range] = PH_PAD_ID
+            ep_pitches_array[mask_range] = MIDI_PAD_ID
+
+    ph_val = mel2ph[0] if spec_len > 0 else -1
+    start_idx = 0
+    length = 1
+    i = 1
+    while i < spec_len:
+        if mel2ph[i] == ph_val and ph_val != PH_PAD_ID:
+            length += 1
+        else:
+            if length > BLUR_KEEP:
+                mask(start_idx, length)
+            ph_val = mel2ph[i]
+            start_idx = i
+            length = 1
+        i += 1
+    # 最后一个连续段处理
+    if length > BLUR_KEEP:
+        mask(start_idx, length)
+
+
+def collate_items(inputs, pad_value=-5, min_len=376, max_len=3760, min_factor=8):
+    """Batch of items as JoinManifestSpecs.__getitem__ returns them (also built by ldm/infer)."""
+    to_dict = {}
+    for l in inputs:
+        for k, v in l.items():
+            if k in to_dict: # image, acoustic, f0, midi, beats, caption, prompt, name
+                to_dict[k].append(v)
+            else:
+                to_dict[k] = [v]
+
+    pad = dict(min_len=min_len, max_len=max_len, min_factor=min_factor)
+    to_dict['image'] = collate_1d_or_2d(to_dict['image'], pad_idx=pad_value, **pad)   # B, C, T
+    to_dict['prompt'] = collate_1d_or_2d(to_dict['prompt'], pad_idx=pad_value, **pad)   # B, C, T
+    to_dict['f0'] = collate_1d_or_2d(to_dict['f0'], pad_idx=0, **pad)   # B, C, T
+    to_dict['mel2ph'] = collate_1d_or_2d(to_dict['mel2ph'], pad_idx=0, **pad).long()
+    to_dict['ph'] = collate_1d_or_2d(to_dict['ph'], pad_idx=PH_PAD_ID, **pad).long()
+    to_dict['ep_pitches'] = collate_1d_or_2d(to_dict['ep_pitches'], pad_idx=MIDI_PAD_ID, **pad).long()
+
+    to_dict['caption'] = {
+        'name': to_dict['name'],
+        'caption': to_dict['caption'],
+        'acoustic':{
+        'f0': to_dict['f0'],
+        'ph': to_dict['ph'],
+        'midi': to_dict['ep_pitches'],
+        'mel2ph': to_dict['mel2ph'],
+        'prompt': to_dict['prompt'],
+        'language': torch.Tensor(to_dict['language']).long()
+        },
+        'infer': False
+    }
+
+    return to_dict
+
 
 class JoinManifestSpecs(torch.utils.data.Dataset):
     def __init__(self, split, main_spec_dir_path, other_spec_dir_path, mel_num=80, mode='pad', spec_crop_len=1248,
-                 pad_value=-5, drop=0, max_tokens=80000, **kwargs):
+                 pad_value=-5, drop=0, max_tokens=None, ext_share=None, max_prompt_len=None, max_batch_clips=64,
+                 sampler_seed=0, max_items=None, **kwargs):
+        """max_tokens: frame budget of a batch, clips x (longest clip + max_prompt_len); None = batches of
+        batch_size clips. ext_share: share of an epoch's frames that the extra corpora (rows with a
+        `dataset` value, WP9) may take; None = all of them. max_prompt_len: prompts are cut to this
+        many frames (a random stretch in training)."""
         super().__init__()
         self.split = split
+        self.ext_share = ext_share
+        self.max_prompt_len = max_prompt_len
+        self.max_batch_clips = max_batch_clips
+        self.sampler_seed = sampler_seed
+        self.max_items = max_items
         self.max_batch_len = spec_crop_len 
         self.min_batch_len = 376
         self.min_factor = 8
@@ -514,17 +164,65 @@ class JoinManifestSpecs(torch.utils.data.Dataset):
         self.df_main = pd.concat(df_list, ignore_index=True)
         self.language_to_id = {language: idx for idx, language in enumerate(language_set)}
 
+        has_split = 'split' in self.df_main.columns  # manifests built from the GTSinger metadata carry their split
         if split == 'train':
-            self.dataset = self.df_main.iloc[300:]
+            self.dataset = self.df_main[self.df_main['split'] == 'train'] if has_split else self.df_main.iloc[300:]
         elif split == 'valid' or split == 'val':
-            self.dataset = self.df_main.iloc[:300]
+            self.dataset = self.df_main[self.df_main['split'] == 'valid'] if has_split else self.df_main.iloc[:300]
         elif split == 'test':
             self.df_main = self.add_name_num(self.df_main)
             self.dataset = self.df_main
+        elif has_split and split in set(self.df_main['split']):  # e.g. test_seen, test_unseen: read like validation
+            self.dataset = self.df_main[self.df_main['split'] == split]
         else:
             raise ValueError(f'Unknown split {split}')
-        self.dataset.reset_index(inplace=True)
+        if max_items and split == 'train':  # a small fixed subset, for overfitting checks
+            self.dataset = self.dataset.sample(max_items, random_state=0)
+        self.dataset = self.dataset.reset_index()
         print('dataset len:', len(self.dataset), "drop_rate", self.drop)
+        if 'dataset' not in self.dataset.columns:
+            self.dataset['dataset'] = np.nan
+        self.frames = np.minimum(self.dataset['n_frames'].values, self.max_batch_len) if 'n_frames' in self.dataset.columns \
+            else np.minimum((self.dataset['duration'].values * 187.5).astype(int), self.max_batch_len)
+        self.is_ext = self.dataset['dataset'].notna().values
+
+    def epoch_batches(self, epoch, batch_size, shuffle):
+        """Batches (lists of row numbers) of clips of similar length for one epoch.
+
+        Training with ext_share: every clip of the main corpus and a random subset of the extra
+        corpora, drawn anew for each epoch, so that the extra data makes up ext_share of the frames."""
+        rng = np.random.RandomState(self.sampler_seed + epoch)
+        main, ext = np.flatnonzero(~self.is_ext), np.flatnonzero(self.is_ext)
+        if self.split == 'train' and self.ext_share is not None and len(ext) and len(main):
+            budget = self.frames[main].sum() * self.ext_share / (1 - self.ext_share)
+            ext = rng.permutation(ext)
+            ext = ext[:int(np.searchsorted(np.cumsum(self.frames[ext]), budget)) + 1]
+        chosen = np.concatenate([main, ext])
+        chosen = chosen[np.argsort(self.frames[chosen], kind='stable')]
+        batches, batch = [], []
+        for i in chosen:  # ascending length, so frames[i] is the longest clip of the batch so far
+            if self.max_tokens:
+                full = len(batch) >= self.max_batch_clips or \
+                       (len(batch) + 1) * (self.frames[i] + (self.max_prompt_len or 0)) > self.max_tokens
+            else:
+                full = len(batch) >= batch_size
+            if batch and full:
+                batches.append(batch)
+                batch = []
+            batch.append(int(i))
+        if batch and (self.max_tokens or self.split != 'train'):
+            batches.append(batch)
+        if self.split == 'train' and self.max_items:  # a small subset is repeated, so that an epoch is not a few steps
+            batches = batches * math.ceil(200 / len(batches))
+        if shuffle:
+            batches = [batches[k] for k in rng.permutation(len(batches))]
+        if self.split == 'train':
+            total = self.frames[chosen].sum()
+            corpus = self.dataset['dataset'].fillna('GTSinger').values[chosen]
+            lang = self.dataset['language'].values[chosen]
+            share = lambda keys: ', '.join(f'{k} {self.frames[chosen][keys == k].sum() / total:.1%}' for k in sorted(set(keys)))
+            print(f'epoch {epoch}: {len(chosen)} clips, {total / 187.5 / 3600:.1f} h, {len(batches)} batches | {share(corpus)} | {share(lang)}')
+        return batches
 
     def add_name_num(self, df):
         """each file may have different caption, we add num to filename to identify each audio-caption pair"""
@@ -546,49 +244,9 @@ class JoinManifestSpecs(torch.utils.data.Dataset):
         return list(index2dur.index)
 
     def collater(self, inputs):
-        to_dict = {}
-        for l in inputs:
-            for k, v in l.items():
-                if k in to_dict: # image, acoustic, f0, midi, beats, caption, prompt, name
-                    to_dict[k].append(v)
-                else:
-                    to_dict[k] = [v]
-
-        if self.collate_mode == 'pad':
-            to_dict['image'] = collate_1d_or_2d(to_dict['image'], pad_idx=self.pad_value, min_len=self.min_batch_len,   # B, C, T
-                                                max_len=self.max_batch_len, min_factor=self.min_factor)
-            to_dict['prompt'] = collate_1d_or_2d(to_dict['prompt'], pad_idx=self.pad_value, min_len=self.min_batch_len,   # B, C, T
-                                                max_len=self.max_batch_len, min_factor=self.min_factor)
-            to_dict['f0'] = collate_1d_or_2d(to_dict['f0'], pad_idx=0, min_len=self.min_batch_len,   # B, C, T
-                                                max_len=self.max_batch_len, min_factor=self.min_factor)
-            to_dict['mel2ph'] = collate_1d_or_2d(to_dict['mel2ph'], pad_idx=0, min_len=self.min_batch_len,   # B, C, T
-                                                max_len=self.max_batch_len, min_factor=self.min_factor).long()
-            to_dict['ph'] = collate_1d_or_2d(to_dict['ph'], pad_idx=475, 
-                                                min_len=self.min_batch_len,   # B, C, T
-                                                max_len=self.max_batch_len, min_factor=self.min_factor).long()
-
-            to_dict['ep_pitches'] = collate_1d_or_2d(to_dict['ep_pitches'], pad_idx=99, 
-                                                min_len=self.min_batch_len,   # B, C, T
-                                                max_len=self.max_batch_len, min_factor=self.min_factor).long()
-
-        else:
-            raise NotImplementedError
-
-        to_dict['caption'] = {
-            'name': to_dict['name'],
-            'caption': to_dict['caption'],
-            'acoustic':{
-            'f0': to_dict['f0'],
-            'ph': to_dict['ph'],
-            'midi': to_dict['ep_pitches'],
-            'mel2ph': to_dict['mel2ph'],
-            'prompt': to_dict['prompt'],
-            'language': torch.Tensor(to_dict['language']).long()
-            },
-            'infer': False
-        }
-
-        return to_dict
+        assert self.collate_mode == 'pad'
+        return collate_items(inputs, pad_value=self.pad_value, min_len=self.min_batch_len, max_len=self.max_batch_len,
+                             min_factor=self.min_factor)
 
     def __getitem__(self, idx):
         idx = idx % len(self.dataset)
@@ -603,23 +261,24 @@ class JoinManifestSpecs(torch.utils.data.Dataset):
         
         # 随机选择
         if spec.shape[1] > self.max_batch_len:
-            print('too long', spec.shape[1])
             start=0
             spec = spec[:, start: start + self.max_batch_len]
             spec_len = self.max_batch_len
 
+        # training: a random other clip of the same singer and song, blanked 10% of the time (text-only
+        # control) and cut to a random stretch; validation: always the first one, from its start
+        train = self.split == 'train'
         prompt_list = ast.literal_eval(data['prompt_mel'])
-        prompt_mel = random.choice(prompt_list)
-        prompt=np.load(prompt_mel)  # [80, T]
-        if np.random.rand() < 0.1:
+        prompt = np.load(random.choice(prompt_list) if train else prompt_list[0])  # [80, T]
+        max_prompt = min(self.max_prompt_len or self.max_batch_len, self.max_batch_len)
+        if train and np.random.rand() < 0.1:
             prompt = np.ones((self.mel_num, self.min_batch_len)).astype(np.float32) * self.pad_value
-        elif np.random.rand() > 0.9:
-            prompt_mel=spec
-        if prompt.shape[1] > self.max_batch_len:
-            prompt = prompt[:, :self.max_batch_len]
+        elif prompt.shape[1] > max_prompt:
+            a = np.random.randint(prompt.shape[1] - max_prompt + 1) if train else 0
+            prompt = prompt[:, a:a + max_prompt]
 
         # 读取f0
-        f0_path = data['audio_path'].replace('.wav', '_f0.npy')
+        f0_path = data['f0_path'] if 'f0_path' in data else data['audio_path'].replace('.wav', '_f0.npy')
         f0 = np.load(f0_path)  # [T,]
         # 截断或对齐f0长度与mel一致
         if f0.shape[0] > spec_len:
@@ -637,90 +296,22 @@ class JoinManifestSpecs(torch.utils.data.Dataset):
         ph_durs = ast.literal_eval(data['ph_durs'])
         ep_pitches = ast.literal_eval(data['ep_pitches'])
         
-        # mel2ph
-        audio_sample_rate = 48000
-        hop_size = 256
-
-        mel2ph = np.zeros((spec_len,), dtype=np.int32)
-        current_frame = 0
-        for i_ph, dur in enumerate(ph_durs):
-            # 如果 dur = -1，表示无效持续时间，可根据需要决定跳过或赋为0
-            if dur <= 0:
-                # 如跳过：继续下一个音素
-                # 或者将dur视作0，不填充
-                continue
-            # 持续时间转为mel帧数
-            frames = int(dur * audio_sample_rate / hop_size + 0.5)
-            end_frame = current_frame + frames
-            if end_frame > spec_len:
-                # 如果超过mel长度，则截断
-                end_frame = spec_len
-            # 将对应区间的mel帧标记为此音素
-            # 通常mel2ph从1开始编号音素
-            mel2ph[current_frame:end_frame] = i_ph + 1
-            # 更新下一个音素的起始帧位置
-            current_frame = end_frame
-            # 如果已经填满整个mel长度，则跳出循环
-            if current_frame >= spec_len:
-                break
-
-        # ph id
-        ph2id = {ph: idx for idx, ph in enumerate(ph_set)}
+        # per-frame phoneme and note pitch
         ph = [ph2id[p] for p in ph]
-
-        ph_array = np.full((spec_len,), 475, dtype=np.int32)
-        ep_pitches_array = np.full((spec_len,), 99, dtype=np.int32)
-
-        for i in range(spec_len):
-            p = mel2ph[i] - 1
-            if p >= 0:
-                ph_array[i] = ph[p]               # 若ph是字符串需映射为int
-                ep_pitches_array[i] = ep_pitches[p]
+        mel2ph, ph_array, ep_pitches_array = frame_tracks(ph, ph_durs, ep_pitches, spec_len)
 
         # 对mel2ph中连续相同ph的片段长度超过24的进行mask
-        ph_val = mel2ph[0] if spec_len > 0 else -1
-        start_idx = 0
-        length = 1
-        i = 1
-        mask_not= random.random() > 0.5
-        while i < spec_len:
-            if mel2ph[i] == ph_val and ph_val != 475:
-                length += 1
-            else:
-                if length > 24 and mask_not:  
-                    seg_start = np.random.randint(start_idx, start_idx + length - 24 + 1)
-                    seg_end = seg_start + 24
-                    # mask前后多余的部分
-                    for mask_range in [range(start_idx, seg_start), range(seg_end, start_idx + length)]:
-                        mel2ph[mask_range] = 0
-                        ph_array[mask_range] = 475
-                        ep_pitches_array[mask_range] = 99
-                ph_val = mel2ph[i]
-                start_idx = i
-                length = 1
-            i += 1
-        # 最后一个连续段处理
-        if length > 24 and mask_not:
-            seg_start = np.random.randint(start_idx, start_idx + length - 24 + 1)
-            seg_end = seg_start + 24
-            for mask_range in [range(start_idx, seg_start), range(seg_end, start_idx + length)]:
-                mel2ph[mask_range] = 0
-                ph_array[mask_range] = 475
-                ep_pitches_array[mask_range] = 99
-
+        if train and random.random() > 0.5:  # boundary blurring, in training only
+            blur_boundaries(mel2ph, ph_array, ep_pitches_array)
 
         # Adding language_id
         language_id = self.language_to_id[data['language']]
 
-        caption=''
-        if np.random.rand() > 0.1:
-            caption += f', A Singer: {data["singer"]}'
-        if np.random.rand() > 0.1:
-            caption += f', in Language: {data["language"]},'
-        if data['emotion'] !='no' and np.random.rand() > 0.1:
-            caption += f', with Emotion: {data["emotion"]} and Singing Method: {data["singing_method"]},'
-        if data['technique'] != 'no' and np.random.rand() > 0.1:
-            caption += f', using Technique: {data["technique"]}'
+        # format in ldm/data/captions.py; `drop` is the rate of the empty (unconditional) caption
+        if self.split == 'train':
+            caption = sample_caption(data, field_drop=0.1, caption_drop=self.drop)
+        else:
+            caption = caption_from_row(data)
 
         item['prompt'] = prompt
         item['image'] = spec
@@ -826,3 +417,15 @@ class DDPIndexBatchSampler(Sampler):    # 让长度相似的音频的indices合�
         return len(self.batches)
 
 
+
+class ListBatchSampler(Sampler):
+    """Yields batches that were built beforehand (JoinManifestSpecs.epoch_batches)."""
+
+    def __init__(self, batches):
+        self.batches = batches
+
+    def __iter__(self):
+        return iter(self.batches)
+
+    def __len__(self):
+        return len(self.batches)

@@ -1,0 +1,14 @@
+{"language": "Spanish", "tempo": 100,
+ "style": {"singer": "male tenor", "emotion": "happy", "singing_method": "pop"},
+ "words": [
+  {"rest": 0.5},
+  {"text": "estrellita", "ph": ["e", "s", "t̪", "ɾ", "e", "ʎ", "i", "t̪", "a"], "notes": [["C4", 1], ["C4", 1], ["G4", 1], ["G4", 1]]},
+  {"text": "dónde",      "notes": [["A4", 1], ["A4", 0.5]]},
+  {"text": "estás",      "notes": [["A4", 0.5], ["G4", 2]]},
+  {"rest": 0.5},
+  {"text": "me",         "notes": [["F4", 1]]},
+  {"text": "pregunto",   "notes": [["F4", 1], ["E4", 1], ["E4", 1]]},
+  {"text": "qué",        "notes": [["D4", 1]]},
+  {"text": "serás",      "notes": [["D4", 1], ["C4", 2]]},
+  {"rest": 0.5}
+ ]}

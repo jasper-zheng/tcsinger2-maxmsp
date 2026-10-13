@@ -1,0 +1,701 @@
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0004
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0005
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0006
+Italian#IT-Bass-2#Breathy#Amarilli#Breathy_Group#0007
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0000
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0001
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0002
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0004
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0005
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0006
+Italian#IT-Bass-2#Breathy#Amarilli#Control_Group#0007
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0004
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0005
+Italian#IT-Bass-2#Breathy#Aprile#Breathy_Group#0006
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0000
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0001
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0002
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0004
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0005
+Italian#IT-Bass-2#Breathy#Aprile#Control_Group#0006
+Italian#IT-Bass-2#Breathy#Mio caro#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#Mio caro#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#Mio caro#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#Mio caro#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#Mio caro#Breathy_Group#0004
+Italian#IT-Bass-2#Breathy#Mio caro#Control_Group#0000
+Italian#IT-Bass-2#Breathy#Mio caro#Control_Group#0001
+Italian#IT-Bass-2#Breathy#Mio caro#Control_Group#0002
+Italian#IT-Bass-2#Breathy#Mio caro#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Mio caro#Control_Group#0004
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0004
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0005
+Italian#IT-Bass-2#Breathy#Nina#Breathy_Group#0006
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0000
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0001
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0002
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0004
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0005
+Italian#IT-Bass-2#Breathy#Nina#Control_Group#0006
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Control_Group#0000
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Control_Group#0001
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Control_Group#0002
+Italian#IT-Bass-2#Breathy#O cessate di piagarmi#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0004
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0005
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0006
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0007
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0008
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Breathy_Group#0009
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0000
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0001
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0002
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0004
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0005
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0006
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0007
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0008
+Italian#IT-Bass-2#Breathy#Per la gloria d'adorarvi#Control_Group#0009
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0000
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0001
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0002
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0003
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0004
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0005
+Italian#IT-Bass-2#Breathy#Sogno#Breathy_Group#0006
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0000
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0001
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0002
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0003
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0004
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0005
+Italian#IT-Bass-2#Breathy#Sogno#Control_Group#0006
+Italian#IT-Bass-2#Glissando#Amarilli#Control_Group#0000
+Italian#IT-Bass-2#Glissando#Amarilli#Control_Group#0001
+Italian#IT-Bass-2#Glissando#Amarilli#Control_Group#0002
+Italian#IT-Bass-2#Glissando#Amarilli#Control_Group#0003
+Italian#IT-Bass-2#Glissando#Amarilli#Control_Group#0004
+Italian#IT-Bass-2#Glissando#Amarilli#Control_Group#0005
+Italian#IT-Bass-2#Glissando#Amarilli#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#Amarilli#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#Amarilli#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Amarilli#Glissando_Group#0003
+Italian#IT-Bass-2#Glissando#Amarilli#Glissando_Group#0004
+Italian#IT-Bass-2#Glissando#Amarilli#Glissando_Group#0005
+Italian#IT-Bass-2#Glissando#Aprile#Control_Group#0000
+Italian#IT-Bass-2#Glissando#Aprile#Control_Group#0001
+Italian#IT-Bass-2#Glissando#Aprile#Control_Group#0002
+Italian#IT-Bass-2#Glissando#Aprile#Control_Group#0003
+Italian#IT-Bass-2#Glissando#Aprile#Control_Group#0004
+Italian#IT-Bass-2#Glissando#Aprile#Control_Group#0005
+Italian#IT-Bass-2#Glissando#Aprile#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#Aprile#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#Aprile#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Aprile#Glissando_Group#0003
+Italian#IT-Bass-2#Glissando#Aprile#Glissando_Group#0004
+Italian#IT-Bass-2#Glissando#Aprile#Glissando_Group#0005
+Italian#IT-Bass-2#Glissando#Mio caro#Control_Group#0000
+Italian#IT-Bass-2#Glissando#Mio caro#Control_Group#0001
+Italian#IT-Bass-2#Glissando#Mio caro#Control_Group#0002
+Italian#IT-Bass-2#Glissando#Mio caro#Control_Group#0003
+Italian#IT-Bass-2#Glissando#Mio caro#Control_Group#0004
+Italian#IT-Bass-2#Glissando#Mio caro#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#Mio caro#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#Mio caro#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Mio caro#Glissando_Group#0003
+Italian#IT-Bass-2#Glissando#Mio caro#Glissando_Group#0004
+Italian#IT-Bass-2#Glissando#Nina#Control_Group#0000
+Italian#IT-Bass-2#Glissando#Nina#Control_Group#0001
+Italian#IT-Bass-2#Glissando#Nina#Control_Group#0002
+Italian#IT-Bass-2#Glissando#Nina#Control_Group#0003
+Italian#IT-Bass-2#Glissando#Nina#Control_Group#0004
+Italian#IT-Bass-2#Glissando#Nina#Control_Group#0005
+Italian#IT-Bass-2#Glissando#Nina#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#Nina#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#Nina#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Nina#Glissando_Group#0003
+Italian#IT-Bass-2#Glissando#Nina#Glissando_Group#0004
+Italian#IT-Bass-2#Glissando#Nina#Glissando_Group#0005
+Italian#IT-Bass-2#Glissando#O cessate di piagarmi#Control_Group#0000
+Italian#IT-Bass-2#Glissando#O cessate di piagarmi#Control_Group#0001
+Italian#IT-Bass-2#Glissando#O cessate di piagarmi#Control_Group#0002
+Italian#IT-Bass-2#Glissando#O cessate di piagarmi#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#O cessate di piagarmi#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#O cessate di piagarmi#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0000
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0001
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0002
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0003
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0004
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0005
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0006
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Control_Group#0007
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0003
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0004
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0005
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0006
+Italian#IT-Bass-2#Glissando#Per la gloria d'adorarvi#Glissando_Group#0007
+Italian#IT-Bass-2#Glissando#Sogno#Control_Group#0000
+Italian#IT-Bass-2#Glissando#Sogno#Control_Group#0001
+Italian#IT-Bass-2#Glissando#Sogno#Control_Group#0002
+Italian#IT-Bass-2#Glissando#Sogno#Control_Group#0003
+Italian#IT-Bass-2#Glissando#Sogno#Glissando_Group#0000
+Italian#IT-Bass-2#Glissando#Sogno#Glissando_Group#0001
+Italian#IT-Bass-2#Glissando#Sogno#Glissando_Group#0002
+Italian#IT-Bass-2#Glissando#Sogno#Glissando_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Control_Group#0006
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Falsetto_Group#0006
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Amarilli#Mixed_Voice_Group#0006
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Control_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Control_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Falsetto_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Falsetto_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Mixed_Voice_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Aprile#Mixed_Voice_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Control_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Control_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Control_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Control_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Falsetto_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Falsetto_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Falsetto_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Falsetto_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Mixed_Voice_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Mixed_Voice_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Mixed_Voice_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Mio caro#Mixed_Voice_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Control_Group#0006
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Falsetto_Group#0006
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Nina#Mixed_Voice_Group#0006
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Control_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Falsetto_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#O cessate di piagarmi#Mixed_Voice_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Per la gloria d'adorarvi#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Per la gloria d'adorarvi#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Per la gloria d'adorarvi#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Per la gloria d'adorarvi#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Per la gloria d'adorarvi#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Per la gloria d'adorarvi#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Control_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Control_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Control_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Control_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Control_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Control_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Falsetto_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Falsetto_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Falsetto_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Falsetto_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Falsetto_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Falsetto_Group#0005
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Mixed_Voice_Group#0000
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Mixed_Voice_Group#0001
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Mixed_Voice_Group#0002
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Mixed_Voice_Group#0003
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Mixed_Voice_Group#0004
+Italian#IT-Bass-2#Mixed_Voice_and_Falsetto#Sogno#Mixed_Voice_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Control_Group#0007
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Amarilli#Pharyngeal_Group#0007
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Aprile#Control_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Aprile#Pharyngeal_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Nina#Control_Group#0007
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Nina#Pharyngeal_Group#0007
+Italian#IT-Bass-2#Pharyngeal#O cessate di piagarmi#Control_Group#0000
+Italian#IT-Bass-2#Pharyngeal#O cessate di piagarmi#Control_Group#0001
+Italian#IT-Bass-2#Pharyngeal#O cessate di piagarmi#Control_Group#0002
+Italian#IT-Bass-2#Pharyngeal#O cessate di piagarmi#Pharyngeal_Group#0000
+Italian#IT-Bass-2#Pharyngeal#O cessate di piagarmi#Pharyngeal_Group#0001
+Italian#IT-Bass-2#Pharyngeal#O cessate di piagarmi#Pharyngeal_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0007
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0008
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Control_Group#0009
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0007
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0008
+Italian#IT-Bass-2#Pharyngeal#Per la gloria d'adorarvi#Pharyngeal_Group#0009
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Sogno#Control_Group#0006
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0000
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0001
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0002
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0003
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0004
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0005
+Italian#IT-Bass-2#Pharyngeal#Sogno#Pharyngeal_Group#0006
+Italian#IT-Bass-2#Vibrato#Amarilli#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#Amarilli#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#Amarilli#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#Amarilli#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#Amarilli#Control_Group#0004
+Italian#IT-Bass-2#Vibrato#Amarilli#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#Amarilli#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#Amarilli#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#Amarilli#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Amarilli#Vibrato_Group#0004
+Italian#IT-Bass-2#Vibrato#Aprile#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#Aprile#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#Aprile#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#Aprile#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#Aprile#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#Aprile#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#Aprile#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#Aprile#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Mio caro#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#Mio caro#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#Mio caro#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#Mio caro#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#Mio caro#Control_Group#0004
+Italian#IT-Bass-2#Vibrato#Mio caro#Control_Group#0005
+Italian#IT-Bass-2#Vibrato#Mio caro#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#Mio caro#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#Mio caro#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#Mio caro#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Mio caro#Vibrato_Group#0004
+Italian#IT-Bass-2#Vibrato#Mio caro#Vibrato_Group#0005
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0004
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0005
+Italian#IT-Bass-2#Vibrato#Nina#Control_Group#0006
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0004
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0005
+Italian#IT-Bass-2#Vibrato#Nina#Vibrato_Group#0006
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#O cessate di piagarmi#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0004
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0005
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0006
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0007
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0008
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Control_Group#0009
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0004
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0005
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0006
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0007
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0008
+Italian#IT-Bass-2#Vibrato#Per la gloria d'adorarvi#Vibrato_Group#0009
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0000
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0001
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0002
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0003
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0004
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0005
+Italian#IT-Bass-2#Vibrato#Sogno#Control_Group#0006
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0000
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0001
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0002
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0003
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0004
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0005
+Italian#IT-Bass-2#Vibrato#Sogno#Vibrato_Group#0006
+Korean#KO-Soprano-1#Breathy#all about you#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#all about you#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#all about you#Breathy_Group#0002
+Korean#KO-Soprano-1#Breathy#all about you#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#all about you#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#all about you#Control_Group#0002
+Korean#KO-Soprano-1#Breathy#gravity#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#gravity#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#gravity#Breathy_Group#0002
+Korean#KO-Soprano-1#Breathy#gravity#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#gravity#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#gravity#Control_Group#0002
+Korean#KO-Soprano-1#Breathy#hcilthbyrtoil#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#hcilthbyrtoil#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#hcilthbyrtoil#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#hcilthbyrtoil#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#when this rain stop#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#when this rain stop#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#when this rain stop#Breathy_Group#0002
+Korean#KO-Soprano-1#Breathy#when this rain stop#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#when this rain stop#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#when this rain stop#Control_Group#0002
+Korean#KO-Soprano-1#Breathy#도망가자#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#도망가자#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#도망가자#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#도망가자#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#무릎#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#무릎#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#무릎#Breathy_Group#0002
+Korean#KO-Soprano-1#Breathy#무릎#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#무릎#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#무릎#Control_Group#0002
+Korean#KO-Soprano-1#Breathy#소나기#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#소나기#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#소나기#Breathy_Group#0002
+Korean#KO-Soprano-1#Breathy#소나기#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#소나기#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#소나기#Control_Group#0002
+Korean#KO-Soprano-1#Breathy#안부#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#안부#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#어른#Breathy_Group#0000
+Korean#KO-Soprano-1#Breathy#어른#Breathy_Group#0001
+Korean#KO-Soprano-1#Breathy#어른#Breathy_Group#0002
+Korean#KO-Soprano-1#Breathy#어른#Control_Group#0000
+Korean#KO-Soprano-1#Breathy#어른#Control_Group#0001
+Korean#KO-Soprano-1#Breathy#어른#Control_Group#0002
+Korean#KO-Soprano-1#Glissando#black out#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#black out#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#black out#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#black out#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#breathe#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#breathe#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#breathe#Control_Group#0002
+Korean#KO-Soprano-1#Glissando#breathe#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#breathe#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#breathe#Glissando_Group#0002
+Korean#KO-Soprano-1#Glissando#dash#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#dash#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#sheesh#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#sheesh#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#solo#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#solo#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#solo#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#solo#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#strawberrymoon#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#strawberrymoon#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#strawberrymoon#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#strawberrymoon#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#눈, 코, 입#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#눈, 코, 입#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#눈, 코, 입#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#눈, 코, 입#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#사랑이 그렇게#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#사랑이 그렇게#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#사랑이 그렇게#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#사랑이 그렇게#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#시간을 달려서#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#시간을 달려서#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#시간을 달려서#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#시간을 달려서#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0001
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0002
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0003
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0004
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0005
+Korean#KO-Soprano-1#Glissando#야신#Control_Group#0006
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0000
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0001
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0002
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0003
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0004
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0005
+Korean#KO-Soprano-1#Glissando#야신#Glissando_Group#0006
+Korean#KO-Soprano-1#Glissando#작은 별#Control_Group#0000
+Korean#KO-Soprano-1#Glissando#작은 별#Glissando_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#blueming#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#blueming#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#blueming#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#only look at me#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#only look at me#Control_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#only look at me#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#only look at me#Falsetto_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#only look at me#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#only look at me#Mixed_Voice_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#palette#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#palette#Control_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#palette#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#palette#Falsetto_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#palette#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#palette#Mixed_Voice_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Control_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Control_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Falsetto_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Falsetto_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Mixed_Voice_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#가을 아침#Mixed_Voice_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#걱정말아요 그대#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#걱정말아요 그대#Control_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#걱정말아요 그대#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#걱정말아요 그대#Falsetto_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#걱정말아요 그대#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#걱정말아요 그대#Mixed_Voice_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Control_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Control_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Falsetto_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Falsetto_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Mixed_Voice_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#내 청춘에게#Mixed_Voice_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Control_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Control_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Falsetto_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Falsetto_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Mixed_Voice_Group#0001
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#눈, 코, 입#Mixed_Voice_Group#0002
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#다시 만난 세계#Control_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#다시 만난 세계#Falsetto_Group#0000
+Korean#KO-Soprano-1#Mixed_Voice_and_Falsetto#다시 만난 세계#Mixed_Voice_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#celebrity#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#celebrity#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#coverme#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#coverme#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#eight#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#eight#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#eight#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#eight#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#fine#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#fine#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#fine#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#fine#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#jamjam#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#jamjam#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#limbo#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#limbo#Control_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#limbo#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#limbo#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#limbo#Pharyngeal_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#love wins all#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#love wins all#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#love wins all#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#love wins all#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#wannabe#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#wannabe#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#내 손을 잡아#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#내 손을 잡아#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#내 손을 잡아#Control_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#내 손을 잡아#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#내 손을 잡아#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#내 손을 잡아#Pharyngeal_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#다시 만난 세계#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#다시 만난 세계#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#다시 만난 세계#Control_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#다시 만난 세계#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#다시 만난 세계#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#다시 만난 세계#Pharyngeal_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Control_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Control_Group#0003
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Pharyngeal_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Pharyngeal_Group#0003
+Korean#KO-Soprano-1#Pharyngeal#시간을 달려서#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#시간을 달려서#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#시간을 달려서#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#좋은 날#Control_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#좋은 날#Control_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#좋은 날#Control_Group#0002
+Korean#KO-Soprano-1#Pharyngeal#좋은 날#Pharyngeal_Group#0000
+Korean#KO-Soprano-1#Pharyngeal#좋은 날#Pharyngeal_Group#0001
+Korean#KO-Soprano-1#Pharyngeal#좋은 날#Pharyngeal_Group#0002
+Korean#KO-Soprano-1#Vibrato#chantey#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#chantey#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#chantey#Control_Group#0002
+Korean#KO-Soprano-1#Vibrato#chantey#Control_Group#0003
+Korean#KO-Soprano-1#Vibrato#chantey#Control_Group#0004
+Korean#KO-Soprano-1#Vibrato#chantey#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#chantey#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#chantey#Vibrato_Group#0002
+Korean#KO-Soprano-1#Vibrato#chantey#Vibrato_Group#0003
+Korean#KO-Soprano-1#Vibrato#chantey#Vibrato_Group#0004
+Korean#KO-Soprano-1#Vibrato#mysea#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#mysea#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#mysea#Control_Group#0002
+Korean#KO-Soprano-1#Vibrato#mysea#Control_Group#0003
+Korean#KO-Soprano-1#Vibrato#mysea#Control_Group#0004
+Korean#KO-Soprano-1#Vibrato#mysea#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#mysea#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#mysea#Vibrato_Group#0002
+Korean#KO-Soprano-1#Vibrato#mysea#Vibrato_Group#0004
+Korean#KO-Soprano-1#Vibrato#도망가자#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#도망가자#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#매일 그대와#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#매일 그대와#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#매일 그대와#Control_Group#0002
+Korean#KO-Soprano-1#Vibrato#매일 그대와#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#매일 그대와#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#매일 그대와#Vibrato_Group#0002
+Korean#KO-Soprano-1#Vibrato#무릎#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#무릎#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#무릎#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#무릎#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#사랑이 그렇게#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#사랑이 그렇게#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#사랑이 그렇게#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#사랑이 그렇게#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Control_Group#0002
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Control_Group#0003
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Vibrato_Group#0002
+Korean#KO-Soprano-1#Vibrato#이런 엔딩#Vibrato_Group#0003
+Korean#KO-Soprano-1#Vibrato#이름에게#Control_Group#0000
+Korean#KO-Soprano-1#Vibrato#이름에게#Control_Group#0001
+Korean#KO-Soprano-1#Vibrato#이름에게#Control_Group#0002
+Korean#KO-Soprano-1#Vibrato#이름에게#Control_Group#0003
+Korean#KO-Soprano-1#Vibrato#이름에게#Control_Group#0004
+Korean#KO-Soprano-1#Vibrato#이름에게#Vibrato_Group#0000
+Korean#KO-Soprano-1#Vibrato#이름에게#Vibrato_Group#0001
+Korean#KO-Soprano-1#Vibrato#이름에게#Vibrato_Group#0002
+Korean#KO-Soprano-1#Vibrato#이름에게#Vibrato_Group#0003
+Korean#KO-Soprano-1#Vibrato#이름에게#Vibrato_Group#0004

@@ -1,5 +1,5 @@
 model:
-  base_learning_rate: 3.0e-06
+  base_learning_rate: 5.0e-05  # absolute: scripts/train_tcsinger2.sh passes --scale_lr false (the paper's rate)
   target: ldm.models.diffusion.cfm1_audio.CFM
   params:
     linear_start: 0.00085
@@ -15,7 +15,7 @@ model:
     conditioning_key: hybrid
     monitor: val/loss_simple_ema
     scale_by_std: true
-    use_ema: false
+    use_ema: true  # samples and evaluation use the EMA weights (the released config has no EMA)
     scheduler_config:
       target: ldm.lr_scheduler.LambdaLinearScheduler
       params:
@@ -46,7 +46,7 @@ model:
       params:
         embed_dim: 20
         monitor: val/rec_loss
-        ckpt_path: logs/2025-07-08T23-39-28_ae_singing/checkpoints/last.ckpt
+        ckpt_path: useful_ckpts/vae_gtsinger.ckpt  # WP4: batch 70,000 of logs/2026-10-09T00-11-41_ae_singing (scripts/export_vae.py)
         ddconfig:
           double_z: true
           in_channels: 80
@@ -84,43 +84,54 @@ model:
         max_length: 80
 
 lightning:
+  logger:
+    params:
+      version: 0  # every session of a run appends to the same TensorBoard directory
+  modelcheckpoint:  # rolling checkpoints to resume from: every 1,000 steps, newest two kept
+    params:
+      filename: '{step:08d}'
+      monitor: step
+      mode: max
+      save_top_k: 2
+      every_n_train_steps: 1000
+      save_last: false
   callbacks:
-    image_logger:
-      target: main.AudioLogger
+    progress_bar:  # one progress line per 200 steps in the log file
+      target: pytorch_lightning.callbacks.TQDMProgressBar
       params:
-        sample_rate: 48000
-        for_specs: true
-        increase_log_steps: false
+        refresh_rate: 200
+    metrics_over_trainsteps_checkpoint:  # milestones, weights only, all kept
+      params:
+        every_n_train_steps: 10000
+    image_logger:  # 8 fixed validation clips, from notes alone and with their F0 given (ldm/stage2_samples.py)
+      target: ldm.stage2_samples.Stage2SampleLogger
+      params:
         batch_frequency: 5000
         max_images: 8
-        melvmin: -5
-        melvmax: 1.5
-        vocoder_cfg:
-          target: vocoder.hifigan.hifigan_nsf.HifiGAN_NSF
-          params:
-            vocoder_ckpt: useful_ckpts/hifigan
-            use_nsf: true
+        cfg_scale: 3.0
+        steps: 25
   trainer:
-    benchmark: True
+    benchmark: false  # batches differ in length, cudnn autotuning would rerun for every new shape
     gradient_clip_val: 1.0
+    precision: bf16  # mixed precision for the transformer (1.6x faster); the VAE and T5 stay in full precision
     replace_sampler_ddp: false
-  modelcheckpoint:
-    params:
-      monitor: epoch
-      mode: max
-      save_top_k: 10
-      every_n_epochs: 10
+    reload_dataloaders_every_n_epochs: 1  # the extra corpora contribute another subset each epoch
+    max_steps: 200000
 
 data:
   target: main.SpectrogramDataModuleFromConfig
   params:
-    batch_size: 8
-    num_workers: 4
-    main_spec_dir_path: 'data/sing'
+    batch_size: 8  # only used when max_tokens is not set
+    num_workers: 8
+    main_spec_dir_path: 'data/sing,data/sing_ext'  # GTSinger + M4Singer, Opencpop, OpenSinger (WP9)
     other_spec_dir_path: ''
     mel_num: 80
-    drop: 0.1
+    drop: 0.2
     spec_crop_len: 3760
+    max_tokens: 48000      # frame budget of a batch: clips x (longest clip + max_prompt_len)
+    max_batch_clips: 64
+    max_prompt_len: 1500   # prompts are cut to 8 s
+    ext_share: 0.4         # share of an epoch's frames from the extra corpora (all Chinese)
     train:
       target: ldm.data.tcsinger2_dataset.JoinSpecsTrain
       params:

@@ -1,0 +1,11 @@
+{
+ "clips_in": 43059,
+ "clips_out": 40922,
+ "steps": {
+  "dropped_label_text_mismatch": 3,
+  "dropped_too_long": 7,
+  "dropped_too_short": 2130,
+  "dropped_unknown_phoneme": 13,
+  "last_phoneme_restored": 1107
+ }
+}

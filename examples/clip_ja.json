@@ -1,0 +1,20 @@
+{"language": "Japanese",
+ "name": "Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0000",
+ "style": {"singer": "female soprano", "emotion": "happy", "singing_method": "pop", "technique": "falsetto"},
+ "words": [
+  {"rest": 2.46, "type": "SP"},
+  {"text": "あ", "notes": [[62, 0.3]]},
+  {"text": "な", "notes": [[64, 0.26]]},
+  {"text": "た", "notes": [[66, 0.3]]},
+  {"text": "が", "notes": [[64, 0.28]]},
+  {"text": "恋", "notes": [[62, 0.82]]},
+  {"text": "し", "notes": [[62, 0.035], [64, 0.325]]},
+  {"text": "く", "notes": [[64, 0.58]]},
+  {"text": "て", "notes": [[64, 0.04], [69, 0.376], [71, 0.944]]},
+  {"rest": 0.38, "type": "AP"},
+  {"text": "恋", "notes": [[62, 0.692], [62, 0.088]]},
+  {"text": "し", "notes": [[62, 0.315], [62, 0.045]]},
+  {"text": "く", "notes": [[62, 0.6]]},
+  {"text": "て", "notes": [[69, 0.387], [71, 0.893]]},
+  {"rest": 0.475, "type": "SP"}
+ ]}

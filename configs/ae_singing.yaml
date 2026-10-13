@@ -35,7 +35,7 @@ model:
     lossconfig:
       target: ldm.modules.losses_audio.contperceptual.LPAPSWithDiscriminator
       params:
-        disc_start: 80001
+        disc_start: 80001  # in global steps = 2 x batches (one step per optimizer): batch 40,000
         perceptual_weight: 0.0
         kl_weight: 1.0e-06
         disc_weight: 0.5
@@ -46,14 +46,32 @@ model:
         r1_reg_weight: 3
 
 lightning:
+  logger:
+    params:
+      version: 0  # every session of a run appends to the same TensorBoard directory
+  modelcheckpoint:  # rolling checkpoints to resume from: every 1,000 batches, newest two kept
+    params:
+      filename: '{step:08d}'
+      monitor: step
+      mode: max
+      save_top_k: 2
+      every_n_train_steps: 2000
+      save_last: false
   callbacks:
+    progress_bar:  # one progress line per 200 batches in the log file
+      target: pytorch_lightning.callbacks.TQDMProgressBar
+      params:
+        refresh_rate: 200
+    metrics_over_trainsteps_checkpoint:  # milestones, weights only, all kept: every 10,000 batches
+      params:
+        every_n_train_steps: 20000
     image_logger:
       target: main.AudioLogger
       params:
         for_specs: true
         increase_log_steps: false
         batch_frequency: 5000
-        max_images: 8
+        max_images: 4
         rescale: false
         melvmin: -5
         melvmax: 1.5
@@ -66,13 +84,15 @@ lightning:
   trainer:
     sync_batchnorm: false # not working with r1_regularization
     strategy: ddp
+    benchmark: true
+    max_steps: 140000  # 70,000 batches
 
 
 data:
   target: main.SpectrogramDataModuleFromConfig
   params:
-    batch_size: 4
-    num_workers: 2
+    batch_size: 16
+    num_workers: 8
     spec_dir_path: data/sing
     mel_num: 80
     spec_len: 2000

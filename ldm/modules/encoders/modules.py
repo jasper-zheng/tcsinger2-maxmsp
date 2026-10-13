@@ -211,20 +211,28 @@ class FrozenTextVocalEmbedder(AbstractEncoder):
     def forward(self, cond, device=None, return_cuda=True):
         text = cond['caption']
         acoustic = cond['acoustic']
-        batch_encoding = self.tokenizer(text=text, truncation=True, max_length=self.max_length, return_length=True,
-                                        return_overflowing_tokens=False, padding="max_length", return_tensors="pt")
-        tokens = batch_encoding["input_ids"].to(self.device if device is None else device)
-        outputs = self.transformer(input_ids=tokens)
-        if return_cuda:
-            z = outputs.last_hidden_state.detach()
-        else:
-            z = outputs.last_hidden_state.cpu().detach()
+        # the encoder is frozen and the captions come from a small set, so each distinct caption is encoded once
+        cache = self.__dict__.setdefault('_cache', {})
+        new = [t for t in dict.fromkeys(text) if t not in cache]
+        if new:
+            batch_encoding = self.tokenizer(text=new, truncation=True, max_length=self.max_length, return_length=True,
+                                            return_overflowing_tokens=False, padding="max_length", return_tensors="pt")
+            tokens = batch_encoding["input_ids"].to(self.device if device is None else device)
+            hidden = self.transformer(input_ids=tokens).last_hidden_state.detach()
+            if len(cache) + len(new) > 20000:
+                cache.clear()
+            for t, h in zip(new, hidden):
+                cache[t] = h
+        z = torch.stack([cache[t] for t in text])
+        if not return_cuda:
+            z = z.cpu()
 
         ret = {
             'caption': z,
             'acoustic': acoustic,
             'name': cond['name'],
-            'infer': cond['infer']
+            'infer': cond['infer'],
+            'f0_mode': cond.get('f0_mode'),
         }
 
         return ret

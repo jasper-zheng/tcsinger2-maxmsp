@@ -1,0 +1,8 @@
+{
+ "clips_in": 20896,
+ "clips_out": 20894,
+ "steps": {
+  "dropped_length_mismatch": 2,
+  "sliver_merged": 3
+ }
+}

@@ -1,0 +1,17 @@
+{"language": "English", "tempo": 100,
+ "style": {"singer": "female alto", "emotion": "happy", "singing_method": "pop"},
+ "words": [
+  {"rest": 0.5},
+  {"text": "twinkle", "notes": [["C4", 1], ["C4", 1]]},
+  {"text": "twinkle", "notes": [["G4", 1], ["G4", 1]]},
+  {"text": "little",  "notes": [["A4", 1], ["A4", 1]]},
+  {"text": "star",    "notes": [["G4", 2]]},
+  {"rest": 0.5},
+  {"text": "how",     "notes": [["F4", 1]]},
+  {"text": "i",       "notes": [["F4", 1]]},
+  {"text": "wonder",  "notes": [["E4", 1], ["E4", 1]]},
+  {"text": "what",    "notes": [["D4", 1]]},
+  {"text": "you",     "notes": [["D4", 1]]},
+  {"text": "are",     "notes": [["C4", 2]]},
+  {"rest": 0.5}
+ ]}

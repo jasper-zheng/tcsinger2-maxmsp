@@ -1,0 +1,754 @@
+{
+ "steps": {
+  "Chinese": {
+   "sliver_merged": 79
+  },
+  "Chinese/speech": {},
+  "English": {
+   "sliver_merged": 909
+  },
+  "English/speech": {},
+  "French": {
+   "sliver_merged": 620,
+   "sung_phoneme_without_pitch": 2,
+   "rest_inside_word": 11,
+   "rest_piece_fixed": 11,
+   "unpitched_piece_merged": 1,
+   "unpitched_phoneme_borrowed": 1
+  },
+  "French/speech": {},
+  "German": {
+   "sliver_merged": 491
+  },
+  "German/speech": {},
+  "Italian": {
+   "sliver_merged": 783,
+   "rest_inside_word": 10,
+   "rest_piece_fixed": 10,
+   "label_fixed": 6
+  },
+  "Italian/speech": {
+   "rest_inside_word": 3
+  },
+  "Japanese": {
+   "unpitched_piece_merged": 6854,
+   "sliver_merged": 14837,
+   "rest_piece_fixed": 4019,
+   "unpitched_phoneme_borrowed": 1563,
+   "sung_phoneme_without_pitch": 2111,
+   "empty_zero_len_dropped": 218,
+   "empty_absorbed": 132,
+   "empty_to_sp": 67,
+   "timeline_gap": 13,
+   "label_fixed": 28,
+   "rest_inside_word": 38
+  },
+  "Japanese/speech": {
+   "empty_absorbed": 71,
+   "label_fixed": 18,
+   "empty_zero_len_dropped": 70,
+   "empty_to_sp": 20
+  },
+  "Korean": {
+   "rest_piece_fixed": 7547,
+   "unpitched_piece_merged": 14240,
+   "sliver_merged": 21102,
+   "unpitched_phoneme_borrowed": 4264,
+   "empty_zero_len_dropped": 225,
+   "sung_phoneme_without_pitch": 12025,
+   "empty_to_sp": 79,
+   "timeline_gap": 9,
+   "empty_absorbed": 309,
+   "label_fixed": 120,
+   "rest_inside_word": 10
+  },
+  "Korean/speech": {
+   "label_fixed": 95,
+   "empty_to_sp": 28,
+   "empty_absorbed": 220,
+   "empty_zero_len_dropped": 56,
+   "timeline_gap": 1,
+   "rest_inside_word": 5
+  },
+  "Russian": {
+   "sliver_merged": 317
+  },
+  "Russian/speech": {},
+  "Spanish": {
+   "sliver_merged": 686,
+   "dropped_length_mismatch": 4
+  },
+  "Spanish/speech": {}
+ },
+ "dropped_rare_phoneme": [
+  [
+   "English#EN-Alto-1#Breathy#someday or oneday#Breathy_Group#0001",
+   [
+    "AE0_en"
+   ]
+  ],
+  [
+   "English#EN-Alto-1#Vibrato#memory#Control_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Alto-1#Vibrato#memory#Vibrato_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Tenor-1#Breathy#Long Live#Breathy_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Tenor-1#Pharyngeal#Long Live#Pharyngeal_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Mixed_Voice_and_Falsetto#nos ballades#Control_Group#0003",
+   [
+    "tʃ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Mixed_Voice_and_Falsetto#nos ballades#Falsetto_Group#0003",
+   [
+    "tʃ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Mixed_Voice_and_Falsetto#nos ballades#Mixed_Voice_Group#0003",
+   [
+    "tʃ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Pharyngeal#lassasymphonie#Control_Group#0000",
+   [
+    "ɟ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Pharyngeal#lassasymphonie#Pharyngeal_Group#0000",
+   [
+    "ɟ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Vibrato#les oiseaux#Control_Group#0005",
+   [
+    "ɟ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Vibrato#les oiseaux#Vibrato_Group#0005",
+   [
+    "ɟ_fr"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Die beiden Grenadiere#Control_Group#0001",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Die beiden Grenadiere#Falsetto_Group#0001",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Die beiden Grenadiere#Mixed_Voice_Group#0001",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0003",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0003",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0003",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Glissando#tuca tuca#Control_Group#0002",
+   [
+    "hː_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Glissando#tuca tuca#Control_Group#0003",
+   [
+    "hː_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Glissando#tuca tuca#Glissando_Group#0002",
+   [
+    "hː_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Glissando#tuca tuca#Glissando_Group#0003",
+   [
+    "hː_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#Giunse alfin il momento#Control_Group#0004",
+   [
+    "j_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#Giunse alfin il momento#Falsetto_Group#0004",
+   [
+    "j_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#Giunse alfin il momento#Mixed_Voice_Group#0004",
+   [
+    "j_it"
+   ]
+  ],
+  [
+   "Japanese#JA-Soprano-1#Glissando#なきむし#Glissando_Group#0001",
+   [
+    "ʑ_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#时雨#Control_Group#0009",
+   [
+    "ʑ_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Breathy#さんぽ#Control_Group#0009",
+   [
+    "ɡʲ_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Breathy#銀の龍の背に乗って#Breathy_Group#0008",
+   [
+    "N_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Glissando#未来へ#Glissando_Group#0002",
+   [
+    "ɕː_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Glissando#銀の龍の背に乗って#Glissando_Group#0010",
+   [
+    "uː_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#Heartful song#Mixed_Voice_Group#0010",
+   [
+    "f_ja",
+    "l_ja",
+    "ɑ_ja",
+    "ɔ_ja",
+    "ɪ_ja",
+    "ʊ_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#とんちんかんちん　一休さん#Falsetto_Group#0004",
+   [
+    "tɕ̚_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#とんちんかんちん　一休さん#Mixed_Voice_Group#0004",
+   [
+    "tɕ̚_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#未来へ#Control_Group#0003",
+   [
+    "ɕː_ja"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-1#Pharyngeal#limbo#Control_Group#0001",
+   [
+    "ø_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-1#Pharyngeal#사건의 지평선#Control_Group#0000",
+   [
+    "t͡s_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-1#Pharyngeal#시간을 달려서#Control_Group#0001",
+   [
+    "kʷ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-1#Vibrato#mysea#Vibrato_Group#0003",
+   [
+    "ø_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-1#Vibrato#이런 엔딩#Vibrato_Group#0000",
+   [
+    "ɲ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Breathy#눈, 코, 입#Control_Group#0003",
+   [
+    "m̚_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#다가와#Falsetto_Group#0003",
+   [
+    "aː_ko",
+    "ʌː_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#다가와#Mixed_Voice_Group#0005",
+   [
+    "ɔ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Pharyngeal#이름이 뭐에요#Control_Group#0002",
+   [
+    "ʃ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Glissando#EYES, NOSE, LIPS#Control_Group#0001",
+   [
+    "ʃ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Glissando#IF YOU#Control_Group#0002",
+   [
+    "ø_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Glissando#가시리#Glissando_Group#0000",
+   [
+    "aː_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#향기만 남아#Control_Group#0000",
+   [
+    "ʊ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#향기만 남아#Falsetto_Group#0003",
+   [
+    "ø_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Pharyngeal#첫 눈#Control_Group#0001",
+   [
+    "eː_ko"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Если бы знать#Control_Group#0007",
+   [
+    "tsʲ_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Если бы знать#Falsetto_Group#0007",
+   [
+    "tsʲ_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Если бы знать#Mixed_Voice_Group#0007",
+   [
+    "tsʲ_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Туда#Control_Group#0007",
+   [
+    "ʐː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Туда#Falsetto_Group#0007",
+   [
+    "ʐː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Туда#Mixed_Voice_Group#0007",
+   [
+    "ʐː_ru"
+   ]
+  ],
+  [
+   "Chinese#ZH-Alto-1#Pharyngeal#听海#Paired_Speech_Group#0000",
+   [
+    "w_zh"
+   ]
+  ],
+  [
+   "English#EN-Alto-1#Breathy#someday or oneday#Paired_Speech_Group#0001",
+   [
+    "AE0_en"
+   ]
+  ],
+  [
+   "English#EN-Alto-1#Vibrato#memory#Paired_Speech_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Alto-2#Pharyngeal#Dream It Possible#Paired_Speech_Group#0001",
+   [
+    "ou_en"
+   ]
+  ],
+  [
+   "English#EN-Alto-2#Pharyngeal#Dream It Possible#Paired_Speech_Group#0002",
+   [
+    "ou_en"
+   ]
+  ],
+  [
+   "English#EN-Tenor-1#Breathy#Long Live#Paired_Speech_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Tenor-1#Glissando#Long Live#Paired_Speech_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Tenor-1#Pharyngeal#Long Live#Paired_Speech_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "English#EN-Tenor-1#Vibrato#Long Live#Paired_Speech_Group#0005",
+   [
+    "EY0_en"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Mixed_Voice_and_Falsetto#nos ballades#Paired_Speech_Group#0003",
+   [
+    "tʃ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Pharyngeal#lassasymphonie#Paired_Speech_Group#0000",
+   [
+    "ɟ_fr"
+   ]
+  ],
+  [
+   "French#FR-Soprano-1#Vibrato#les oiseaux#Paired_Speech_Group#0005",
+   [
+    "ɟ_fr"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Die beiden Grenadiere#Paired_Speech_Group#0001",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Paired_Speech_Group#0003",
+   [
+    "tʃ_de"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Glissando#tuca tuca#Paired_Speech_Group#0002",
+   [
+    "hː_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Glissando#tuca tuca#Paired_Speech_Group#0003",
+   [
+    "hː_it"
+   ]
+  ],
+  [
+   "Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#Giunse alfin il momento#Paired_Speech_Group#0004",
+   [
+    "j_it"
+   ]
+  ],
+  [
+   "Japanese#JA-Soprano-1#Breathy#ただいま#Paired_Speech_Group#0009",
+   [
+    "ɕː_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Soprano-1#Glissando#风になる#Paired_Speech_Group#0016",
+   [
+    "q_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#とんちんかんちん　一休さん#Paired_Speech_Group#0004",
+   [
+    "tɕ̚_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#銀の龍の背に乗って#Paired_Speech_Group#0008",
+   [
+    "uː_ja"
+   ]
+  ],
+  [
+   "Japanese#JA-Tenor-1#Vibrato#Heartful Song#Paired_Speech_Group#0001",
+   [
+    "ɯ̥_ja"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Breathy#사계#Paired_Speech_Group#0002",
+   [
+    "ø_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Pharyngeal#눈, 코, 입#Paired_Speech_Group#0002",
+   [
+    "ø_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Breathy#눈의 꽃#Paired_Speech_Group#0002",
+   [
+    "kʲ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Glissando#IF YOU#Paired_Speech_Group#0004",
+   [
+    "tʷ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#눈의 꽃#Paired_Speech_Group#0011",
+   [
+    "ɔ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#총맞은것처럼#Paired_Speech_Group#0001",
+   [
+    "ɲ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Pharyngeal#가시리#Paired_Speech_Group#0001",
+   [
+    "ɕʷ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Pharyngeal#일년을 하루 같이#Paired_Speech_Group#0002",
+   [
+    "ɲ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Pharyngeal#향기만 남아#Paired_Speech_Group#0003",
+   [
+    "ʊ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Vibrato#되풀이（Repeatedly）#Paired_Speech_Group#0004",
+   [
+    "tʷ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Vibrato#아름답던 별들의 밤 (Night of Beautiful Stars)#Paired_Speech_Group#0008",
+   [
+    "s̚_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Vibrato#일년을 하루 같이#Paired_Speech_Group#0002",
+   [
+    "ʃ_ko"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Breathy#Зачем 2#Paired_Speech_Group#0000",
+   [
+    "tʲː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Glissando#Зачем#Paired_Speech_Group#0006",
+   [
+    "tʲː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Если бы знать#Paired_Speech_Group#0002",
+   [
+    "tɕː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Зачем#Paired_Speech_Group#0008",
+   [
+    "tʲː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Туда#Paired_Speech_Group#0007",
+   [
+    "ʐː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Туда#Paired_Speech_Group#0014",
+   [
+    "tʲː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Pharyngeal#Зачем 2#Paired_Speech_Group#0000",
+   [
+    "tʲː_ru"
+   ]
+  ],
+  [
+   "Russian#RU-Alto-1#Vibrato#Зачем 2#Paired_Speech_Group#0000",
+   [
+    "tʲː_ru"
+   ]
+  ],
+  [
+   "Korean#KO-Soprano-2#Pharyngeal#안녕#Pharyngeal_Group#0002",
+   [
+    "ɑ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Breathy#최고의 행운#Control_Group#0005",
+   [
+    "ɑ_ko"
+   ]
+  ],
+  [
+   "Korean#KO-Tenor-1#Vibrato#최고의 행운#Control_Group#0005",
+   [
+    "ɑ_ko"
+   ]
+  ]
+ ],
+ "rare_phonemes": {
+  "s̚_ko": 2,
+  "f_ja": 1,
+  "ɯ̥_ja": 1,
+  "ʐː_ru": 4,
+  "tʲː_ru": 6,
+  "m̚_ko": 1,
+  "ʊ_ko": 2,
+  "tɕ̚_ja": 3,
+  "ɲ_ko": 5,
+  "kʲ_ko": 1,
+  "q_ja": 1,
+  "l_ja": 2,
+  "aː_ko": 6,
+  "ʊ_ja": 1,
+  "ø_ko": 6,
+  "j_it": 7,
+  "ɔ_ko": 2,
+  "tʃ_fr": 4,
+  "kʷ_ko": 1,
+  "ʌː_ko": 7,
+  "ʃ_ko": 3,
+  "ɔ_ja": 1,
+  "t͡s_ko": 1,
+  "ʑ_ja": 2,
+  "tsʲ_ru": 3,
+  "ɪ_ja": 1,
+  "ɕː_ja": 3,
+  "uː_ja": 2,
+  "tʃ_de": 9,
+  "eː_ko": 1,
+  "ou_en": 2,
+  "ɕʷ_ko": 1,
+  "tɕː_ru": 2,
+  "ɑ_ja": 2,
+  "AE0_en": 2,
+  "hː_it": 6,
+  "ɡʲ_ja": 1,
+  "tʷ_ko": 2,
+  "w_zh": 1,
+  "EY0_en": 9,
+  "N_ja": 2,
+  "ɟ_fr": 6,
+  "ɑ_ko": 7
+ },
+ "emotion_fixed": {
+  "hapsadpy->sad": 24,
+  "hsadappy->sad": 24
+ },
+ "built": {
+  "singing": 28624,
+  "speech": 12320
+ },
+ "kept": {
+  "singing": 28565,
+  "speech": 12278
+ }
+}

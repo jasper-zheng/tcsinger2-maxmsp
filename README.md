@@ -96,10 +96,11 @@ python main.py --base configs/tcsinger2.yaml -t --gpus 0,1,2,3,4,5,6,7
 ### Inference with TCSinger 2
 
 ```bash
-python scripts/test_sing.py
+python scripts/sing.py --score examples/twinkle_en.json --out samples/twinkle.wav --singer "female alto"
+python scripts/sing.py --score examples/f0_vibrato_it.json --out samples/with_f0.wav --prompt voice.wav
 ```
 
-*Replace the checkpoint path and CFG coefficient as required. For speech inputs, modify the VAE accordingly.*
+*The score is a JSON file of words with their notes (format in `ldm/infer/score.py`); the style is a caption and/or an audio prompt; the F0 curve is optional and goes into the score as `"f0"`. `examples/README.md` lists the example scores, among them eight with the F0 of a recorded performance; `python scripts/sing.py -h` lists the options. This replaces the released `scripts/test_sing.py`, which resynthesised training rows.*
 
 
 ## Acknowledgements

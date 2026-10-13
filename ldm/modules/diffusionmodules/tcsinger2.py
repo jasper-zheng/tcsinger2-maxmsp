@@ -7,12 +7,13 @@ import warnings
 import math
 try:
     from flash_attn import flash_attn_func
+    from flash_attn import flash_attn_varlen_func
+    from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
     is_flash_attn = True
 except:
     is_flash_attn = False
-from flash_attn import flash_attn_varlen_func
-from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
 from einops import rearrange
+from ldm.data.phone_set import NUM_PH, PH_PAD_ID, NUM_MIDI, MIDI_PAD_ID, NUM_LANG
 from ldm.modules.diffusionmodules.flag_large_dit_moe import Attention, FeedForward, RMSNorm, modulate, TimestepEmbedder,ConditionEmbedder
 
 #############################################################################
@@ -51,7 +52,7 @@ class MoE(nn.Module):
         self.temperature = temperature
 
         # 第一组：语言专家（每个batch选1个）
-        self.language_embedding = nn.Embedding(9, dim)  # 9种语言ID
+        self.language_embedding = nn.Embedding(NUM_LANG, dim)  # 语言ID
         self.language_gating = nn.Linear(dim, self.num_language_experts)  
         self.language_experts = nn.ModuleDict({
             str(i): FeedForward(dim, hidden_dim, multiple_of, ffn_dim_multiplier)
@@ -67,6 +68,8 @@ class MoE(nn.Module):
         })
 
     def gumbel_softmax(self, logits, temperature, hard=False):
+        if hard:  # evaluation and inference: the best expert, without Gumbel noise
+            return torch.zeros_like(logits).scatter_(-1, logits.argmax(dim=-1, keepdim=True), 1.0)
         gumbels = -torch.empty_like(logits).exponential_().log()
         gumbels = (logits + gumbels) / temperature
         y_soft = gumbels.softmax(dim=-1)
@@ -265,8 +268,8 @@ class Singer(nn.Module):
         self.prompt_proj = nn.Conv1d(
             in_channels, hidden_size, kernel_size=kernel_size, padding=kernel_size // 2
         )
-        self.midi_embedding = nn.Embedding(100, hidden_size)  # MIDI range is 0-100
-        self.ph_embedding = nn.Embedding(476, hidden_size) 
+        self.midi_embedding = nn.Embedding(NUM_MIDI, hidden_size)
+        self.ph_embedding = nn.Embedding(NUM_PH, hidden_size) 
         self.downsample_rate = 4 
 
         # Conv1d layer for f0 (continuous)
@@ -319,7 +322,19 @@ class Singer(nn.Module):
         self.gate_f0 = nn.Linear(self.hidden_size, self.hidden_size, bias=True)
 
         self.c_embedder = ConditionEmbedder(hidden_size, ori_dim)
-        self.loss_w=1
+        self.set_step(0)
+
+    # schedules that follow the training step (set by the Lightning module before every training batch,
+    # so that validation, sampling and a resume do not move them)
+    LB_DECAY, LB_FLOOR = 0.9999, 0.01              # weight of the load-balancing loss: 1 -> 0.01
+    TAU_START, TAU_END, TAU_STEPS = 2.0, 0.3, 100000  # Gumbel-softmax temperature, dense to sparse
+
+    def set_step(self, step):
+        self.loss_w = max(self.LB_FLOOR, self.LB_DECAY ** step)
+        self.temperature = self.TAU_START + (self.TAU_END - self.TAU_START) * min(step / self.TAU_STEPS, 1.0)
+        for m in self.modules():
+            if isinstance(m, MoE):
+                m.temperature = self.temperature
 
     def forward(self, x, t, context):
         """
@@ -327,19 +342,31 @@ class Singer(nn.Module):
         x: (N, C, T) tensor of temporal inputs (latent representations of melspec)
         t: (N,) tensor of diffusion timesteps
         context: dictionary containing different conditioning inputs.
+
+        context['f0_mode'] says where the F0 that conditions the blocks comes from:
+          'train'    the ground-truth F0 in c_concat['f0']; the F0 and voicing losses are computed
+          'given'    inference with a supplied F0 in c_concat['f0'] (voicing from it); no losses
+          'predict'  inference from the notes: the F0 predicted by the first block; no losses
+        Without the key, context['infer'] chooses between 'predict' and 'train'.
+
+        Returns (vector field [B, C, T], losses, F0 used in Hz [B, 1, T_mel]); losses has 'lb'
+        (weighted load-balancing loss), 'f0', 'uv' and 'f0_pred' (the predicted F0 in Hz, unvoiced = 0).
         """
         self.freqs_cis = self.freqs_cis.to(x.device)
 
         # Extract context inputs
-        f0_gt = context['c_concat']['f0']    # (B, 1, T)
-        f0_gt_log = torch.log(f0_gt + 1.0)
         midi = context['c_concat']['midi']    # (B, 1, T)
         ph = context['c_concat']['ph']    # (B, 1, T)
         caption = context['c_crossattn']  # (B, T_caption, 1024)
         prompt = context['c_concat']['prompt_embed']  # (B, C, T_prompt)
         language = context['c_concat']['language']  # (B, 1)
-        infer=context['infer']
-        
+        f0_mode = context.get('f0_mode') or ('predict' if context['infer'] else 'train')
+        assert f0_mode in ('train', 'given', 'predict'), f0_mode
+        T_mel = ph.shape[-1]
+        if f0_mode != 'predict':
+            f0_gt = context['c_concat']['f0'][..., :T_mel]    # (B, 1, T)
+            f0_gt_log = torch.log(f0_gt + 1.0)
+
         B = x.size(0)
         T_prompt   = prompt.size(2)
         device = x.device
@@ -351,8 +378,8 @@ class Singer(nn.Module):
         # Extract global vector from prompt using global average pooling
         prompt_global = prompt.mean(dim=1)  # [B, hidden_size]
 
-        ph_pad_id   = torch.full((B, T_prompt*self.downsample_rate), 475, dtype=torch.long,device=device)
-        midi_pad_id = torch.full((B, T_prompt*self.downsample_rate), 99,  dtype=torch.long,device=device)
+        ph_pad_id   = torch.full((B, T_prompt*self.downsample_rate), PH_PAD_ID, dtype=torch.long,device=device)
+        midi_pad_id = torch.full((B, T_prompt*self.downsample_rate), MIDI_PAD_ID,  dtype=torch.long,device=device)
         f0_pad      = torch.zeros(B, 1, T_prompt*self.downsample_rate,device=device)   # 无声记 0
 
         ph_pad_feat = self.ph_proj(
@@ -417,22 +444,21 @@ class Singer(nn.Module):
         f0_pred     = self.f0_upsample(f0_pred_lat)                       # [B,1,T_orig]
 
         uv_logits_lat = self.uv_classifier(feats)               # [B,T_lat,2]
-        uv_logits = uv_logits_lat.repeat_interleave(self.downsample_rate, dim=1)[:, :f0_gt.shape[-1], :]  # [B,T,2]
+        uv_logits = uv_logits_lat.repeat_interleave(self.downsample_rate, dim=1)[:, :T_mel, :]  # [B,T,2]
         uv_pred = torch.argmax(uv_logits, dim=-1, keepdim=True).float().permute(0,2,1)  # [B,1,T]
+        f0_pred = f0_pred[..., :T_mel].detach().clamp(min=0) * uv_pred   # log scale, unvoiced = 0
 
-        if infer:
-            # 推理：使用预测 f0，损失置 0
-            f0_for_cond = f0_pred=f0_pred.detach() * uv_pred   
-            f0_loss = 0.0
-            uv_loss = 0.0
+        f0_loss = uv_loss = x.new_zeros(())
+        if f0_mode == 'predict':
+            f0_for_cond = f0_pred
         else:
-            # 训练：使用 GT f0，计算损失
-            uv_mask = (f0_gt > 0).float()            # [B,1,T]
-            f0_loss = F.mse_loss(f0_pred * uv_mask, f0_gt_log * uv_mask)
-            uv_gt = (f0_gt.squeeze(1) > 0).long()    # [B,T]
-            uv_loss = F.cross_entropy(uv_logits.view(-1, 2), uv_gt.view(-1))
             f0_for_cond = f0_gt_log
-            f0_pred=f0_pred*uv_pred
+            if f0_mode == 'train':
+                f0_raw = self.f0_upsample(f0_pred_lat)[..., :T_mel]
+                uv_mask = (f0_gt > 0).float()            # [B,1,T]
+                f0_loss = F.mse_loss(f0_raw * uv_mask, f0_gt_log * uv_mask)
+                uv_gt = (f0_gt.squeeze(1) > 0).long()    # [B,T]
+                uv_loss = F.cross_entropy(uv_logits.reshape(-1, 2), uv_gt.reshape(-1))
 
         f0_feat = self.f0_proj(f0_for_cond).transpose(1, 2)  # [B,T,C]
         f0_full   = torch.cat([f0_pad_feat,   f0_feat],   dim=1)   
@@ -446,13 +472,8 @@ class Singer(nn.Module):
                 adaln_input=adaln_input, time=t_emb, caption=caption, language=language
             )
             loss += loss_tmp
-        loss = loss/len(self.blocks)
-        
-        if self.loss_w>0.01:
-            self.loss_w*=0.9999
-        loss *= self.loss_w #加系数防止影响过大
-        
-        loss+=f0_loss+uv_loss
+        loss = loss/len(self.blocks) * self.loss_w  # 加系数防止影响过大
+        losses = dict(lb=loss, f0=f0_loss, uv=uv_loss, f0_pred=torch.exp(f0_pred) - 1.0)
 
         # Remove the prompt part and keep only the original x output
         x_final = x_combined[:, prompt_length:, :]  # 去掉 prompt 部分
@@ -461,7 +482,7 @@ class Singer(nn.Module):
         x_final = self.final_layer(x_final, adaln_input)
         x_final = rearrange(x_final, 'b t c -> b c t')  # [B, C, T]
 
-        return x_final, loss, torch.exp(f0_for_cond).detach() - 1.0
+        return x_final, losses, losses['f0_pred'] if f0_mode == 'predict' else f0_gt
 
     @staticmethod
     def precompute_freqs_cis(
@@ -496,7 +517,7 @@ class Singer(nn.Module):
         print(f"theta {theta} rope scaling {rope_scaling_factor} ntk {ntk_factor}")
 
         freqs = 1.0 / (theta ** (
-            torch.arange(0, dim, 2)[: (dim // 2)].float().cuda() / dim
+            torch.arange(0, dim, 2)[: (dim // 2)].float() / dim
         ))
         t = torch.arange(end, device=freqs.device, dtype=torch.float)  # type: ignore
         t = t / rope_scaling_factor
@@ -540,6 +561,10 @@ class TCSinger2(Singer):
         for block in self.blocks:
             nn.init.constant_(block.adaLN_modulation[-1].weight, 0)
             nn.init.constant_(block.adaLN_modulation[-1].bias, 0)
+
+        # The F0 head predicts log(Hz + 1); start it at a typical sung pitch (about 245 Hz) instead of at 0,
+        # where its loss would be some 15 times the flow loss
+        nn.init.constant_(self.f0_regressor.bias, 5.5)
 
         # Zero-out output layers:
         nn.init.constant_(self.final_layer.adaLN_modulation[-1].weight, 0)

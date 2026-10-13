@@ -1,4 +1,4 @@
-import argparse, os, sys, datetime, glob
+import argparse, os, sys, datetime, glob, zipfile
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import numpy as np
 import time
@@ -142,6 +142,25 @@ def get_parser(**parser_kwargs):
     )
     return parser
 
+def is_complete_ckpt(path):
+    """False for a checkpoint that was cut off while being written (its zip directory is missing)."""
+    try:
+        with zipfile.ZipFile(path) as f:
+            return len(f.namelist()) > 0
+    except (zipfile.BadZipFile, OSError):
+        return False
+
+
+def find_resume_ckpt(logdir):
+    """Newest complete checkpoint in checkpoints/ of a run (sub-directories hold weights-only snapshots)."""
+    ckpts = glob.glob(os.path.join(logdir, "checkpoints", "*.ckpt"))
+    for ckpt in sorted(ckpts, key=os.path.getmtime, reverse=True):
+        if is_complete_ckpt(ckpt):
+            return ckpt
+        print(f"Skipping incomplete checkpoint {ckpt}")
+    raise ValueError(f"No complete checkpoint in {logdir}")
+
+
 def getrank():
     def is_dist_avail_and_initialized():
         if not dist.is_available():
@@ -220,11 +239,12 @@ class DataModuleFromConfig(pl.LightningDataModule):# batchloader outputshape sho
     def _train_dataloader(self):
         init_fn = None
         if isinstance(self.datasets["train"], ldm.data.tcsinger2_dataset.JoinManifestSpecs):
-            from ldm.data.tcsinger2_dataset import DDPIndexBatchSampler
+            from ldm.data.tcsinger2_dataset import ListBatchSampler
             dataset = self.datasets["train"]
-            main_indices = dataset.ordered_indices()
-            batch_sampler = DDPIndexBatchSampler(main_indices, batch_size=self.batch_size, shuffle=True,
-                                                 drop_last=True, max_tokens=self.datasets["train"].max_tokens)
+            # rebuilt for every epoch (trainer.reload_dataloaders_every_n_epochs: 1): the extra corpora
+            # contribute another random subset each time
+            epoch = self.trainer.current_epoch if getattr(self, 'trainer', None) is not None else 0
+            batch_sampler = ListBatchSampler(dataset.epoch_batches(epoch, self.batch_size, shuffle=True))
             loader = DataLoader(dataset, batch_sampler=batch_sampler, sampler=None,
                                 num_workers=self.num_workers, collate_fn=dataset.collater,
                                 worker_init_fn=init_fn)
@@ -238,10 +258,9 @@ class DataModuleFromConfig(pl.LightningDataModule):# batchloader outputshape sho
     def _val_dataloader(self, shuffle=False):
         init_fn = None
         if isinstance(self.datasets["validation"],ldm.data.tcsinger2_dataset.JoinManifestSpecs):
-            from ldm.data.tcsinger2_dataset import DDPIndexBatchSampler
+            from ldm.data.tcsinger2_dataset import ListBatchSampler
             dataset = self.datasets["validation"]
-            main_indices = dataset.ordered_indices()
-            batch_sampler = DDPIndexBatchSampler(main_indices, batch_size=self.batch_size, shuffle=shuffle, drop_last=True)
+            batch_sampler = ListBatchSampler(dataset.epoch_batches(0, self.batch_size, shuffle=shuffle))
             return DataLoader(dataset, batch_sampler=batch_sampler, sampler=None,
                               num_workers=self.num_workers, collate_fn=dataset.collater,
                               worker_init_fn=init_fn)
@@ -269,7 +288,8 @@ class SpectrogramDataModuleFromConfig(DataModuleFromConfig):
     def __init__(self, batch_size, num_workers, spec_dir_path=None, main_spec_dir_path=None, other_spec_dir_path=None,
                   mel_num=None, spec_len=None, spec_crop_len=1248, drop=0, cond_drop=None, mode='pad',
                  require_caption=True, train=None, validation=None, test=None, predict=None, wrap=False,
-                 other_condition=None, max_tokens=80000):
+                 other_condition=None, max_tokens=None, ext_share=None, max_prompt_len=None, max_batch_clips=None,
+                 max_items=None):
         specs_dataset_cfg = {
             'spec_dir_path': spec_dir_path,
             'main_spec_dir_path': main_spec_dir_path,
@@ -283,6 +303,11 @@ class SpectrogramDataModuleFromConfig(DataModuleFromConfig):
             'cond_drop': cond_drop,
             'other_condition': other_condition
         }
+        # options of ldm.data.tcsinger2_dataset (frame-budget batches, share of the extra corpora, prompt length)
+        for key, value in dict(max_tokens=max_tokens, ext_share=ext_share, max_prompt_len=max_prompt_len,
+                               max_batch_clips=max_batch_clips, max_items=max_items).items():
+            if value is not None:
+                specs_dataset_cfg[key] = value
         for name, split in {'train': train, 'validation': validation, 'test': test}.items():
             if split is not None:
                 split.params.specs_dataset_cfg = specs_dataset_cfg
@@ -366,7 +391,7 @@ class ImageLogger(Callback):
                 continue
             grid = torchvision.utils.make_grid(images[k])
             fig = plt.figure()
-            plt.pcolor(grid.mean(dim=0),vmin=self.melvmin,vmax=self.melvmax)
+            plt.pcolormesh(grid.mean(dim=0),vmin=self.melvmin,vmax=self.melvmax)  # pcolor takes ~15 s per figure here
             tag = f"{split}/{k}"
             pl_module.logger.experiment.add_figure(tag, fig,global_step=pl_module.global_step)
 
@@ -499,7 +524,7 @@ class AudioLogger(ImageLogger):
                 grid = torchvision.utils.make_grid(images[k])# (B,C=1 or 3,H,W) -> (C=3,B*H,W)
                 # attention is already in [0, 1] therefore ignoring this line
             fig = plt.figure()
-            plt.pcolor(grid.mean(dim=0),vmin=self.melvmin,vmax=self.melvmax)
+            plt.pcolormesh(grid.mean(dim=0),vmin=self.melvmin,vmax=self.melvmax)  # pcolor takes ~15 s per figure here
             pl_module.logger.experiment.add_figure(tag, fig,global_step=pl_module.global_step)
 
     @rank_zero_only
@@ -573,12 +598,13 @@ if __name__ == "__main__":
             raise ValueError("Cannot find {}".format(opt.resume))
         if os.path.isfile(opt.resume):
             paths = opt.resume.split("/")
-            logdir = "/".join(paths[:-2])
+            logdir = "/".join(paths[:len(paths) - 1 - paths[::-1].index("checkpoints")])
             ckpt = opt.resume
         else:
             assert os.path.isdir(opt.resume), opt.resume
             logdir = opt.resume.rstrip("/")
-            ckpt = os.path.join(logdir, "checkpoints", "last.ckpt")
+            ckpt = find_resume_ckpt(logdir)
+            print(f"Resuming from {ckpt}")
 
         opt.ckpt_path = ckpt
         base_configs = sorted(glob.glob(os.path.join(logdir, "configs/*.yaml")))

@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 import pandas as pd
 import csv
 import unicodedata
@@ -24,30 +25,33 @@ def save_df_to_tsv(dataframe, path):
         quoting=csv.QUOTE_NONE,
     )
 
-def search_alternate_paths(file_path):
-    # 在多个目录中尝试查找文件，作为简单示例：
-    alternate_dirs = [
-        '/root/autodl-tmp/backup/data/singing',
-    ]
-    for alt_dir in alternate_dirs:
-        alt_path = file_path.replace('/root/autodl-tmp/data/singing', alt_dir)
-        if os.path.exists(alt_path):
-            return alt_path
-    return None
+def get_mel_path(wav_fn, data_root, mel_root, mode='none', sr=48000):
+    # must match the layout written by preprocess/mel_spec_48k.py:
+    # <mel_root>/mel<mode><sr>/<wav path relative to data_root, .wav -> _mel.npy>
+    rel = os.path.relpath(wav_fn, data_root)
+    return os.path.join(mel_root, f'mel{mode}{sr}', rel[:-4] + '_mel.npy')
 
-def generate():
-    input_file = '/root/autodl-tmp/data/singing/meta/metadata.json'
-    output_file = '/root/autodl-tmp/tcsinger2/data/new/data.tsv'
-    
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--metadata", type=str, required=True, help="metadata.json with wav_fn, ph, ph_durs, ...")
+    parser.add_argument("--out_tsv", type=str, default='data/new/data.tsv')
+    parser.add_argument("--data_root", type=str, required=True, help="root directory that all wav_fn paths live under")
+    parser.add_argument("--mel_root", type=str, default='data/processed', help="save_path given to mel_spec_48k.py")
+    return parser.parse_args()
+
+def generate(args):
+    input_file = args.metadata
+    output_file = args.out_tsv
+
     with open(input_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    
+
     # 获取所有可能的键，假设所有条目的键都相同
     all_keys = set()
     for item in data:
         all_keys.update(item.keys())
     all_keys = list(all_keys)
-    
+
     # 将 'wav_fn' 替换为 'audio_path'
     all_keys.append('mel_path')
     if 'wav_fn' in all_keys:
@@ -63,22 +67,21 @@ def generate():
         # 提取所有属性
         tmp = {}
         value = item.get('wav_fn', '')
-        
+
         # 对路径进行规范化处理
         value = normalize_path(value)
-        
+
         # 检查 audio_path 是否存在
         if not os.path.exists(value):
             missing_files.append(value)  # 记录不存在的文件
             continue
-        
+
         # 对 mel_path 路径进行类似的处理
-        mel_value = item.get('wav_fn', '').replace('.wav', '_mel.npy')
-        mel_value = mel_value.replace('/root/autodl-tmp/data/singing', '/root/autodl-tmp/tcsinger2/processed/melnone48000/singing').replace('nips_final/nips_submit', 'GTSinger')
-        
+        mel_value = get_mel_path(item.get('wav_fn', ''), args.data_root, args.mel_root)
+
         # 对 mel_path 路径进行规范化处理
         mel_value = normalize_path(mel_value)
-        
+
         for key in all_keys:
             if key == 'mel_path':
                 value = mel_value
@@ -97,7 +100,8 @@ def generate():
             print(f)
 
     print(f"正在将清单写入 {output_file} ...")
+    os.makedirs(os.path.dirname(output_file) or '.', exist_ok=True)
     save_df_to_tsv(pd.DataFrame.from_dict(manifest), output_file)
 
 if __name__ == '__main__':
-    generate()
+    generate(parse_args())

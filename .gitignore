@@ -1,0 +1,43 @@
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Training runs and logs
+/logs/
+*.log
+
+# Checkpoints and pretrained models (vocoder, FLAN-T5, RMVPE, exported models)
+/useful_ckpts/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# Generated audio, figures and evaluation outputs
+/samples/
+/test/
+
+# Metadata and manifests: large and derived from the datasets.
+# Kept: the small files inference needs, the split lists and the reports.
+/data/*
+!/data/meta/
+/data/meta/*
+!/data/meta/lexicon.json
+!/data/meta/phone_set.json
+!/data/meta/spker_set.json
+!/data/meta/cleaning_log.json
+!/data/meta/postprocess_report.json
+!/data/meta/report.md
+!/data/meta/splits/
+!/data/meta_ext/
+/data/meta_ext/*
+!/data/meta_ext/*report*.json
+!/data/meta_ext/*_log.json
+!/data/meta_ext/report.md
+
+# Local environments and secrets
+/envs/
+.venv/
+.env
+untitled.txt

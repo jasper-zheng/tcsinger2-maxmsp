@@ -1,22 +1,24 @@
 """
-Modified for contrastive learning: 
-- Added speech encoder with same architecture as main encoder
-- Frozen original autoencoder parameters
-- Added contrastive loss between singing and speech features
+Custom Audio Encoder: contrastive learning on top of a trained, frozen VAE.
+- Speech encoder with the same architecture as the VAE encoder, started from its weights
+- Content branch: frame-level phoneme and note embeddings with cross-attention to the text prompt
+- The three embeddings (singing, speech, content) are aligned in the space of the VAE latent, where the
+  frozen singing encoder is the anchor
 """
 
-import os
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 import torch.nn.functional as F
-from contextlib import contextmanager
-from packaging import version
-import numpy as np
 from ldm.modules.distributions.distributions import DiagonalGaussianDistribution
 from torch.optim.lr_scheduler import LambdaLR
 from ldm.util import instantiate_from_config
 from utils.commons.rel_transformer import RelTransformerEncoder
+from utils.commons.duration import DurationPredictor, NoteEncoder
+from ldm.data.phone_set import NUM_PH, NUM_MIDI
+
+# Modules of the VAE. They are frozen, and left out of this model's checkpoints (they come from ckpt_path).
+FROZEN = ('encoder.', 'decoder.', 'quant_conv.', 'post_quant_conv.', 'dur_predictor.', 'note_encoder.', 'ph_encoder.', 'loss.')
 
 
 class AutoencoderKL(pl.LightningModule):
@@ -24,17 +26,24 @@ class AutoencoderKL(pl.LightningModule):
                  embed_dim,
                  ddconfig,
                  lossconfig,
-                 ckpt_path=None,
+                 ckpt_path=None,          # the trained VAE
+                 con_ckpt_path=None,      # trained speech encoder and content branch (scripts/export_con.py)
                  ignore_keys=[],
                  image_key="image",
                  monitor=None,
                  contrastive_temp=0.07,  # Temperature for contrastive loss
+                 lr=5e-5,                # used as it is; main.py's batch-size scaling of base_learning_rate is not
+                 warmup_steps=1000,
+                 text_encoder_path="useful_ckpts/flan-t5-large",
+                 text_max_length=80,
                  **kwargs,
                  ):
         super().__init__()
         self.image_key = image_key
         self.contrastive_temp = contrastive_temp
-        
+        self.lr = lr
+        self.warmup_steps = warmup_steps
+
         # Original autoencoder components
         self.encoder = Encoder1D(**ddconfig)
         self.decoder = Decoder1D(**ddconfig)
@@ -44,16 +53,6 @@ class AutoencoderKL(pl.LightningModule):
         self.post_quant_conv = torch.nn.Conv1d(embed_dim, ddconfig["z_channels"], 1)
         self.embed_dim = embed_dim
         hidden=ddconfig['hidden_size']
-        self.ph_embed   = nn.Embedding(476, hidden)
-        self.midi_embed = nn.Embedding(100, hidden)
-        self.ph_conv   = nn.Conv1d(hidden, hidden, 3, padding=1)
-        self.midi_conv = nn.Conv1d(hidden, hidden, 3, padding=1)
-        
-        # Add speech encoder (same architecture as main encoder)
-        self.speech_encoder = Encoder1D(**ddconfig)
-        
-        # Store learning rate
-        self.learning_rate = kwargs.get('learning_rate', 1e-4)
 
         self.dur_predictor = DurationPredictor(
             ddconfig['hidden_size'],
@@ -61,100 +60,98 @@ class AutoencoderKL(pl.LightningModule):
             n_layers=ddconfig['dur_predictor_layers'],
             dropout_rate=ddconfig['predictor_dropout'],
             kernel_size=ddconfig['dur_predictor_kernel'])
-        
-        self.note_encoder = NoteEncoder(n_vocab=100, hidden_channels=ddconfig['hidden_size'])
+
+        self.note_encoder = NoteEncoder(n_vocab=NUM_MIDI, hidden_channels=ddconfig['hidden_size'])
         self.ph_encoder = RelTransformerEncoder(
-                476, ddconfig['hidden_size'], ddconfig['hidden_size'],
+                NUM_PH, ddconfig['hidden_size'], ddconfig['hidden_size'],
                 ddconfig['hidden_size']*4, ddconfig['num_heads'], ddconfig['enc_layers'],
                 ddconfig['enc_ffn_kernel_size'], ddconfig['dropout'], prenet=ddconfig['enc_prenet'], pre_ln=ddconfig['enc_pre_ln'])
 
-        # Freeze original autoencoder parameters AFTER loading checkpoint
-        self.freeze_original_ae()
-        
-        # ---------- 文本编码器（冻结） ----------
-        txt_cfg = {
-            "target": "ldm.modules.encoders.modules.FrozenTextVocalEmbedder",
-            "params": {"version": "useful_ckpts/flan-t5-large",
-                       "max_length": 80}
-        }
-        self.text_encoder = instantiate_from_config(txt_cfg)
-        self.text_encoder.eval().requires_grad_(False)
+        # Add speech encoder (same architecture as main encoder)
+        self.speech_encoder = Encoder1D(**ddconfig)
 
-        # 输出维度 → hidden 的线性映射
-        txt_dim = self.text_encoder.embed_dim   
+        # Content branch: frame-level phonemes and notes
+        self.ph_embed   = nn.Embedding(NUM_PH, hidden)
+        self.midi_embed = nn.Embedding(NUM_MIDI, hidden)
+        self.ph_conv   = nn.Conv1d(hidden, hidden, 3, padding=1)
+        self.midi_conv = nn.Conv1d(hidden, hidden, 3, padding=1)
+
+        # Text encoder (frozen FLAN-T5). It is loaded when the first caption arrives and kept out of the
+        # module tree, so it is neither in the state dict nor loaded when only the audio encoders are used.
+        self.text_encoder_path = text_encoder_path
+        self.text_max_length = text_max_length
+        self._text_encoder = []   # [tokenizer, T5 encoder] once loaded
+        self._text_cache = {}     # caption -> (token features [L, txt_dim], padding mask [L])
+        txt_dim = 1024            # FLAN-T5-large
         self.txt_proj = nn.Linear(txt_dim, hidden, bias=False)
 
-        # Cross-Attention：query=h_content(seq=T) ; key/value = text(seq=L)
+        # Cross-Attention: query=h_content(seq=T) ; key/value = text(seq=L)
         self.cross_attn = nn.MultiheadAttention(
             embed_dim=hidden, num_heads=8, batch_first=True)
-        
+        # Content embedding -> the latent space the audio embeddings live in
+        self.content_proj = nn.Linear(hidden, embed_dim)
+
         if monitor is not None:
             self.monitor = monitor
         if ckpt_path is not None:
             self.init_from_ckpt(ckpt_path, ignore_keys=ignore_keys)
-            
+        if con_ckpt_path is not None:
+            self.init_con_from_ckpt(con_ckpt_path)
+        self.freeze_original_ae()
+
     def freeze_original_ae(self):
         """Freeze original autoencoder components and set to eval mode"""
-        # Freeze parameters
-        for param in list(self.encoder.parameters()) + \
-                    list(self.decoder.parameters()) + \
-                    list(self.quant_conv.parameters()) + \
-                    list(self.dur_predictor.parameters()) + \
-                    list(self.note_encoder.parameters()) + \
-                    list(self.ph_encoder.parameters()) + \
-                    list(self.post_quant_conv.parameters()):
-            param.requires_grad = False
-            
-        # Set to eval mode
-        self.encoder.eval()
-        self.decoder.eval()
-        self.quant_conv.eval()
-        self.post_quant_conv.eval()
-        self.dur_predictor.eval()
-        self.note_encoder.eval()
-        self.ph_encoder.eval()
+        for name, module in self.named_children():
+            if (name + '.').startswith(FROZEN):
+                module.requires_grad_(False)
+                module.eval()
+
+    def train(self, mode=True):
+        super().train(mode)
+        self.freeze_original_ae()  # Lightning switches the whole model to train mode around validation
+        return self
 
     def init_from_ckpt(self, path, ignore_keys=list()):
-        """Load checkpoint, handling both original and full checkpoints"""
-        sd = torch.load(path, map_location="cpu")
-        
-        # Handle different checkpoint formats
-        if "state_dict" in sd:
-            state_dict = sd["state_dict"]
-        else:
-            state_dict = sd
-            
-        # Filter keys and handle missing speech_encoder
-        keys = list(state_dict.keys())
-        new_state_dict = {}
-        
-        for k in keys:
-            # Skip ignored keys
-            skip = False
+        """Load the trained VAE and start the speech encoder from its encoder."""
+        sd = torch.load(path, map_location="cpu")["state_dict"]
+        for k in list(sd.keys()):
             for ik in ignore_keys:
                 if k.startswith(ik):
                     print("Deleting key {} from state_dict.".format(k))
-                    skip = True
-                    break
-            if skip:
-                continue
-                
-            # Handle keys for speech_encoder if missing in checkpoint
-            if k.startswith("speech_encoder.") and k not in self.state_dict():
-                print(f"Key {k} not found in model, skipping")
-                continue
-                
-            new_state_dict[k] = state_dict[k]
-        
-        # Load state dict strictly for matching keys
-        self.load_state_dict(new_state_dict, strict=False)
+                    del sd[k]
+        missing, unexpected = self.load_state_dict(sd, strict=False)
+        not_restored = [k for k in missing if k.startswith(FROZEN)]
+        assert not not_restored, f"{path} lacks VAE weights: {not_restored[:5]}"
+        if not any(k.startswith("speech_encoder.") for k in sd):
+            self.speech_encoder.load_state_dict(self.encoder.state_dict())
         print(f"AutoencoderKL Restored from {path} Done")
-        
-        # Re-freeze after loading (in case loading changed requires_grad)
-        self.freeze_original_ae()
+
+    def init_con_from_ckpt(self, path):
+        """Load the trained parts (everything but the VAE) from an export of scripts/export_con.py."""
+        sd = torch.load(path, map_location="cpu")["state_dict"]
+        missing, unexpected = self.load_state_dict(sd, strict=False)
+        not_restored = [k for k in missing if not k.startswith(FROZEN)]
+        assert not not_restored and not unexpected, f"{path} does not fit: {not_restored[:5]} {unexpected[:5]}"
+        print(f"Custom audio encoder restored from {path}")
+
+    def on_save_checkpoint(self, checkpoint):
+        for k in [k for k in checkpoint["state_dict"] if k.startswith(FROZEN)]:
+            del checkpoint["state_dict"][k]
+
+    def on_load_checkpoint(self, checkpoint):
+        for k, v in self.state_dict().items():
+            if k.startswith(FROZEN):
+                checkpoint["state_dict"].setdefault(k, v)
 
     def encode(self, x):
         h = self.encoder(x)
+        moments = self.quant_conv(h)
+        posterior = DiagonalGaussianDistribution(moments)
+        return posterior
+
+    def encode_speech(self, x):
+        """Posterior of a speech mel, in the latent space of the (singing) VAE."""
+        h = self.speech_encoder(x)
         moments = self.quant_conv(h)
         posterior = DiagonalGaussianDistribution(moments)
         return posterior
@@ -173,232 +170,127 @@ class AutoencoderKL(pl.LightningModule):
         dec = self.decode(z)
         return dec, posterior
 
-    def get_input(self, batch, k):
-        x = batch[k]
-        assert len(x.shape) == 3
-        x = x.to(memory_format=torch.contiguous_format).float()
-        f0 = batch['f0']
-        f0 = f0.to(memory_format=torch.contiguous_format).float()
-        return [x, f0]
-
     def pred_duration(self, ph, notedurs, pitches, notetypes, padding_mask=None):
-        # 获取音素嵌入
-        ph_emb = self.ph_encoder(ph) 
-        
-        # 获取音符特征
+        ph_emb = self.ph_encoder(ph)
         note_features = self.note_encoder(pitches, notedurs, notetypes)
-        
-        # 合并特征
         combined = ph_emb + note_features
-        
-        # 预测duration (B, T)
         pred_durs = self.dur_predictor(combined, x_padding=padding_mask)
-        
         return pred_durs
 
-    def get_negative_loss(self, h_speech, h_neg_pool):
-        """
-        h_speech : [B, H, T]  – positive anchor
-        h_neg_pool : [B, N, H]  – pre-pooled negative features
-        """
-        if h_neg_pool is None:
-            return 0.0
-
-        B, N, H = h_neg_pool.shape
-        speech_pool = F.normalize(h_speech.mean(2), dim=1)     # [B, H]
-        neg_flat    = F.normalize(h_neg_pool.reshape(B*N, H), dim=1)  # [B*N, H]
-
-        sim = torch.matmul(speech_pool, neg_flat.t()) / self.contrastive_temp  # [B, B*N]
-        labels = torch.full((B,), -1, device=sim.device, dtype=torch.long)     # 没正样本 → label -1
-        return F.cross_entropy(sim, labels, ignore_index=-1)
-
-    def get_contrastive_loss(self, h_sing, h_speech):
-        """Compute contrastive loss between singing and speech features"""
-        # Pool features along time dimension
-        h_sing_pool = h_sing.mean(dim=2)  # [B, C]
-        h_speech_pool = h_speech.mean(dim=2)  # [B, C]
-        
-        # Normalize features
-        h_sing_pool = F.normalize(h_sing_pool, p=2, dim=1)
-        h_speech_pool = F.normalize(h_speech_pool, p=2, dim=1)
-        
-        # Compute similarity matrix
-        sim_matrix = torch.matmul(h_sing_pool, h_speech_pool.t())  # [B, B]
-        sim_matrix /= self.contrastive_temp
-        
-        # Create labels (diagonal is positive)
-        labels = torch.arange(sim_matrix.size(0), device=sim_matrix.device)
-        
-        # Calculate contrastive loss
-        loss = F.cross_entropy(sim_matrix, labels)
-        return loss
-
-    def training_step(self, batch, batch_idx, optimizer_idx):
-        inputs = self.get_input(batch, self.image_key)
-        x = inputs[0]
-        
-        # Get speech input
-        x_speech = batch['spec_speech']
-        assert x_speech.shape[1:] == x.shape[1:], \
-            f"Speech shape {x_speech.shape} != Singing shape {x.shape}"
-        
-        ph  = batch['ph_array']     # [B, T]
-        midi= batch['pitch_array']  # [B, T]
-        h_ph   = self.ph_embed(ph).transpose(1, 2)          # [B, H, T]
-        h_midi = self.midi_embed(midi).transpose(1, 2)      # [B, H, T] 
-        h_ph_conv   = self.ph_conv(h_ph)
-        h_midi_conv = self.midi_conv(h_midi)
-        h_content   = h_ph_conv + h_midi_conv      # [B, H, T]
-
-        # ---------- 文本 → cross-attention ----------
-        captions = batch['caption']                # List[str] 长度 B
-        with torch.no_grad():
-            txt_feat = self.text_encoder(captions) # [B, L, txt_dim]
-        txt_feat   = self.txt_proj(txt_feat)       # [B, L, H]
-
-        q = h_content.permute(0, 2, 1)             # [B, T, H]
-        cross_out, _ = self.cross_attn(q, txt_feat, txt_feat,
-                                       key_padding_mask=None)  # [B,T,H]
-        cross_out = cross_out.permute(0, 2, 1)     # [B, H, T]
-
-        h_content = h_content + cross_out       
-        
-        # Original autoencoder processing (frozen)
-        with torch.no_grad():
-            reconstructions, posterior = self(x)
-
-        # Get features from both encoders
-        with torch.no_grad():
-            h_sing = self.encoder(x)  # Frozen encoder
-        h_speech = self.speech_encoder(x_speech)  # Trainable speech encoder
-
-        h_neg_pool = None
-        if 'neg_singing' in batch:
-            neg = batch['neg_singing']            # [B, N_neg, C, T]
-            B, N, C, T = neg.shape
-            neg = neg.view(B*N, C, T)
-            with torch.no_grad():
-                h_neg = self.encoder(neg)         # [B*N, H, T] (encoder 已冻结)
-            h_neg_pool = h_neg.mean(2)            # pool-T → [B*N, H]
-            h_neg_pool = h_neg_pool.view(B, N, -1)  # [B, N, H]
-
-        # Calculate contrastive loss
-        loss_ss  = self.get_contrastive_loss(h_sing,     h_speech)
-        loss_cs  = self.get_contrastive_loss(h_content,  h_speech)
-        loss_neg = self.get_negative_loss(h_speech, h_neg_pool)
-        contrastive_loss = loss_ss + loss_cs + loss_neg
-        self.log("loss_contrastive", contrastive_loss, prog_bar=True, 
-                logger=True, on_step=True, on_epoch=True)
-        
-        return contrastive_loss
-
-    def validation_step(self, batch, batch_idx):
-        # -------- 1. 取输入 --------
-        x, _ = self.get_input(batch, self.image_key)           # singing spec
-        x_speech = batch['spec_speech']                        # speech spec
-        ph   = batch['ph_array']
-        midi = batch['pitch_array']
-        captions = batch['caption']                            # List[str]
-
-        # -------- 2. 计算 h_content --------
-        h_ph   = self.ph_embed(ph).transpose(1, 2)
-        h_midi = self.midi_embed(midi).transpose(1, 2)
-        h_content = self.ph_conv(h_ph) + self.midi_conv(h_midi)
-
-        with torch.no_grad():
-            txt_feat = self.text_encoder(captions)             # [B, L, txt_dim]
-        txt_feat = self.txt_proj(txt_feat)                     # [B, L, H]
-
-        q = h_content.permute(0, 2, 1)                         # [B, T, H]
-        cross_out, _ = self.cross_attn(q, txt_feat, txt_feat)
-        h_content = h_content + cross_out.permute(0, 2, 1)
-
-        # -------- 3. 正/负特征 --------
-        with torch.no_grad():
-            h_sing = self.encoder(x)                           # 冻住
-        h_speech = self.speech_encoder(x_speech)               # 可训练
-
-        h_neg_pool = None
-        if 'neg_singing' in batch:
-            neg = batch['neg_singing']                         # [B, N, C, T]
-            B, N, C, T = neg.shape
-            neg = neg.view(B * N, C, T)
-            with torch.no_grad():
-                h_neg = self.encoder(neg)                      # [B*N, H, T]
-            h_neg_pool = h_neg.mean(2).view(B, N, -1)          # [B, N, H]
-
-        # -------- 4. 计算损失 --------
-        loss_ss  = self.get_contrastive_loss(h_sing, h_speech)
-        loss_cs  = self.get_contrastive_loss(h_content, h_speech)
-        loss_neg = self.get_negative_loss(h_speech, h_neg_pool)
-        val_loss = loss_ss + loss_cs + loss_neg
-
-        self.log("val/loss_contrastive", val_loss, prog_bar=True, on_epoch=True)
-
-        return val_loss
-
-
-    def test_step(self, batch, batch_idx):
-        inputs = self.get_input(batch, self.image_key)
-        x = inputs[0]
-        
-        with torch.no_grad():
-            reconstructions, posterior = self(x)
-            mse_loss = F.mse_loss(reconstructions, x)
-            self.log('test/mse_loss', mse_loss)
-            
-            test_ckpt_path = os.path.basename(self.trainer.tested_ckpt_path)
-            savedir = os.path.join(self.trainer.log_dir, f'output_imgs_{test_ckpt_path}', 'fake_class')
-            
-            if batch_idx == 0:
-                os.makedirs(savedir, exist_ok=True)
-                print(f"Test outputs saved to: {savedir}")
-            
-            file_names = batch['f_name']
-            reconstructions = reconstructions.cpu().numpy()
-            
-            for b in range(reconstructions.shape[0]):
-                vname_num_split_index = file_names[b].rfind('_')
-                v_n = file_names[b][:vname_num_split_index]
-                num = file_names[b][vname_num_split_index+1:]
-                save_img_path = os.path.join(savedir, f'{v_n}.npy')
-                np.save(save_img_path, reconstructions[b])
-        
-        return None
-        
-    def configure_optimizers(self):
-        params = list(self.speech_encoder.parameters()) + \
-                 list(self.ph_conv.parameters()) + \
-                 list(self.midi_conv.parameters()) + \
-                 list(self.txt_proj.parameters()) + \
-                 list(self.cross_attn.parameters())
-        return torch.optim.Adam(params, lr=self.learning_rate)
-
-    def get_last_layer(self):
-        return self.decoder.conv_out.weight
+    # ------------------------------------------------------------------
+    # The three embeddings, each [B, embed_dim]
+    # ------------------------------------------------------------------
+    def pool_latent(self, h):
+        """Encoder output [B, 2*z_channels, T] -> time mean of the latent mean, which is what stage 2 reads."""
+        return self.quant_conv(h)[:, :self.embed_dim].mean(2)
 
     @torch.no_grad()
-    def log_images(self, batch, only_inputs=False, **kwargs):
-        # Original implementation remains unchanged
-        log = dict()
-        x = self.get_input(batch, self.image_key)
-        f0 = x[1]
-        x = x[0]
-        mel_gt = x
-        x = x.to(self.device)
-        f0 = f0.to(self.device)
+    def embed_singing(self, x):
+        return self.pool_latent(self.encoder(x))
 
-        if not only_inputs:
-            xrec, posterior = self(x)
-            log["samples"] = self.decode(torch.randn_like(posterior.sample())).unsqueeze(1)
-            mel_rec = xrec
-            log["reconstructions"] = mel_rec.unsqueeze(1)
-            log["f0"] = f0.cpu()
-            
-        log["inputs"] = mel_gt.unsqueeze(1)
-        log['f0_gt'] = f0.cpu()
+    def embed_speech(self, x):
+        return self.pool_latent(self.speech_encoder(x))
 
-        return log
+    @torch.no_grad()
+    def encode_text(self, captions):
+        """T5 token features [B, L, txt_dim] and padding mask [B, L] (True at padding), cached per caption."""
+        new = [c for c in dict.fromkeys(captions) if c not in self._text_cache]
+        if new:
+            if not self._text_encoder:
+                from transformers import T5Tokenizer, T5EncoderModel
+                self._text_encoder += [T5Tokenizer.from_pretrained(self.text_encoder_path),
+                                       T5EncoderModel.from_pretrained(self.text_encoder_path).eval().requires_grad_(False)]
+            tokenizer, t5 = self._text_encoder
+            t5.to(self.device)
+            enc = tokenizer(new, truncation=True, max_length=self.text_max_length, padding="max_length",
+                            return_tensors="pt").to(self.device)
+            out = t5(input_ids=enc.input_ids, attention_mask=enc.attention_mask).last_hidden_state
+            for c, feat, mask in zip(new, out, enc.attention_mask):
+                self._text_cache[c] = (feat, mask == 0)
+        feats, pads = zip(*(self._text_cache[c] for c in captions))
+        return torch.stack(feats).to(self.device), torch.stack(pads).to(self.device)
+
+    def embed_content(self, ph, midi, captions):
+        """Content (frame-level phonemes and notes) combined with the text prompt by cross-attention."""
+        h_ph   = self.ph_embed(ph).transpose(1, 2)          # [B, H, T]
+        h_midi = self.midi_embed(midi).transpose(1, 2)      # [B, H, T]
+        h_content = self.ph_conv(h_ph) + self.midi_conv(h_midi)
+
+        txt_feat, txt_pad = self.encode_text(captions)      # [B, L, txt_dim]
+        txt_feat = self.txt_proj(txt_feat)                  # [B, L, H]
+        q = h_content.permute(0, 2, 1)                      # [B, T, H]
+        cross_out, _ = self.cross_attn(q, txt_feat, txt_feat, key_padding_mask=txt_pad)
+        return self.content_proj((q + cross_out).mean(1))
+
+    # ------------------------------------------------------------------
+    # Contrastive loss
+    # ------------------------------------------------------------------
+    def info_nce(self, a, b, exclude=None, extra_b=None):
+        """Symmetric InfoNCE between two sets of embeddings [B, C]; row i of a and row i of b are the positive pair.
+
+        exclude : [B, B] bool, pairs that are neither positives nor negatives (left out of the softmax)
+        extra_b : [B, N, C], further negatives for the b -> a direction: row i of b against its own N embeddings
+        Returns the loss (mean of both directions) and the top-1 accuracy of the b -> a direction.
+        """
+        a, b = F.normalize(a, dim=1), F.normalize(b, dim=1)
+        sim = a @ b.t() / self.contrastive_temp             # [B, B], a in rows
+        if exclude is not None:
+            sim = sim.masked_fill(exclude, float('-inf'))
+        labels = torch.arange(sim.size(0), device=sim.device)
+        b_to_a = sim.t()
+        if extra_b is not None:
+            neg = torch.einsum('bc,bnc->bn', b, F.normalize(extra_b, dim=2)) / self.contrastive_temp
+            b_to_a = torch.cat([b_to_a, neg], dim=1)        # [B, B + N]
+        loss = 0.5 * (F.cross_entropy(sim, labels) + F.cross_entropy(b_to_a, labels))
+        acc = (b_to_a.argmax(1) == labels).float().mean()
+        return loss, acc
+
+    def contrastive_losses(self, batch):
+        x = batch[self.image_key].float()                   # singing mel [B, C, T]
+        x_speech = batch['spec_speech'].float()
+        pair_id = batch['pair_id']
+
+        z_sing = self.embed_singing(x)                      # frozen encoder, the anchor
+        z_speech = self.embed_speech(x_speech)              # trainable
+        z_content = self.embed_content(batch['ph_array'].long(), batch['pitch_array'].long(), batch['caption'])
+
+        z_neg = None
+        if batch['neg_singing'].shape[1] > 0:
+            neg = batch['neg_singing'].float()              # [B, N, C, T], other singing clips
+            B, N = neg.shape[:2]
+            z_neg = self.embed_singing(neg.flatten(0, 1)).view(B, N, -1)
+
+        # Singing clips of the same phrase (control and technique versions) share their speech clip: they
+        # are positives of each other, so they are left out of the terms that involve speech.
+        siblings = (pair_id[:, None] == pair_id[None, :]) & ~torch.eye(len(pair_id), dtype=torch.bool, device=x.device)
+
+        loss_ss, acc_ss = self.info_nce(z_sing, z_speech, exclude=siblings, extra_b=z_neg)
+        loss_cs, acc_cs = self.info_nce(z_content, z_speech, exclude=siblings)
+        loss_sc, acc_sc = self.info_nce(z_sing, z_content)
+        loss = (loss_ss + loss_cs + loss_sc) / 3
+        return loss, dict(loss_ss=loss_ss, loss_cs=loss_cs, loss_sc=loss_sc, acc_ss=acc_ss, acc_cs=acc_cs, acc_sc=acc_sc)
+
+    def training_step(self, batch, batch_idx):
+        loss, parts = self.contrastive_losses(batch)
+        self.log("loss_contrastive", loss, prog_bar=True, logger=True, on_step=True, on_epoch=False)
+        self.log_dict({f"train/{k}": v for k, v in parts.items()}, logger=True, on_step=True, on_epoch=False)
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        loss, parts = self.contrastive_losses(batch)
+        bs = len(batch['pair_id'])
+        self.log("val/loss_contrastive", loss, prog_bar=True, on_epoch=True, batch_size=bs)
+        self.log_dict({f"val/{k}": v for k, v in parts.items()}, on_epoch=True, batch_size=bs)
+        return loss
+
+    def configure_optimizers(self):
+        params = [p for name, module in self.named_children() if not (name + '.').startswith(FROZEN)
+                  for p in module.parameters()]
+        print(f"Custom audio encoder: {sum(p.numel() for p in params) / 1e6:.1f} M trainable parameters, learning rate "
+              f"{self.lr:.2e} from model.params.lr (the learning rate main.py reports is not used)")
+        opt = torch.optim.Adam(params, lr=self.lr, betas=(0.9, 0.999))
+        sched = LambdaLR(opt, lambda step: min(1.0, (step + 1) / max(1, self.warmup_steps)))
+        return [opt], [dict(scheduler=sched, interval='step', frequency=1)]
 
 
 def Normalize(in_channels, num_groups=32):

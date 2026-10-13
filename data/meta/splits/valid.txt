@@ -1,0 +1,863 @@
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0000
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0001
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0002
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0003
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0004
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0005
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0006
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0007
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0008
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0009
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0010
+Chinese#ZH-Alto-1#Glissando#青花瓷#Control_Group#0011
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0000
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0001
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0002
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0003
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0004
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0005
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0006
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0007
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0008
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0009
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0010
+Chinese#ZH-Alto-1#Glissando#青花瓷#Glissando_Group#0011
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0000
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0001
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0002
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0003
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0004
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0005
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0006
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0007
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0008
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0009
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0010
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0011
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0000
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0001
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0002
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0003
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0004
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0005
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0006
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0007
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0008
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0009
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0010
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0011
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0000
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0001
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0002
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0003
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0004
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0005
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0006
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0007
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0008
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0009
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0010
+Chinese#ZH-Alto-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0011
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0000
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0001
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0002
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0003
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0004
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0005
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0006
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0007
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0008
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0009
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0010
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0011
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0012
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0013
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0014
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0015
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0016
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0017
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0018
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0019
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0020
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Control_Group#0021
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0000
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0001
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0002
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0003
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0004
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0005
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0006
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0007
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0008
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0009
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0010
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0011
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0012
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0013
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0014
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0015
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0016
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0017
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0018
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0019
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0020
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Falsetto_Group#0021
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0000
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0001
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0002
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0003
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0004
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0005
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0006
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0007
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0008
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0009
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0010
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0011
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0012
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0013
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0014
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0015
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0016
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0017
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0018
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0019
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0020
+Chinese#ZH-Tenor-1#Mixed_Voice_and_Falsetto#青花瓷#Mixed_Voice_Group#0021
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0000
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0001
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0002
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0003
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0004
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0005
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0006
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0007
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0008
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0009
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0010
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0011
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0012
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0013
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0014
+English#EN-Alto-1#Glissando#tell me that you love me#Control_Group#0015
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0000
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0001
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0002
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0003
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0004
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0005
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0006
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0007
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0008
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0009
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0010
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0011
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0012
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0013
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0014
+English#EN-Alto-1#Glissando#tell me that you love me#Glissando_Group#0015
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0000
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0001
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0002
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0003
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0004
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0005
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0006
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0007
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0008
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0009
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Control_Group#0010
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0000
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0001
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0002
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0003
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0004
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0005
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0006
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0007
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0008
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0009
+English#EN-Alto-1#Pharyngeal#tell me that you love me#Pharyngeal_Group#0010
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0000
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0001
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0002
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0003
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0004
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0005
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0006
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0007
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0008
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0009
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0010
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Control_Group#0011
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0000
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0001
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0002
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0003
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0004
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0005
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0006
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0007
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0008
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0009
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0010
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Falsetto_Group#0011
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0000
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0001
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0002
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0003
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0004
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0005
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0006
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0007
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0008
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0009
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0010
+English#EN-Alto-2#Mixed_Voice_and_Falsetto#Hello#Mixed_Voice_Group#0011
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0000
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0001
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0002
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0003
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0004
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0005
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0006
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0007
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0008
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0009
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0010
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Control_Group#0011
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0000
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0001
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0002
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0003
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0004
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0005
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0006
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0007
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0008
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0009
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0010
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Falsetto_Group#0011
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0000
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0001
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0002
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0003
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0004
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0005
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0006
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0007
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0008
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0009
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0010
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Firework#Mixed_Voice_Group#0011
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0000
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0001
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0002
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0003
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0004
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0005
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Control_Group#0006
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0000
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0001
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0002
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0003
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0004
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0005
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Falsetto_Group#0006
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0000
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0001
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0002
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0003
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0004
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0005
+English#EN-Tenor-1#Mixed_Voice_and_Falsetto#Umbrella#Mixed_Voice_Group#0006
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0000
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0001
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0002
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0003
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0004
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0005
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0006
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0007
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0008
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0009
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0010
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Control_Group#0011
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0000
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0001
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0002
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0003
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0004
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0005
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0006
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0007
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0008
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0009
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0010
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Falsetto_Group#0011
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0000
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0001
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0002
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0003
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0004
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0005
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0006
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0007
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0008
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0009
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0010
+French#FR-Soprano-1#Mixed_Voice_and_Falsetto#le dernier train#Mixed_Voice_Group#0011
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0000
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0001
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0002
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0003
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0004
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0005
+French#FR-Tenor-1#Breathy#avant#Breathy_Group#0006
+French#FR-Tenor-1#Breathy#avant#Control_Group#0000
+French#FR-Tenor-1#Breathy#avant#Control_Group#0001
+French#FR-Tenor-1#Breathy#avant#Control_Group#0002
+French#FR-Tenor-1#Breathy#avant#Control_Group#0003
+French#FR-Tenor-1#Breathy#avant#Control_Group#0004
+French#FR-Tenor-1#Breathy#avant#Control_Group#0005
+French#FR-Tenor-1#Breathy#avant#Control_Group#0006
+French#FR-Tenor-1#Glissando#avant#Control_Group#0000
+French#FR-Tenor-1#Glissando#avant#Control_Group#0001
+French#FR-Tenor-1#Glissando#avant#Control_Group#0002
+French#FR-Tenor-1#Glissando#avant#Control_Group#0003
+French#FR-Tenor-1#Glissando#avant#Control_Group#0004
+French#FR-Tenor-1#Glissando#avant#Glissando_Group#0000
+French#FR-Tenor-1#Glissando#avant#Glissando_Group#0001
+French#FR-Tenor-1#Glissando#avant#Glissando_Group#0002
+French#FR-Tenor-1#Glissando#avant#Glissando_Group#0003
+French#FR-Tenor-1#Glissando#avant#Glissando_Group#0004
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0000
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0001
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0002
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0003
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0004
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0005
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0006
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Control_Group#0007
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0000
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0001
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0002
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0003
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0004
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0005
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0006
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Falsetto_Group#0007
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0000
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0001
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0002
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0003
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0004
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0005
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0006
+French#FR-Tenor-1#Mixed_Voice_and_Falsetto#avant#Mixed_Voice_Group#0007
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Control_Group#0000
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Control_Group#0001
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Control_Group#0002
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Control_Group#0003
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Control_Group#0004
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Falsetto_Group#0000
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Falsetto_Group#0001
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Falsetto_Group#0002
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Falsetto_Group#0003
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Falsetto_Group#0004
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Mixed_Voice_Group#0000
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Mixed_Voice_Group#0001
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Mixed_Voice_Group#0002
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Mixed_Voice_Group#0003
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Meer aus Farben#Mixed_Voice_Group#0004
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0000
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0001
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0002
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0003
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0004
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0005
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Control_Group#0006
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0000
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0001
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0002
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0003
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0004
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0005
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Falsetto_Group#0006
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0000
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0001
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0002
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0003
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0004
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0005
+German#DE-Soprano-1#Mixed_Voice_and_Falsetto#Mitten Im Paradies#Mixed_Voice_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0000
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0001
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0002
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0003
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0004
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0005
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0007
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Control_Group#0008
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0000
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0001
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0002
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0003
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0004
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0005
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0007
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Falsetto_Group#0008
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0000
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0001
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0002
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0003
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0004
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0005
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0007
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Der Gartner#Mixed_Voice_Group#0008
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0000
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0001
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0002
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0004
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0005
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Control_Group#0007
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0000
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0001
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0002
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0004
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0005
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Falsetto_Group#0007
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0000
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0001
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0002
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0004
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0005
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0006
+German#DE-Tenor-1#Mixed_Voice_and_Falsetto#Wohin#Mixed_Voice_Group#0007
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Breathy_Group#0000
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Breathy_Group#0001
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Breathy_Group#0002
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Breathy_Group#0003
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Control_Group#0000
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Control_Group#0001
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Control_Group#0002
+Italian#IT-Bass-1#Breathy#O sole che sorgi da Gange#Control_Group#0003
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Control_Group#0000
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Control_Group#0001
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Control_Group#0002
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Control_Group#0003
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Glissando_Group#0000
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Glissando_Group#0001
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Glissando_Group#0002
+Italian#IT-Bass-1#Glissando#O sole che sorgi da Gange#Glissando_Group#0003
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Control_Group#0000
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Control_Group#0001
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Control_Group#0002
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Control_Group#0003
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Falsetto_Group#0000
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Falsetto_Group#0001
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Falsetto_Group#0002
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Falsetto_Group#0003
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Mixed_Voice_Group#0000
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Mixed_Voice_Group#0001
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Mixed_Voice_Group#0002
+Italian#IT-Bass-1#Mixed_Voice_and_Falsetto#O sole che sorgi da Gange#Mixed_Voice_Group#0003
+Italian#IT-Bass-1#Vibrato#O sole che sorgi da Gange#Control_Group#0000
+Italian#IT-Bass-1#Vibrato#O sole che sorgi da Gange#Control_Group#0001
+Italian#IT-Bass-1#Vibrato#O sole che sorgi da Gange#Control_Group#0002
+Italian#IT-Bass-1#Vibrato#O sole che sorgi da Gange#Vibrato_Group#0000
+Italian#IT-Bass-1#Vibrato#O sole che sorgi da Gange#Vibrato_Group#0001
+Italian#IT-Bass-1#Vibrato#O sole che sorgi da Gange#Vibrato_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Control_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Control_Group#0001
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Control_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Falsetto_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Falsetto_Group#0001
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Falsetto_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Mixed_Voice_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Mixed_Voice_Group#0001
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#O mio babbino caro#Mixed_Voice_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#caro mio ben#Control_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#caro mio ben#Falsetto_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#caro mio ben#Mixed_Voice_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Control_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Control_Group#0001
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Control_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Control_Group#0003
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Control_Group#0004
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Falsetto_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Falsetto_Group#0001
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Falsetto_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Falsetto_Group#0003
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Falsetto_Group#0004
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Mixed_Voice_Group#0000
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Mixed_Voice_Group#0001
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Mixed_Voice_Group#0002
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Mixed_Voice_Group#0003
+Italian#IT-Soprano-1#Mixed_Voice_and_Falsetto#gia il sole dal gange#Mixed_Voice_Group#0004
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Control_Group#0000
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Control_Group#0001
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Control_Group#0002
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Control_Group#0003
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Control_Group#0004
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Control_Group#0005
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Falsetto_Group#0000
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Falsetto_Group#0001
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Falsetto_Group#0002
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Falsetto_Group#0003
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Falsetto_Group#0004
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Falsetto_Group#0005
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Mixed_Voice_Group#0000
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Mixed_Voice_Group#0001
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Mixed_Voice_Group#0002
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Mixed_Voice_Group#0003
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Mixed_Voice_Group#0004
+Japanese#JA-Soprano-1#Mixed_Voice_and_Falsetto#大好きだよ#Mixed_Voice_Group#0005
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0000
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0001
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0002
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0003
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0004
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0005
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0006
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Control_Group#0007
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0000
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0001
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0002
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0003
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0004
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0005
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0006
+Japanese#JA-Soprano-1#Pharyngeal#大好きだよ#Pharyngeal_Group#0007
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0000
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0001
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0002
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0003
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0004
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0005
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0006
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0007
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0008
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0009
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0010
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0011
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0012
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0013
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Control_Group#0014
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0000
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0001
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0002
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0003
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0004
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0005
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0006
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0007
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0008
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0009
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0010
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0011
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0012
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0013
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Falsetto_Group#0014
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0000
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0001
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0002
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0003
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0004
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0005
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0006
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0007
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0008
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0009
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0010
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0011
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0012
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0013
+Japanese#JA-Tenor-1#Mixed_Voice_and_Falsetto#水色#Mixed_Voice_Group#0014
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0000
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0001
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0002
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0003
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0004
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0005
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0006
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Control_Group#0007
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0000
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0001
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0002
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0003
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0004
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0005
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0006
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Falsetto_Group#0007
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0000
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0001
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0002
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0003
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0004
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0005
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0006
+Korean#KO-Soprano-2#Mixed_Voice_and_Falsetto#나야 나#Mixed_Voice_Group#0007
+Korean#KO-Tenor-1#Breathy#첫 눈#Breathy_Group#0000
+Korean#KO-Tenor-1#Breathy#첫 눈#Breathy_Group#0001
+Korean#KO-Tenor-1#Breathy#첫 눈#Breathy_Group#0002
+Korean#KO-Tenor-1#Breathy#첫 눈#Breathy_Group#0003
+Korean#KO-Tenor-1#Breathy#첫 눈#Control_Group#0000
+Korean#KO-Tenor-1#Breathy#첫 눈#Control_Group#0001
+Korean#KO-Tenor-1#Breathy#첫 눈#Control_Group#0002
+Korean#KO-Tenor-1#Breathy#첫 눈#Control_Group#0003
+Korean#KO-Tenor-1#Glissando#첫 눈#Control_Group#0000
+Korean#KO-Tenor-1#Glissando#첫 눈#Control_Group#0001
+Korean#KO-Tenor-1#Glissando#첫 눈#Control_Group#0002
+Korean#KO-Tenor-1#Glissando#첫 눈#Control_Group#0003
+Korean#KO-Tenor-1#Glissando#첫 눈#Control_Group#0004
+Korean#KO-Tenor-1#Glissando#첫 눈#Control_Group#0005
+Korean#KO-Tenor-1#Glissando#첫 눈#Glissando_Group#0000
+Korean#KO-Tenor-1#Glissando#첫 눈#Glissando_Group#0001
+Korean#KO-Tenor-1#Glissando#첫 눈#Glissando_Group#0002
+Korean#KO-Tenor-1#Glissando#첫 눈#Glissando_Group#0003
+Korean#KO-Tenor-1#Glissando#첫 눈#Glissando_Group#0004
+Korean#KO-Tenor-1#Glissando#첫 눈#Glissando_Group#0005
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Control_Group#0000
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Control_Group#0001
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Control_Group#0002
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Control_Group#0003
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Control_Group#0004
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Falsetto_Group#0000
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Falsetto_Group#0001
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Falsetto_Group#0002
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Falsetto_Group#0003
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Falsetto_Group#0004
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Mixed_Voice_Group#0000
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Mixed_Voice_Group#0001
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Mixed_Voice_Group#0002
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Mixed_Voice_Group#0003
+Korean#KO-Tenor-1#Mixed_Voice_and_Falsetto#첫 눈#Mixed_Voice_Group#0004
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Control_Group#0000
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Control_Group#0002
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Control_Group#0003
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Control_Group#0004
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Pharyngeal_Group#0000
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Pharyngeal_Group#0001
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Pharyngeal_Group#0002
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Pharyngeal_Group#0003
+Korean#KO-Tenor-1#Pharyngeal#첫 눈#Pharyngeal_Group#0004
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0000
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0001
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0002
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0003
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0004
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0005
+Korean#KO-Tenor-1#Vibrato#첫 눈#Control_Group#0006
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0000
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0001
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0002
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0003
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0004
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0005
+Korean#KO-Tenor-1#Vibrato#첫 눈#Vibrato_Group#0006
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0000
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0001
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0002
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0003
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0004
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0005
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0006
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0007
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0008
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0009
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0010
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0011
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0012
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0013
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0014
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0015
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0016
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Control_Group#0017
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0000
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0001
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0002
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0003
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0004
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0005
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0006
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0007
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0008
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0009
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0010
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0011
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0012
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0013
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0014
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0015
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0016
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Falsetto_Group#0017
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0000
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0001
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0002
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0003
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0004
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0005
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0006
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0007
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0008
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0009
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0010
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0011
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0012
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0013
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0014
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0015
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0016
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Все мосты сожжены#Mixed_Voice_Group#0017
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Control_Group#0000
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Control_Group#0001
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Control_Group#0002
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Control_Group#0003
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Control_Group#0004
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Control_Group#0005
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Falsetto_Group#0000
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Falsetto_Group#0001
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Falsetto_Group#0002
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Falsetto_Group#0003
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Falsetto_Group#0004
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Falsetto_Group#0005
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Mixed_Voice_Group#0000
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Mixed_Voice_Group#0001
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Mixed_Voice_Group#0002
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Mixed_Voice_Group#0003
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Mixed_Voice_Group#0004
+Russian#RU-Alto-1#Mixed_Voice_and_Falsetto#Свободна и счастье 2#Mixed_Voice_Group#0005
+Russian#RU-Alto-1#Pharyngeal#Свободна и счастье 2#Control_Group#0000
+Russian#RU-Alto-1#Pharyngeal#Свободна и счастье 2#Control_Group#0001
+Russian#RU-Alto-1#Pharyngeal#Свободна и счастье 2#Pharyngeal_Group#0000
+Russian#RU-Alto-1#Pharyngeal#Свободна и счастье 2#Pharyngeal_Group#0001
+Spanish#ES-Bass-1#Breathy#Corre#Breathy_Group#0000
+Spanish#ES-Bass-1#Breathy#Corre#Breathy_Group#0001
+Spanish#ES-Bass-1#Breathy#Corre#Breathy_Group#0002
+Spanish#ES-Bass-1#Breathy#Corre#Breathy_Group#0003
+Spanish#ES-Bass-1#Breathy#Corre#Breathy_Group#0004
+Spanish#ES-Bass-1#Breathy#Corre#Breathy_Group#0005
+Spanish#ES-Bass-1#Breathy#Corre#Control_Group#0000
+Spanish#ES-Bass-1#Breathy#Corre#Control_Group#0001
+Spanish#ES-Bass-1#Breathy#Corre#Control_Group#0002
+Spanish#ES-Bass-1#Breathy#Corre#Control_Group#0003
+Spanish#ES-Bass-1#Breathy#Corre#Control_Group#0004
+Spanish#ES-Bass-1#Breathy#Corre#Control_Group#0005
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0000
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0001
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0002
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0003
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0004
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0005
+Spanish#ES-Bass-1#Glissando#Corre#Control_Group#0006
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0000
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0001
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0002
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0003
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0004
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0005
+Spanish#ES-Bass-1#Glissando#Corre#Glissando_Group#0006
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0000
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0001
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0002
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0003
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0004
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0005
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0006
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Control_Group#0007
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0000
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0001
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0002
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0003
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0004
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0005
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0006
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Falsetto_Group#0007
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0000
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0001
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0002
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0003
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0004
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0005
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0006
+Spanish#ES-Bass-1#Mixed_Voice_and_Falsetto#Por Una Cabeza#Mixed_Voice_Group#0007
+Spanish#ES-Bass-1#Pharyngeal#Corre#Control_Group#0000
+Spanish#ES-Bass-1#Pharyngeal#Corre#Control_Group#0001
+Spanish#ES-Bass-1#Pharyngeal#Corre#Control_Group#0002
+Spanish#ES-Bass-1#Pharyngeal#Corre#Control_Group#0003
+Spanish#ES-Bass-1#Pharyngeal#Corre#Control_Group#0004
+Spanish#ES-Bass-1#Pharyngeal#Corre#Control_Group#0005
+Spanish#ES-Bass-1#Pharyngeal#Corre#Pharyngeal_Group#0000
+Spanish#ES-Bass-1#Pharyngeal#Corre#Pharyngeal_Group#0001
+Spanish#ES-Bass-1#Pharyngeal#Corre#Pharyngeal_Group#0002
+Spanish#ES-Bass-1#Pharyngeal#Corre#Pharyngeal_Group#0003
+Spanish#ES-Bass-1#Pharyngeal#Corre#Pharyngeal_Group#0004
+Spanish#ES-Bass-1#Pharyngeal#Corre#Pharyngeal_Group#0005
+Spanish#ES-Bass-1#Vibrato#Corre#Control_Group#0000
+Spanish#ES-Bass-1#Vibrato#Corre#Control_Group#0001
+Spanish#ES-Bass-1#Vibrato#Corre#Control_Group#0002
+Spanish#ES-Bass-1#Vibrato#Corre#Control_Group#0003
+Spanish#ES-Bass-1#Vibrato#Corre#Control_Group#0004
+Spanish#ES-Bass-1#Vibrato#Corre#Control_Group#0005
+Spanish#ES-Bass-1#Vibrato#Corre#Vibrato_Group#0000
+Spanish#ES-Bass-1#Vibrato#Corre#Vibrato_Group#0001
+Spanish#ES-Bass-1#Vibrato#Corre#Vibrato_Group#0002
+Spanish#ES-Bass-1#Vibrato#Corre#Vibrato_Group#0003
+Spanish#ES-Bass-1#Vibrato#Corre#Vibrato_Group#0004
+Spanish#ES-Bass-1#Vibrato#Corre#Vibrato_Group#0005
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Breathy_Group#0000
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Breathy_Group#0001
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Breathy_Group#0002
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Breathy_Group#0003
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Breathy_Group#0004
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Breathy_Group#0005
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Control_Group#0000
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Control_Group#0001
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Control_Group#0002
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Control_Group#0003
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Control_Group#0004
+Spanish#ES-Soprano-1#Breathy#Si Yo Fuera Un CHICO#Control_Group#0005
+Spanish#ES-Soprano-1#Glissando#Si Yo Fuera Un CHICO#Control_Group#0000
+Spanish#ES-Soprano-1#Glissando#Si Yo Fuera Un CHICO#Control_Group#0001
+Spanish#ES-Soprano-1#Glissando#Si Yo Fuera Un CHICO#Control_Group#0002
+Spanish#ES-Soprano-1#Glissando#Si Yo Fuera Un CHICO#Glissando_Group#0000
+Spanish#ES-Soprano-1#Glissando#Si Yo Fuera Un CHICO#Glissando_Group#0001
+Spanish#ES-Soprano-1#Glissando#Si Yo Fuera Un CHICO#Glissando_Group#0002
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0000
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0001
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0002
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0003
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0004
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0005
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0006
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Control_Group#0007
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0000
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0001
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0002
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0003
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0004
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0005
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0006
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Falsetto_Group#0007
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0000
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0001
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0002
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0003
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0004
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0005
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0006
+Spanish#ES-Soprano-1#Mixed_Voice_and_Falsetto#Si Yo Fuera Un CHICO#Mixed_Voice_Group#0007
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Control_Group#0000
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Control_Group#0001
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Control_Group#0002
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Control_Group#0003
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Pharyngeal_Group#0000
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Pharyngeal_Group#0001
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Pharyngeal_Group#0002
+Spanish#ES-Soprano-1#Pharyngeal#Si Yo Fuera Un CHICO#Pharyngeal_Group#0003
