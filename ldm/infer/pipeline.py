@@ -107,10 +107,11 @@ def prompt_mel(path, mel_net=None, max_frames=MAX_PROMPT_FRAMES):
             raise ValueError(f'prompt {path}: expected a mel of shape [80, T], found {mel.shape}')
     else:
         import pyloudnorm as pyln
+        import soundfile as sf
         import torchaudio
         from preprocess.NAT_mel import MelNet
-        wav, sr = torchaudio.load(path)
-        wav = torchaudio.functional.resample(wav.mean(0, keepdim=True), orig_freq=sr, new_freq=SR)[0]
+        wav, sr = sf.read(path, dtype='float32', always_2d=True)  # not torchaudio.load: from torchaudio 2.9 on it needs torchcodec
+        wav = torchaudio.functional.resample(torch.from_numpy(wav.mean(1)), orig_freq=sr, new_freq=SR)
         wav = wav[:(max_frames + 1) * HOP].numpy()
         if len(wav) < SR:
             raise ValueError(f'prompt {path}: {len(wav) / SR:.2f} s of audio; at least 1 s is needed, 3 s or more is better')
@@ -129,6 +130,14 @@ def prompt_mel(path, mel_net=None, max_frames=MAX_PROMPT_FRAMES):
     if mel.shape[1] < 3 * FPS:
         warnings.append(f'the prompt is only {mel.shape[1] / FPS:.1f} s long')
     return mel, warnings
+
+
+def default_device():
+    """cuda, else mps (Apple GPU), else cpu."""
+    import torch
+    if torch.cuda.is_available():
+        return 'cuda'
+    return 'mps' if torch.backends.mps.is_available() else 'cpu'
 
 
 def blank_prompt():
@@ -165,16 +174,17 @@ def make_batch(prepared, caption, prompt=None, f0=None):
 
 
 class Singer:
-    """The stage-2 model with its vocoder and pitch tracker."""
+    """The stage-2 model with its vocoder and pitch tracker. device: None = default_device(); the vocoder runs
+    on the model's device, the pitch tracker on CUDA if there is one, else on the CPU (MPS is no faster for it)."""
 
-    def __init__(self, ckpt='useful_ckpts/tcsinger2_gtsinger.ckpt', config='configs/tcsinger2.yaml', device='cuda',
+    def __init__(self, ckpt='useful_ckpts/tcsinger2_gtsinger.ckpt', config='configs/tcsinger2.yaml', device=None,
                  vocoder_ckpt='useful_ckpts/hifigan', rmvpe_ckpt='useful_ckpts/rmvpe/model.pt', model=None, step=None):
         from ldm.stage2_samples import load_stage2
         from vocoder.hifigan.hifigan_nsf import HifiGAN_NSF
         self.ckpt = ckpt
         with contextlib.redirect_stdout(io.StringIO()):  # the constructors print their layer lists
-            self.model, self.step = (model, step) if model is not None else load_stage2(ckpt, config, device)
-            self.vocoder = HifiGAN_NSF(vocoder_ckpt)
+            self.model, self.step = (model, step) if model is not None else load_stage2(ckpt, config, device or default_device())
+            self.vocoder = HifiGAN_NSF(vocoder_ckpt, device=self.model.device)
         self.predictor = DurationPredictor(self.model.first_stage_model)
         self.rmvpe_ckpt, self._rmvpe, self._mel_net = rmvpe_ckpt, None, None
 

@@ -23,7 +23,10 @@ LANG_SUFFIX = {'Chinese': '_zh', 'English': '_en', 'French': '_fr', 'German': '_
                'Japanese': '_ja', 'Korean': '_ko', 'Russian': '_ru', 'Spanish': '_es'}
 REST = ('<AP>', '<SP>')
 LEXICON_PATH = os.path.join(os.path.dirname(PHONE_SET_PATH), 'lexicon.json')
-MFA_DICT_DIR = os.environ.get('TCSINGER2_MFA_DICT', '/notebooks/GTSinger/Data-Process/utils/mfa_dict')
+# data/mfa_dict where scripts/setup_env_mac.sh downloads them, else the GTSinger checkout on /notebooks
+_LOCAL_MFA_DICT = os.path.join(os.path.dirname(os.path.dirname(PHONE_SET_PATH)), 'mfa_dict')
+MFA_DICT_DIR = os.environ.get('TCSINGER2_MFA_DICT', _LOCAL_MFA_DICT if os.path.isdir(_LOCAL_MFA_DICT)
+                              else '/notebooks/GTSinger/Data-Process/utils/mfa_dict')
 WEAK_DICT = ('Japanese', 'Korean')
 ACCENT_LANGS = ('French', 'Italian', 'Spanish')  # lyrics are often typed without their accents
 # as preprocess/gtsinger_build_metadata.py cleans the labels

@@ -57,7 +57,7 @@ def parse_args():
     g.add_argument('--steps', type=int, default=25)
     g.add_argument('--ckpt', default='useful_ckpts/tcsinger2_gtsinger.ckpt')
     g.add_argument('--config', default='configs/tcsinger2.yaml')
-    g.add_argument('--device', default='cuda')
+    g.add_argument('--device', help='cuda, mps or cpu; default: cuda, else mps (Apple GPU), else cpu')
     p.add_argument('--dry_run', action='store_true', help='stop after the front-end: print phonemes and timings (no GPU needed)')
     p.add_argument('--phonemes', metavar='LANGUAGE', help='list the phonemes of a language and exit')
     return p.parse_args()

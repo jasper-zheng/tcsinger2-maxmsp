@@ -191,12 +191,14 @@ class FrozenCLAPFLANEmbedder(AbstractEncoder):
 
 
 class FrozenTextVocalEmbedder(AbstractEncoder):
-    def __init__(self, version="google/t5-v1_1-large", device="cuda", max_length=77, freeze=True):
+    # device=None: built on the CPU and moved with the model (.to(device)); the tokens follow the encoder's weights
+    def __init__(self, version="google/t5-v1_1-large", device=None, max_length=77, freeze=True):
         super().__init__()
 
         self.tokenizer = T5Tokenizer.from_pretrained(version)
-        self.transformer = T5EncoderModel.from_pretrained(version).to(device)
-        self.device = device
+        self.transformer = T5EncoderModel.from_pretrained(version)
+        if device is not None:
+            self.transformer = self.transformer.to(device)
         self.max_length = max_length  # TODO: typical value?
         if freeze:
             self.freeze()
@@ -217,7 +219,7 @@ class FrozenTextVocalEmbedder(AbstractEncoder):
         if new:
             batch_encoding = self.tokenizer(text=new, truncation=True, max_length=self.max_length, return_length=True,
                                             return_overflowing_tokens=False, padding="max_length", return_tensors="pt")
-            tokens = batch_encoding["input_ids"].to(self.device if device is None else device)
+            tokens = batch_encoding["input_ids"].to(self.transformer.device if device is None else device)
             hidden = self.transformer(input_ids=tokens).last_hidden_state.detach()
             if len(cache) + len(new) > 20000:
                 cache.clear()

@@ -20,8 +20,10 @@ def denoise(wav, v=0.1):
     return librosa.istft(spec_m * np.exp(1j * spec_a), hop_length=256,
                          win_length=1024)
 
-def load_model(config_path, checkpoint_path):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def load_model(config_path, checkpoint_path, device=None):
+    if device is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = torch.device(device)
     ckpt_dict = torch.load(checkpoint_path, map_location="cpu")
     if '.yaml' in config_path:
         config = set_hparams(config_path, global_hparams=False)
@@ -50,12 +52,12 @@ class HifiGAN_NSF(torch.nn.Module):
             ckpt = sorted(glob.glob(f'{base_dir}/model_ckpt_steps_*.ckpt'), key=
             lambda x: int(re.findall(f'{base_dir}/model_ckpt_steps_(\d+).ckpt', x)[0]))[-1]
             print('| load HifiGAN: ', ckpt)
-            self.model, self.config, self.device = load_model(config_path=config_path, checkpoint_path=ckpt)
+            self.model, self.config, self.device = load_model(config_path=config_path, checkpoint_path=ckpt, device=device)
         else:
             config_path = f'{base_dir}/config.json'
             ckpt = f'{base_dir}/generator_v1'
             if os.path.exists(config_path):
-                self.model, self.config, self.device = load_model(config_path=config_path, checkpoint_path=ckpt)
+                self.model, self.config, self.device = load_model(config_path=config_path, checkpoint_path=ckpt, device=device)
 
     def extract_f0_from_mel(self, mel):
         # 提取 f0 的方法

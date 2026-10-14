@@ -102,6 +102,16 @@ python scripts/sing.py --score examples/f0_vibrato_it.json --out samples/with_f0
 
 *The score is a JSON file of words with their notes (format in `ldm/infer/score.py`); the style is a caption and/or an audio prompt; the F0 curve is optional and goes into the score as `"f0"`. `examples/README.md` lists the example scores, among them eight with the F0 of a recorded performance; `python scripts/sing.py -h` lists the options. This replaces the released `scripts/test_sing.py`, which resynthesised training rows.*
 
+Inference also runs on macOS with Apple silicon (the models run on MPS, about 2 s per 10 s score on an M4 Max once loaded). Copy `useful_ckpts/` from the training machine, then:
+
+```bash
+bash scripts/setup_env_mac.sh        # .venv with torch 2.11 (requirements-mac.txt) and the pronunciation dictionaries in data/mfa_dict
+source .venv/bin/activate
+python scripts/sing.py --score examples/twinkle_en.json --out samples/twinkle.wav --singer "female alto"
+```
+
+*`--device` defaults to `cuda`, else `mps`, else `cpu`. To sing many scores, load the model once from Python (`ldm.infer.pipeline.Singer`) instead of calling the script per score.*
+
 
 ## Acknowledgements
 

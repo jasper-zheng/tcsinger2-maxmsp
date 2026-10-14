@@ -41,3 +41,6 @@ __pycache__/
 .venv/
 .env
 untitled.txt
+
+.DS_Store
+WORK_PACKAGES.md

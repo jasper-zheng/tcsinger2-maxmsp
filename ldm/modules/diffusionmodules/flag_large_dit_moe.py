@@ -480,7 +480,8 @@ class FeedForward(nn.Module):
             dim, hidden_dim, bias=False
         )
 
-    @torch.compile
+    # compiled on CUDA only: torch.compile does not support MPS before torch 2.6 and gains nothing measurable there after
+    @(torch.compile if torch.cuda.is_available() else (lambda f: f))
     def _forward_silu_gating(self, x1, x3):
         return F.silu(x1) * x3
 

@@ -1,0 +1,42 @@
+# Inference on macOS (Apple silicon, MPS). Install with: bash scripts/setup_env_mac.sh
+# Training stays on the CUDA machine (requirements-env.txt, constraints-env.txt).
+# torch 2.11 is the newest release with a matching torchaudio; from 2.6 on the vocoder runs on MPS
+# (2.5 fails there: "Output channels > 65536 not supported at the MPS device").
+torch==2.11.0
+torchaudio==2.11.0
+torchvision==0.26.0
+numpy==1.26.4
+# scipy.signal.kaiser (vocoder/parallel_wavegan/layers/pqmf.py) is gone from scipy 1.13 on
+scipy==1.11.4
+# pytorch-lightning 1.9 imports pkg_resources, which newer setuptools no longer ship
+setuptools<70
+pytorch-lightning==1.9.5
+torchmetrics==1.2.1
+transformers==4.35.2
+tokenizers==0.15.1
+huggingface-hub==0.20.3
+sentencepiece==0.1.99
+safetensors
+einops==0.8.0
+librosa==0.10.1
+numba==0.60.0
+soundfile
+pyloudnorm==0.1.1
+audioread
+torchdyn==1.0.6
+torchlibrosa
+importlib_resources
+ftfy
+icecream
+pytorch-memlab
+pyworld
+pretty_midi
+webrtcvad-wheels==2.0.14.post1
+pypinyin==0.55.0
+omegaconf
+pandas
+matplotlib==3.8.2
+h5py
+tqdm
+packaging
+pyyaml
