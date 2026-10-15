@@ -38,7 +38,9 @@ if __name__ == '__main__':
     for path in args.ckpts:
         ckpt = torch.load(path, map_location='cpu')
         model = instantiate_from_config(OmegaConf.load(args.config).model)
-        model.load_state_dict(ckpt['state_dict'], strict=True)
+        # the export (useful_ckpts/vae_gtsinger.ckpt) has no discriminator; every other weight must match
+        missing, unexpected = model.load_state_dict(ckpt['state_dict'], strict=False)
+        assert not unexpected and all(k.startswith('loss.') for k in missing), (missing, unexpected)
         model = model.cuda().eval()
         with torch.no_grad():
             recs = [model.decode(model.encode(torch.from_numpy(m).float().cuda()[None]).mode())[0].cpu().numpy() for m in mels]

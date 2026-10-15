@@ -10,7 +10,8 @@ or the "style" of the score, or --caption with the whole string) and an audio pr
 of the voice to imitate; its first 8 s are used).
 F0, optional: "f0" in the score, a list of Hz per frame (187.5 frames/s, or the score's "f0_fps"), 0 where
 unvoiced. The curve must start with the score and follow the same melody; the output follows it. Without
-a curve, or with --no_f0, the model predicts the F0 from the notes.
+a curve, or with --no_f0, the model predicts the F0 from the notes; with --f0_model the F0 generator of WP10
+(ldm/f0gen) makes the curve instead (from the notes, the language and the F0 of the prompt).
 
 Writes <out>.wav, <out>_f0.png and <out>.json: phonemes, timings, caption, warnings, figures, and as "f0" the
 curve the model sang (predicted or given). Copy it into a score to sing it again after editing it.
@@ -47,6 +48,9 @@ def parse_args():
     g.add_argument('--prompt', help='audio prompt: a recording of the voice (or a mel .npy)')
     g = p.add_argument_group('F0')
     g.add_argument('--no_f0', action='store_true', help='predict the F0 from the notes even if the score has an "f0"')
+    g.add_argument('--f0_model', help='F0 generator (WP10, e.g. useful_ckpts/f0gen_gtsinger.ckpt) for the F0 when none is given')
+    g.add_argument('--f0_steps', type=int, default=32, help='sampling steps of the F0 generator')
+    g.add_argument('--f0_cfg', type=float, default=1.0, help='guidance scale of the F0 generator (prompt against none)')
     g = p.add_argument_group('synthesis')
     g.add_argument('--blur', dest='blur', action='store_true', default=pipeline.DEFAULT_BLUR,
                    help='label only the middle 24 frames of every phoneme piece and let the model place the boundaries')
@@ -98,10 +102,10 @@ def main():
             print_front_end(info)
             print('caption:', info['caption'] or '(none)', '| F0:', source)
         else:
-            singer = pipeline.Singer(args.ckpt, args.config, args.device)
+            singer = pipeline.Singer(args.ckpt, args.config, args.device, f0_model=args.f0_model)
             wav, info, curves = singer.sing(args.score, style=style, caption=args.caption, prompt=args.prompt, f0=f0,
                                             blur=args.blur, fit=args.fit, seed=args.seed,
-                                            cfg_scale=args.cfg_scale, steps=args.steps)
+                                            cfg_scale=args.cfg_scale, steps=args.steps, f0_steps=args.f0_steps, f0_cfg=args.f0_cfg)
             pipeline.write_outputs(args.out, wav, info, curves)
             print_front_end(info)
             print('caption:', info['caption'] or '(none)', '| prompt:', info.get('prompt', '(none)'), '| F0:', info['f0_source'])

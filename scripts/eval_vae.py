@@ -58,7 +58,9 @@ if __name__ == '__main__':
     ckpt = torch.load(args.ckpt, map_location='cpu')
     step = int(ckpt.get('global_step', 0))
     model = instantiate_from_config(OmegaConf.load(args.config).model)
-    model.load_state_dict(ckpt['state_dict'], strict=True)
+    # the export (useful_ckpts/vae_gtsinger.ckpt) has no discriminator; every other weight must match
+    missing, unexpected = model.load_state_dict(ckpt['state_dict'], strict=False)
+    assert not unexpected and all(k.startswith('loss.') for k in missing), (missing, unexpected)
     model = model.cuda().eval()
     out_dir = os.path.join(args.out_dir, f'step{step:08d}')
     os.makedirs(out_dir, exist_ok=True)

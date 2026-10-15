@@ -1,0 +1,71 @@
+# WP10: F0 generator for notes-only synthesis (ldm/f0gen). Flow-matching objective; configs/f0gen_reg.yaml is
+# the regression control with the same network and data.
+model:
+  base_learning_rate: 1.0e-04  # (2e-4 diverged at step 11,900, LOGS.md WP10) absolute: scripts/train_f0gen.sh passes --scale_lr false
+  target: ldm.f0gen.module.F0Gen
+  params:
+    objective: flow
+    warmup_steps: 2000
+    ema_decay: 0.999
+    net_config:
+      dim: 384
+      depth: 8
+      heads: 6
+
+lightning:
+  logger:
+    params:
+      version: 0
+  modelcheckpoint:  # rolling checkpoints to resume from: every 1,000 steps, newest two kept
+    params:
+      filename: '{step:08d}'
+      monitor: step
+      mode: max
+      save_top_k: 2
+      every_n_train_steps: 1000
+      save_last: false
+  callbacks:
+    progress_bar:
+      target: pytorch_lightning.callbacks.TQDMProgressBar
+      params:
+        refresh_rate: 200
+    metrics_over_trainsteps_checkpoint:  # milestones, weights only, all kept
+      params:
+        every_n_train_steps: 10000
+    image_logger:  # F0 curves of 64 fixed validation clips and their figures (ldm/f0gen/metrics.py)
+      target: ldm.f0gen.module.F0SampleLogger
+      params:
+        batch_frequency: 5000
+        n_clips: 64
+        n_plots: 8
+        steps: 32
+        cfg: 1.0
+  trainer:
+    benchmark: false
+    gradient_clip_val: 1.0
+    precision: bf16
+    replace_sampler_ddp: false
+    reload_dataloaders_every_n_epochs: 1
+    max_steps: 100000
+
+data:
+  target: main.SpectrogramDataModuleFromConfig
+  params:
+    batch_size: 8  # only used when max_tokens is not set
+    num_workers: 6
+    main_spec_dir_path: 'data/sing,data/sing_ext'
+    other_spec_dir_path: ''
+    spec_crop_len: 3760
+    max_tokens: 80000      # frame budget of a batch: clips x (longest clip + max_prompt_len)
+    max_batch_clips: 64
+    max_prompt_len: 1500
+    ext_share: 0.4
+    train:
+      target: ldm.f0gen.dataset.F0SpecsTrain
+      params:
+        specs_dataset_cfg:
+        prompt_drop: 0.2
+    validation:
+      target: ldm.f0gen.dataset.F0SpecsValidation
+      params:
+        specs_dataset_cfg:

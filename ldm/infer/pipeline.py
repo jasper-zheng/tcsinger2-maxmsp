@@ -8,6 +8,8 @@ Steps: score.py (the JSON), g2p.py (phonemes), timing.py (pieces, lengths, frame
 then the batch of the training dataset (collate_items) and CFM.synthesize with the EMA weights, and the
 vocoder with the F0 that conditioned the model: the given one, or the one predicted from the notes.
 The F0 is given as "f0" in the score, or to sing() as a file (.json, text or a recording) or an array.
+Without a given F0, Singer(f0_model=...) generates one with the F0 generator of WP10 (ldm/f0gen) and sings
+it like a given one; without f0_model the stage-2 model predicts it.
 """
 import contextlib
 import io
@@ -178,7 +180,8 @@ class Singer:
     on the model's device, the pitch tracker on CUDA if there is one, else on the CPU (MPS is no faster for it)."""
 
     def __init__(self, ckpt='useful_ckpts/tcsinger2_gtsinger.ckpt', config='configs/tcsinger2.yaml', device=None,
-                 vocoder_ckpt='useful_ckpts/hifigan', rmvpe_ckpt='useful_ckpts/rmvpe/model.pt', model=None, step=None):
+                 vocoder_ckpt='useful_ckpts/hifigan', rmvpe_ckpt='useful_ckpts/rmvpe/model.pt', model=None, step=None,
+                 f0_model=None):
         from ldm.stage2_samples import load_stage2
         from vocoder.hifigan.hifigan_nsf import HifiGAN_NSF
         self.ckpt = ckpt
@@ -186,6 +189,12 @@ class Singer:
             self.model, self.step = (model, step) if model is not None else load_stage2(ckpt, config, device or default_device())
             self.vocoder = HifiGAN_NSF(vocoder_ckpt, device=self.model.device)
         self.predictor = DurationPredictor(self.model.first_stage_model)
+        self.f0_model = f0_model
+        if f0_model:
+            from ldm.f0gen.module import load_f0gen
+            self.f0gen = load_f0gen(f0_model, self.model.device)
+        else:
+            self.f0gen = None
         self.rmvpe_ckpt, self._rmvpe, self._mel_net = rmvpe_ckpt, None, None
 
     @property
@@ -207,10 +216,10 @@ class Singer:
         return prepare(score, self.predictor, blur, fit, use_lexicon)
 
     def sing(self, score, style=None, caption=None, prompt=None, f0=None, f0_fps=None, blur=DEFAULT_BLUR, fit=DEFAULT_FIT,
-             seed=0, cfg_scale=3.0, steps=25, f0_freeze_step=0, measure=True):
+             seed=0, cfg_scale=3.0, steps=25, f0_freeze_step=0, measure=True, f0_steps=32, f0_cfg=1.0):
         """score: path, dict, Score or Prepared. style: dict of caption fields that override the score's;
         caption: a raw caption instead. prompt: audio or mel file, or a mel [80, T]. f0: see given_f0; by default
-        the "f0" of the score is sung if it has one.
+        the "f0" of the score is sung if it has one. f0_steps, f0_cfg: sampling of the F0 generator, if loaded.
         Returns (wav at 48 kHz, info dict, curves dict)."""
         import torch
         prepared = score if isinstance(score, Prepared) else self.prepare(score, blur, fit)
@@ -218,6 +227,7 @@ class Singer:
         n = prepared.n_frames
         midi, sung, nucleus = prepared.frame_masks()
         info['caption'] = make_caption(prepared.score.style, caption, **(style or {}))
+        prompt_path = prompt if isinstance(prompt, str) else None
         if isinstance(prompt, str):
             info['prompt'] = prompt
             prompt, w = prompt_mel(prompt, self.mel_net)
@@ -230,6 +240,9 @@ class Singer:
         info['warnings'] += w
         if stats is not None:
             info['f0_check'] = stats
+        if f0 is None and self.f0gen is not None:
+            f0 = self.generate_f0(prepared, prompt_path, seed, f0_steps, f0_cfg)
+            info.update(f0_source='f0gen', f0_model=self.f0_model, f0_steps=f0_steps, f0_cfg=f0_cfg)
         mode = 'predict' if f0 is None else 'given'
         info.update(mode=mode, seed=seed, cfg_scale=cfg_scale, steps=steps, ckpt=self.ckpt, ckpt_step=self.step)
 
@@ -246,10 +259,37 @@ class Singer:
             curves['f0_out'] = f0_out
             ffe, voicing, cents = f0_metrics(f0_used, f0_out)
             info['measured'] = dict(ffe_out_vs_f0_used=round(ffe, 4), voicing_err_out=round(voicing, 4), cents_out=round(cents, 1))
-            if mode == 'predict':
+            if info['f0_source'] in ('predicted', 'f0gen'):
                 note_track = np.where(sung & (midi > 0), midi, MIDI_PAD_ID)
                 info['measured']['notes_within_1'] = round(float(notes_within(f0_used, note_track)), 4)
         return wav, info, curves
+
+    def prompt_f0(self, path):
+        """F0 of a prompt for the F0 generator: tracked in a recording; for a mel .npy of the processed data, the F0
+        file next to it (melnone48000/..._mel.npy -> f0/..._f0.npy); otherwise None (no prompt)."""
+        if path is None:
+            return None
+        if path.lower().endswith('.npy'):
+            f0_path = path.replace('/melnone48000/', '/f0/').replace('_mel.npy', '_f0.npy')
+            return np.load(f0_path) if f0_path != path and os.path.exists(f0_path) else None
+        import soundfile as sf
+        wav, sr = sf.read(path, dtype='float32', always_2d=True)
+        return f0_input.track_f0(wav.mean(axis=1)[:int((MAX_PROMPT_FRAMES + 1) * HOP * sr / SR)], sr, self.rmvpe)
+
+    def generate_f0(self, prepared, prompt_path=None, seed=0, steps=32, cfg=1.0):
+        """An F0 for the score from the F0 generator (WP10), from the unblurred note tracks of its pieces."""
+        from ldm.f0gen import features
+        from ldm.f0gen.dataset import collate
+        n = prepared.n_frames
+        tr = features.tracks_from_pieces(prepared.pieces, prepared.tracks['starts'])
+        pf0 = self.prompt_f0(prompt_path)
+        prompt = features.prompt_features(pf0[:MAX_PROMPT_FRAMES]) if pf0 is not None and (pf0 > 0).any() else np.zeros((2, 0), np.float32)
+        zeros = np.zeros(n, dtype=np.float32)
+        item = dict(name=prepared.score.name, language=language_set.index(prepared.score.language), f0=zeros,
+                    ref=features.reference_pitch(tr['midi']), r=zeros, v=zeros, trust=zeros, ph=tr['ph'], midi=tr['midi'],
+                    ntype=tr['ntype'], pos=tr['pos'], onset=tr['onset'], prompt=prompt)
+        f0 = self.f0gen.generate(collate([item]), steps=steps, cfg=cfg, seed=seed)
+        return f0[0, :n].float().cpu().numpy()
 
 
 def plot_result(path, info, curves):
@@ -263,8 +303,9 @@ def plot_result(path, info, curves):
     ax.plot(t, np.where(midi > 0, midi, np.nan), color='0.6', lw=3, label='notes')
     if 'f0_out' in curves:
         ax.plot(t[:len(curves['f0_out'])], semi(curves['f0_out'][:len(t)]), color='tab:orange', lw=1, label='F0 of the output')
-    ax.plot(t, semi(curves['f0_used']), color='tab:green' if info['mode'] == 'predict' else 'tab:blue', lw=1,
-            label='predicted F0' if info['mode'] == 'predict' else 'given F0')
+    generated = info.get('f0_source') == 'f0gen'
+    ax.plot(t, semi(curves['f0_used']), color='tab:green' if info['mode'] == 'predict' or generated else 'tab:blue', lw=1,
+            label='predicted F0' if info['mode'] == 'predict' else 'generated F0' if generated else 'given F0')
     lo, hi = ax.get_ylim()
     for a, b, label in zip(starts[:-1], starts[1:], curves['labels']):
         ax.axvline(a / FPS, color='0.85', lw=0.5, zorder=0)
