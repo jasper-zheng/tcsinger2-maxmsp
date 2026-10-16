@@ -40,3 +40,5 @@ h5py
 tqdm
 packaging
 pyyaml
+# to run demo.ipynb
+ipykernel

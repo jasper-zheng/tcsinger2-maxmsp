@@ -17,7 +17,7 @@ parser.add_argument('--ckpt', required=True)
 parser.add_argument('--out', default='useful_ckpts/f0gen_gtsinger.ckpt')
 args = parser.parse_args()
 
-state = torch.load(args.ckpt, map_location='cpu')
+state = torch.load(args.ckpt, map_location='cpu', weights_only=False)
 model = load_f0gen(args.ckpt, device='cpu')
 model.ema.copy_to(model.net)
 torch.save(dict(state_dict={f'net.{k}': v for k, v in model.net.state_dict().items()}, f0gen_config=dict(state['hyper_parameters']),

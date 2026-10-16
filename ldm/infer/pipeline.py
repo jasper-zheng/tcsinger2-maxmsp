@@ -293,13 +293,14 @@ class Singer:
 
 
 def plot_result(path, info, curves):
-    import matplotlib
-    matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
+    # a Figure without pyplot: no backend is chosen, so a notebook's own is left alone (matplotlib.use('Agg')
+    # inside an IPython 9 kernel fails with matplotlib 3.8)
+    from matplotlib.figure import Figure
     midi, starts = curves['midi'].astype(float), curves['starts']
     t = np.arange(len(midi)) / FPS
     semi = lambda f: np.where(f > 0, 69 + 12 * np.log2(np.maximum(f, 1e-3) / 440.0), np.nan)
-    fig, ax = plt.subplots(figsize=(max(8, t[-1] * 1.6), 3.8))
+    fig = Figure(figsize=(max(8, t[-1] * 1.6), 3.8))
+    ax = fig.subplots()
     ax.plot(t, np.where(midi > 0, midi, np.nan), color='0.6', lw=3, label='notes')
     if 'f0_out' in curves:
         ax.plot(t[:len(curves['f0_out'])], semi(curves['f0_out'][:len(t)]), color='tab:orange', lw=1, label='F0 of the output')
@@ -320,7 +321,6 @@ def plot_result(path, info, curves):
         py_warnings.simplefilter('ignore', UserWarning)
         fig.tight_layout()
         fig.savefig(path, dpi=110)
-    plt.close(fig)
 
 
 def write_outputs(out_path, wav, info, curves=None):

@@ -131,7 +131,8 @@ class F0Gen(pl.LightningModule):
 
 def load_f0gen(path, device='cuda'):
     """An F0 generator from a training checkpoint, a milestone or an export (scripts/export_f0gen.py)."""
-    state = torch.load(path, map_location='cpu')
+    # weights_only=False: the hyperparameters are an OmegaConf DictConfig, which torch >= 2.6 refuses by default
+    state = torch.load(path, map_location='cpu', weights_only=False)
     hp = state.get('hyper_parameters') or state.get('f0gen_config')
     model = F0Gen(**hp)
     missing, unexpected = model.load_state_dict(state['state_dict'], strict=False)
