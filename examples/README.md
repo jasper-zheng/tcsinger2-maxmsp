@@ -38,3 +38,9 @@ A score like these is written from any clip of the manifest by
 `python scripts/clip_to_score.py --name "<item name>" --with_f0 [--with_durs] [--f0_fps 100] --out <file>`.
 `python scripts/checks/check_f0_examples.py` sings all of them with and without their curve and measures how
 closely the output follows it.
+
+## For Max
+
+`python scripts/score_to_max.py examples/*.json` turns scores into the conditions JSON that the Max models
+(`neural.gen~`) take, in `export/max/scores/`; see EWP3 in `EXPORTING_WORK_PACKAGES.md`. The `"f0"` of a score
+is not used there: in Max the curve comes from the F0 generator and is edited in a `buffer~`.

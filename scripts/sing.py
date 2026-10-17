@@ -67,16 +67,6 @@ def parse_args():
     return p.parse_args()
 
 
-def print_front_end(info):
-    print(f"{info['name']}: {info['language']}, {info['seconds']:.2f} s, {info['n_frames']} frames")
-    print('   start    end  word           source   notes        phoneme pieces (ms)')
-    for w in info['words']:
-        notes = ' '.join(str(m) for m, _ in w['notes']) if w['source'] != 'rest' else '-'
-        pieces = ' '.join(f"{p['ph'].rsplit('_', 1)[0] if '_' in p['ph'] else p['ph']}:{p['dur'] * 1000:.0f}"
-                          for p in (info['pieces'][i] for i in w['pieces']))
-        print(f"  {w['start']:6.2f} {w['end']:6.2f}  {w['text']:<14s} {w['source']:<8s} {notes:<12s} {pieces}")
-
-
 def main():
     args = parse_args()
     if args.phonemes:
@@ -99,7 +89,7 @@ def main():
             info['caption'] = pipeline.make_caption(prepared.score.style, args.caption, **style)
             _, source, _, w = pipeline.given_f0(prepared, f0)
             info['warnings'] += w
-            print_front_end(info)
+            pipeline.print_front_end(info)
             print('caption:', info['caption'] or '(none)', '| F0:', source)
         else:
             singer = pipeline.Singer(args.ckpt, args.config, args.device, f0_model=args.f0_model)
@@ -107,7 +97,7 @@ def main():
                                             blur=args.blur, fit=args.fit, seed=args.seed,
                                             cfg_scale=args.cfg_scale, steps=args.steps, f0_steps=args.f0_steps, f0_cfg=args.f0_cfg)
             pipeline.write_outputs(args.out, wav, info, curves)
-            print_front_end(info)
+            pipeline.print_front_end(info)
             print('caption:', info['caption'] or '(none)', '| prompt:', info.get('prompt', '(none)'), '| F0:', info['f0_source'])
             print('measured:', ', '.join(f'{k} {v}' for k, v in info['measured'].items()))
             print('wrote', os.path.splitext(args.out)[0] + '.wav')

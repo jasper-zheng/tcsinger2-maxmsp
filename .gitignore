@@ -46,3 +46,9 @@ untitled.txt
 WORK_PACKAGES.md
 demo.ipynb
 EXPORTING_WORK_PACKAGES.md
+# Max export: artifacts (EWP0-8) and the generated data of the JS front-end (scripts/build_max_js_data.py)
+/export/artifacts/
+/export/max/js/data/
+
+*probe.js
+*.maxpat

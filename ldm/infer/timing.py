@@ -31,6 +31,7 @@ IPA_VOWELS = set('aeiouyøœɐɑɔəɛɪɨɯɵʉʊʌʏæ')
 ZH_INITIALS = {'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h', 'j', 'q', 'x', 'zh', 'ch', 'sh', 'r', 'z', 'c', 's'}
 MIN_PRED = 0.01      # seconds; a predicted length below this is raised to it before the fit
 MIN_NUCLEUS = 0.4    # a nucleus keeps at least this share of its predicted length, else the whole note is scaled
+TIE = 0.01           # frames: a boundary this close below a half frame rounds up, like one on it (see to_frames)
 
 
 @dataclass
@@ -200,8 +201,11 @@ def to_frames(pieces, blur=False):
     """Per-frame tracks of timed pieces, through the training code.
 
     Piece boundaries are rounded to frames on the running time, so that they do not drift against a given
-    F0. Returns dict(mel2ph, ph, midi: int32 [T]; starts: first frame of every piece, with T appended)."""
-    ends = np.round(np.cumsum([p.dur for p in pieces]) * FPS).astype(int)
+    F0. A boundary on a half frame (a note boundary at a whole second is one: 1 s = 187.5 frames) rounds
+    up, and so does one up to TIE frames below it, so that the float32 front-end of the Max export
+    (EWP3) rounds every boundary the same way. Returns dict(mel2ph, ph, midi: int32 [T]; starts: first
+    frame of every piece, with T appended)."""
+    ends = np.floor(np.cumsum([p.dur for p in pieces]) * FPS + 0.5 + TIE).astype(int)
     starts = np.concatenate([[0], ends])
     durs = np.diff(starts) / FPS  # whole frames each; frame_tracks rounds them to the same numbers
     mel2ph, ph, midi = frame_tracks([ph2id[p.ph] for p in pieces], durs, [p.midi for p in pieces], int(ends[-1]))

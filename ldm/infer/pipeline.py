@@ -323,6 +323,17 @@ def plot_result(path, info, curves):
         fig.savefig(path, dpi=110)
 
 
+def print_front_end(info):
+    """Prints the words, notes and phoneme pieces of Prepared.describe() (sing.py, score_to_max.py)."""
+    print(f"{info['name']}: {info['language']}, {info['seconds']:.2f} s, {info['n_frames']} frames")
+    print('   start    end  word           source   notes        phoneme pieces (ms)')
+    for w in info['words']:
+        notes = ' '.join(str(m) for m, _ in w['notes']) if w['source'] != 'rest' else '-'
+        pieces = ' '.join(f"{p['ph'].rsplit('_', 1)[0] if '_' in p['ph'] else p['ph']}:{p['dur'] * 1000:.0f}"
+                          for p in (info['pieces'][i] for i in w['pieces']))
+        print(f"  {w['start']:6.2f} {w['end']:6.2f}  {w['text']:<14s} {w['source']:<8s} {notes:<12s} {pieces}")
+
+
 def write_outputs(out_path, wav, info, curves=None):
     """<out>.wav (48 kHz, 16 bit), <out>_f0.png and <out>.json: what was sung, warnings, figures, and as "f0" (with
     "f0_fps") the F0 that conditioned the model, in the form a score takes it, so that a predicted curve can be
