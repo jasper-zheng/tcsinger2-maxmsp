@@ -9,7 +9,10 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from scipy.signal import kaiser
+try:
+    from scipy.signal import kaiser
+except ImportError:  # scipy >= 1.13 has it in scipy.signal.windows only
+    from scipy.signal.windows import kaiser
 
 
 def design_prototype_filter(taps=62, cutoff_ratio=0.15, beta=9.0):

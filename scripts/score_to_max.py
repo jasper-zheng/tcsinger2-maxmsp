@@ -16,7 +16,8 @@ curve always comes from `score2f0` (and may be edited there); an "f0" in the sco
 The same file is made inside Max, without Python, by export/max/js (tcs_max.js in a [v8] object).
 
 Usage (from TCSinger2/):
-  python scripts/score_to_max.py examples/*.json                      # -> export/max/scores/<file>.json
+  python scripts/score_to_max.py examples/*.json                      # -> examples/<file>.max.json, next to each score
+  python scripts/score_to_max.py examples/*.json --out_dir somewhere  # -> somewhere/<file>.json
   python scripts/score_to_max.py examples/twinkle_en.json --out x.json --singer "female alto" --emotion happy
 """
 import argparse
@@ -42,7 +43,7 @@ N_PIECES = 256  # P of the export
 CONDITIONS = {'ph': (int, PH_PAD_ID), 'midi': (int, MIDI_PAD_ID), 'note_dur': (float, 0.0), 'note_type': (int, NOTE_TYPE_PAD),
               'ph_dur': (float, 0.0), 'nucleus': (int, 0), 'note_id': (int, -1)}
 PREDICT = -1.0  # ph_dur of a piece whose length the model predicts
-OUT_DIR = 'export/max/scores'
+SUFFIX = '.max.json'  # the default output, next to its score (git-ignored: *.max.json)
 
 
 def note_ids(pieces):
@@ -100,6 +101,29 @@ def self_check(prepared, d, predictor):
     return problems
 
 
+def graph_check(prepared, d, vae, frontend=None):
+    """Problems (empty = none) of the in-graph front-end (export/modules/frontend.py, run here in PyTorch) on the
+    conditions, against the Python front-end's frames and F0 generator tracks."""
+    import torch
+    from export.modules.frontend import FrontEnd
+    from ldm.f0gen.features import reference_pitch, tracks_from_pieces
+    fe = frontend or FrontEnd(vae).eval()
+    conds = [torch.tensor([d[k]], dtype=torch.float32 if kind is float else torch.long) for k, (kind, _) in CONDITIONS.items()]
+    with torch.no_grad():
+        got = {k: v[0].numpy() for k, v in fe(*conds).items()}
+    want = prepared.tracks
+    n = int(want['starts'][-1])
+    if int(got['n']) != n or not np.array_equal(got['ends'][:len(want['starts']) - 1], want['starts'][1:]):
+        return [f"in-graph front-end: piece ends differ ({int(got['n'])} frames, Python {n})"]
+    problems = [f'in-graph front-end: {k} differs' for k in ('mel2ph', 'ph', 'midi') if not np.array_equal(got[k][:n], want[k])]
+    f0 = tracks_from_pieces(prepared.pieces, want['starts'])
+    f0['ref'] = reference_pitch(f0['midi'])
+    problems += [f'in-graph front-end: F0 generator track {k} differs' for k in ('ntype', 'onset') if not np.array_equal(got[k][:n], f0[k])]
+    problems += [f'in-graph front-end: F0 generator track {k} differs by {np.abs(got[k][..., :n] - f0[k]).max():.1e}'
+                 for k in ('pos', 'ref') if np.abs(got[k][..., :n] - f0[k]).max() > 1e-5]
+    return problems
+
+
 def convert(path, predictor, caption=None, style=None):
     """Score file -> (the dict to write, the Prepared score)."""
     prepared = pipeline.prepare(path, predictor, blur=False, fit=pipeline.DEFAULT_FIT)
@@ -128,7 +152,7 @@ def parse_args():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('scores', nargs='+', help='JSON score(s), in the format of ldm/infer/score.py')
     o = p.add_mutually_exclusive_group()
-    o.add_argument('--out_dir', default=OUT_DIR, help=f'where <score file name>.json goes (default {OUT_DIR})')
+    o.add_argument('--out_dir', help=f'where <score file name>.json goes (default: next to the score, as <name>{SUFFIX})')
     o.add_argument('--out', help='output file, for a single score')
     g = p.add_argument_group('style (overrides the "style" of the score)')
     g.add_argument('--singer', help=f'<gender> or <gender> <range>: {GENDERS} x {VOCAL_RANGES}')
@@ -138,6 +162,8 @@ def parse_args():
     g.add_argument('--caption', help='the whole caption instead, e.g. "Singer: female alto, Emotion: happy"; "" for none')
     p.add_argument('--config', default='configs/tcsinger2.yaml', help='config with the VAE that holds the duration predictor')
     p.add_argument('--no_check', action='store_true', help='skip the check that the conditions alone give the same frames')
+    p.add_argument('--check', action='store_true', help='also run the in-graph front-end of the export (export/modules/frontend.py) '
+                   'on the conditions and check that it gives the same frames')
     p.add_argument('--quiet', action='store_true', help='no phoneme table')
     return p.parse_args()
 
@@ -151,6 +177,8 @@ def main():
     style = dict(singer=args.singer, emotion=args.emotion, singing_method=args.singing_method, technique=args.technique)
     failed = 0
     for path in args.scores:
+        if path.endswith(SUFFIX):  # an output of this script, e.g. matched by examples/*.json
+            continue
         try:
             d, prepared = convert(path, predictor, args.caption, style)
         except (ScoreError, G2PError, ValueError, FileNotFoundError) as e:
@@ -159,9 +187,12 @@ def main():
             continue
         if not args.no_check:
             problems = self_check(prepared, d, predictor)
+            if args.check:
+                problems += graph_check(prepared, d, predictor.vae)
             if problems:
                 d['meta']['warnings'].append('conditions check: ' + '; '.join(problems))
-        out = args.out or os.path.join(args.out_dir, os.path.splitext(os.path.basename(path))[0] + '.json')
+        stem = os.path.splitext(os.path.basename(path))[0]
+        out = args.out or (os.path.join(args.out_dir, stem + '.json') if args.out_dir else os.path.join(os.path.dirname(path), stem + SUFFIX))
         os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
         with open(out, 'w', encoding='utf-8') as f:
             f.write(dumps(d))

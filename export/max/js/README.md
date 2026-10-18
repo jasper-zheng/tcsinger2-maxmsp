@@ -15,7 +15,7 @@ The models predict the lengths themselves, so no duration model runs here. See E
    python scripts/build_max_js_data.py
    ```
    It writes `data/tcs_data_*.js`: 58 MB, generated and not committed. It needs `data/mfa_dict/` (`scripts/setup_env_mac.sh`) and pypinyin.
-2. **Open a patch in this folder:** `tcs_frontend_test.maxpat` (pick a score, try the style messages) or `tcs_probe.maxpat` (what Max's v8 supports). Max finds the modules next to the patch by name, and the data as `./data/…`. Max's `require` does not look into subfolders for a bare name, so the data is always required by its relative path. A patch elsewhere needs this folder in Max's file path (Options → File Preferences); whether `./data/…` then resolves is not checked yet.
+2. **Open a patch in this folder:** `tcsinger2.maxpat` (see "Singing in Max" below; `python scripts/build_max_patches.py` writes it). Max finds the modules next to the patch by name, and the data as `./data/…`. Max's `require` does not look into subfolders for a bare name, so the data is always required by its relative path. A patch elsewhere needs this folder in Max's file path (Options → File Preferences); whether `./data/…` then resolves is not checked yet.
 
 ## Messages
 
@@ -62,16 +62,36 @@ They are CommonJS modules and require each other by bare name (`require("tcs_g2p
 | `tcs_data.js`, `tcs_util.js` | data loading; Python's `round`, `repr` and `searchsorted` |
 | `tcs_max.js` | the Max object |
 
+## Singing in Max (EWP7)
+
+`tcsinger2.maxpat` puts the front-end together with the two models. It covers the two uses: notes only, and an F0 edited by hand.
+
+**Setup, once:**
+1. Build the data, as above.
+2. Export the models (`export/export_f0.py`, `export/export_sing.py`, into `export/artifacts/`) and put them next to the patch, as git-ignored symlinks:
+   ```
+   cd export/max/js
+   for f in ../../artifacts/tcsinger2_f0.{pte,json} ../../artifacts/tcsinger2_sing.{pte,json,tokenizer.json,tokenizer.config.json}; do ln -sf $f .; done
+   ```
+3. Make the patches: `python scripts/build_max_patches.py`. `*.maxpat` is git-ignored, so this script is their source.
+
+**Using `tcsinger2.maxpat`:**
+1. **Open a score:** the front-end sends its conditions `dict` to both objects, and its caption to `neural.tokenizer` → `sing`.
+2. **`score2f0`:** `generate` writes the curve into `buffer~ tcs_f0`, as MIDI pitch at 50 Hz with 0 = unvoiced, then sends `init f0 tcs_f0` to `sing`. With the toggle on, `sing` runs straight after (notes only).
+3. **Edit the curve (optional):** `mode draw` in the `waveform~`, then draw.
+4. **`sing`:** `generate` writes `buffer~ tcs_out` at 48 kHz. `start` plays it and `writewave` saves it.
+
+**Times on an M4 Max:**
+- `score2f0`: about 0.37 s;
+- `sing`: about 0.9 s;
+- the first call after loading: a few seconds more.
+
+**Memory:** about 20 GB while generating. MLX keeps that memory after a patch closes and reuses it, so it goes back to the system only when Max quits.
+
+**The check:** the export's checks against Python, in Max as well, are in `export_check/`, which is not part of the repository.
+
+**Pitfall:** the front-end's `dict` must go straight to its receivers. Through a `[t a …]` it arrived empty, and the objects then ran on zero conditions. Max sends an outlet's messages right to left by position.
+
 ## Parity test
 
-```
-python scripts/checks/make_frontend_corpus.py          # .venv: 3,496 scores with Python's results
-node export/max/js/test/parity.js export/artifacts/frontend_corpus.jsonl
-```
-
-**What it checks:**
-- Every score must give the same conditions, caption, meta, words and pieces as Python.
-- A failing score must fail with the same error class at the same `words[i]`.
-- Display times may differ by one frame. A boundary exactly on the rounding edge (0.49 frame) can round either way with Python's predicted lengths in the sum.
-
-**Python version:** the port adds floats left to right, like `sum()` in Python 3.11 (`.venv`). Python 3.12 and later use a compensated float `sum`, which could move a boundary in the last bit.
+The JS front-end equals the Python one on 3,496 scores (EWP3). That test is in `export_check/` with the export's other checks, which are not part of the repository.

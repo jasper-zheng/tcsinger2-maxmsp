@@ -103,8 +103,9 @@ class F0Gen(pl.LightningModule):
         return [opt], [dict(scheduler=torch.optim.lr_scheduler.LambdaLR(opt, warm), interval='step', frequency=1)]
 
     @torch.no_grad()
-    def generate(self, batch, steps=32, cfg=1.0, seed=0, ema=True, return_target=False):
-        """F0 in Hz [B, T] (0 = unvoiced) for a collated batch (ldm.f0gen.dataset.collate)."""
+    def generate(self, batch, steps=32, cfg=1.0, seed=0, ema=True, return_target=False, noise=None):
+        """F0 in Hz [B, T] (0 = unvoiced) for a collated batch (ldm.f0gen.dataset.collate). noise: the starting
+        [B, 2, T] instead of the one drawn from `seed`."""
         batch = {k: v.to(self.device) if torch.is_tensor(v) else v for k, v in batch.items()}
         scope = self.ema_scope() if ema else contextlib.nullcontext()
         with scope:
@@ -113,8 +114,12 @@ class F0Gen(pl.LightningModule):
                 out = self.net(torch.zeros(B, 2, T, device=self.device), torch.zeros(B, device=self.device), batch)
                 x = torch.stack([out[:, 0], torch.where(out[:, 1] > 0, 1.0, -1.0)], dim=1)
             else:
-                g = torch.Generator(device=self.device).manual_seed(seed)
-                x = torch.randn(B, 2, T, device=self.device, generator=g)
+                if noise is None:
+                    g = torch.Generator(device=self.device).manual_seed(seed)
+                    x = torch.randn(B, 2, T, device=self.device, generator=g)
+                else:
+                    assert tuple(noise.shape) == (B, 2, T), (tuple(noise.shape), (B, 2, T))
+                    x = noise.to(self.device)
                 style = self.net.style(batch)
                 null = self.net.lang(batch['language']) + self.net.prompt.null[None]
                 ts = torch.linspace(0, 1, steps + 1, device=self.device)

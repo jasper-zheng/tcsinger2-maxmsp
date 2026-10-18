@@ -216,11 +216,14 @@ class Singer:
         return prepare(score, self.predictor, blur, fit, use_lexicon)
 
     def sing(self, score, style=None, caption=None, prompt=None, f0=None, f0_fps=None, blur=DEFAULT_BLUR, fit=DEFAULT_FIT,
-             seed=0, cfg_scale=3.0, steps=25, f0_freeze_step=0, measure=True, f0_steps=32, f0_cfg=1.0):
+             seed=0, cfg_scale=3.0, steps=25, f0_freeze_step=0, measure=True, f0_steps=32, f0_cfg=1.0,
+             noise=None, f0_noise=None, callback=None):
         """score: path, dict, Score or Prepared. style: dict of caption fields that override the score's;
         caption: a raw caption instead. prompt: audio or mel file, or a mel [80, T]. f0: see given_f0; by default
         the "f0" of the score is sung if it has one. f0_steps, f0_cfg: sampling of the F0 generator, if loaded.
-        Returns (wav at 48 kHz, info dict, curves dict)."""
+        noise, f0_noise: starting noise given from outside (tensors at least as long as the padded batch, cut to
+        it: [1, 20, >= T/4] and [1, 2, >= T]), else drawn from `seed`; callback(i, latent): after each Euler update
+        of stage 2. Returns (wav at 48 kHz, info dict, curves dict)."""
         import torch
         prepared = score if isinstance(score, Prepared) else self.prepare(score, blur, fit)
         info = prepared.describe()
@@ -241,15 +244,18 @@ class Singer:
         if stats is not None:
             info['f0_check'] = stats
         if f0 is None and self.f0gen is not None:
-            f0 = self.generate_f0(prepared, prompt_path, seed, f0_steps, f0_cfg)
+            f0 = self.generate_f0(prepared, prompt_path, seed, f0_steps, f0_cfg, f0_noise)
             info.update(f0_source='f0gen', f0_model=self.f0_model, f0_steps=f0_steps, f0_cfg=f0_cfg)
         mode = 'predict' if f0 is None else 'given'
         info.update(mode=mode, seed=seed, cfg_scale=cfg_scale, steps=steps, ckpt=self.ckpt, ckpt_step=self.step)
 
         batch = make_batch(prepared, info['caption'], prompt, f0)
+        if noise is not None:
+            noise = torch.as_tensor(noise)[:, :, :-(-batch['ph'].shape[-1] // 4)]
         torch.manual_seed(seed)
         with self.model.ema_scope():
-            mel, f0_used = self.model.synthesize(batch, f0_mode=mode, cfg_scale=cfg_scale, steps=steps, f0_freeze_step=f0_freeze_step)
+            mel, f0_used = self.model.synthesize(batch, f0_mode=mode, cfg_scale=cfg_scale, steps=steps, f0_freeze_step=f0_freeze_step,
+                                                 noise=noise, callback=callback)
         mel, f0_used = mel[0, :, :n].float().cpu().numpy(), f0_used[0, :n].float().cpu().numpy()
         wav = self.vocoder.vocode(mel, f0=f0_used)
         curves = dict(mel=mel, f0_used=f0_used, midi=midi, starts=prepared.tracks['starts'], labels=[p.ph for p in prepared.pieces])
@@ -276,8 +282,10 @@ class Singer:
         wav, sr = sf.read(path, dtype='float32', always_2d=True)
         return f0_input.track_f0(wav.mean(axis=1)[:int((MAX_PROMPT_FRAMES + 1) * HOP * sr / SR)], sr, self.rmvpe)
 
-    def generate_f0(self, prepared, prompt_path=None, seed=0, steps=32, cfg=1.0):
-        """An F0 for the score from the F0 generator (WP10), from the unblurred note tracks of its pieces."""
+    def generate_f0(self, prepared, prompt_path=None, seed=0, steps=32, cfg=1.0, noise=None):
+        """An F0 for the score from the F0 generator (WP10), from the unblurred note tracks of its pieces.
+        noise: [1, 2, >= T], cut to the padded length, instead of the one drawn from `seed`."""
+        import torch
         from ldm.f0gen import features
         from ldm.f0gen.dataset import collate
         n = prepared.n_frames
@@ -288,7 +296,10 @@ class Singer:
         item = dict(name=prepared.score.name, language=language_set.index(prepared.score.language), f0=zeros,
                     ref=features.reference_pitch(tr['midi']), r=zeros, v=zeros, trust=zeros, ph=tr['ph'], midi=tr['midi'],
                     ntype=tr['ntype'], pos=tr['pos'], onset=tr['onset'], prompt=prompt)
-        f0 = self.f0gen.generate(collate([item]), steps=steps, cfg=cfg, seed=seed)
+        batch = collate([item])
+        if noise is not None:
+            noise = torch.as_tensor(noise)[:, :, :batch['mask'].shape[1]]
+        f0 = self.f0gen.generate(batch, steps=steps, cfg=cfg, seed=seed, noise=noise)
         return f0[0, :n].float().cpu().numpy()
 
 
