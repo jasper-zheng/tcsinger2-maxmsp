@@ -105,12 +105,16 @@ if __name__ == '__main__':
     parser.add_argument('--gtsinger_meta', default='data/meta/metadata.json')
     parser.add_argument('--unseen_singers', nargs='*', default=None, help='held-out singer IDs instead of the seeded draw')
     parser.add_argument('--seed', type=int, default=1234)
+    parser.add_argument('--corpora', nargs='*', default=list(CORPORA), choices=list(CORPORA),
+                        help='corpora to merge (default: every one whose metadata is built)')
     args = parser.parse_args()
 
     gts = gtsinger_titles(args.gtsinger_meta)
     known = dict(gts)  # title -> split, grows corpus by corpus
     merged, unseen_all, report = [], {}, []
     for name, (fn, n_unseen, target_h) in CORPORA.items():
+        if name not in args.corpora:
+            continue
         path = os.path.join(args.meta_dir, fn)
         if not os.path.exists(path):
             print(f'{name}: {path} not built yet, skipped')

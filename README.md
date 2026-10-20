@@ -25,92 +25,114 @@ Visit our [demo page](https://aaronz345.github.io/TCSinger2Demo/) for audio samp
 - Experimental results show that TCSinger 2 outperforms baseline models in subjective and objective metrics across multiple tasks: **zero-shot style transfer, multi-level style control, cross-lingual style transfer, and speech-to-singing style transfer**.
 
 ## Quick Start
-We provide an example of how you can train your own model and infer with TCSinger 2.
 
-To try on your own dataset, clone this repo on your local machine with NVIDIA GPU + CUDA cuDNN and follow the instructions below.
+This repository trains TCSinger 2 on GTSinger, optionally with M4Singer, Opencpop and OpenSinger. Its pipeline fixes
+the released data preparation, training and inference code, and adds an F0 generator for synthesis from notes alone.
+The inputs are notes and lyrics (a JSON score), a style (a text caption and/or an audio prompt) and, optionally, an F0
+curve that the output follows.
 
-### Dependencies
+The pipeline is in [`scripts-new/`](scripts-new/README.md); its README has the details (data, disk space, times,
+resuming, the work directory). Run every step from the repository root.
 
-A suitable [conda](https://conda.io/) environment named `tcsinger2` can be created
-and activated with:
+### Setup
 
+Needs Linux, Python 3.11, an NVIDIA GPU with CUDA 12.1 (training was done on one RTX A6000 48 GB) and a C compiler.
+
+1. Edit `scripts-new/config.sh`: the venv (`TCS_VENV`), the work directory for data, runs and exports (`TCS_WORK`,
+   default `work/`), the GTSinger source and, optionally, the extra corpora.
+2. Install the packages and download FLAN-T5-large, RMVPE and the pronunciation dictionaries:
+
+```bash
+bash scripts-new/0_setup.sh
 ```
-conda create -n tcsinger2 python=3.10
-conda install --yes --file requirements.txt
-conda activate tcsinger2
-```
 
-### Multi-GPU
-
-By default, this implementation uses as many GPUs in parallel as returned by `torch.cuda.device_count()`. 
-You can specify which GPUs to use by setting the `CUDA_DEVICES_AVAILABLE` environment variable before running the training module.
+3. Download the [HiFi-GAN vocoder](https://drive.google.com/drive/folders/1ve9cm_Yn3CQWSqkzMuRL33Uj1BNh51lR?usp=drive_link)
+   into `useful_ckpts/hifigan`.
 
 ## Train your own model
 
-### Data Preparation 
+### Data Preparation
 
-1. Collect your own singing dataset, e.g., including [GTSinger](https://github.com/AaronZ345/GTSinger), and feel free to add extra data annotated with alignment tools, like [STARS](https://github.com/gwx314/STARS).  
-2. Place `metadata.json` (fields: `ph`, `word`, `item_name`, `ph_durs`, `wav_fn`, `singer`, `ep_pitches`, `ep_notedurs`, `ep_types`, `emotion`, `singing_method`, `technique`) and `phone_set.json` (complete phoneme list) in the desired folder and update the paths in `preprocess/preprocess.py`.  (*A reference `metadata.json` is provided in **GTSinger***.) 
-Please present the `singer` attribute as a description specifying the performer’s gender and vocal range, and render the `technique` attribute either as a concise text listing of skills or as a natural-language account that conveys their sequential order.
-3. Extract F0 for each `.wav`, save as `*_f0.npy`, e.g. with **[RMVPE](https://github.com/Dream-High/RMVPE)**.
-4. Download [HIFI-GAN](https://drive.google.com/drive/folders/1ve9cm_Yn3CQWSqkzMuRL33Uj1BNh51lR?usp=drive_link) as the vocoder in `useful_ckpts/hifigan` and [FLAN-T5](https://huggingface.co/google/flan-t5-large) in `useful_ckpts/flan-t5-large`.
-5. Preprocess the dataset:
-
-```bash
-export PYTHONPATH=.
-python preprocess/preprocess.py
-```
-
-*Tip: You may also convert your dataset directly to a `.csv` instead of using `metadata.json`.*
-
-6. Compute mel-spectrograms:
+1. Get [GTSinger](https://github.com/AaronZ345/GTSinger): either its nine language zips (set `GTSINGER_ZIPS`) or the
+   extracted tree from Hugging Face (set `GTSINGER_ROOT`):
+   `huggingface-cli download GTSinger/GTSinger --repo-type dataset --local-dir <dir> --exclude 'processed/*'`.
+2. Build the metadata (cleaned annotations, note-split phonemes, phone set, singer-held-out splits), the mels, the F0
+   (RMVPE), the style captions and the training manifest:
 
 ```bash
-python preprocess/mel_spec_48k.py --tsv_path data/new/data.tsv --num_gpus 1 --max_duration 20
+bash scripts-new/1_data_gtsinger.sh
 ```
 
-7. Post-process:
+3. Optionally add the Chinese corpora M4Singer, Opencpop and OpenSinger (set `EXTRA_CORPORA` and their archives).
+   OpenSinger has no timings, so a small aligner is trained to place its phonemes:
 
 ```bash
-python preprocess/postprocess_data.py
+bash scripts-new/2_data_extra.sh
 ```
+
+Every step can be run again after an interruption: it skips what has finished.
 
 ### Training TCSinger 2
 
-1. Train the VAE module and duration predictor
+Each command starts its run, resumes it from its newest checkpoint, or skips it once finished, and then exports the
+model to `work/ckpts/`. Extra arguments go to `main.py` (e.g. `--max_steps 300000` to train further).
+
+1. The VAE and the duration predictor (about 17 h on an RTX A6000):
+
 ```bash
-python main.py --base configs/ae_singing.yaml -t --gpus 0,1,2,3,4,5,6,7
+nohup bash scripts-new/3_train_vae.sh > /dev/null 2>&1 &
 ```
 
-2. Train the main TCSinger 2 model
-   
+2. The main TCSinger 2 model (about 29 h on an RTX A6000):
+
 ```bash
-python main.py --base configs/tcsinger2.yaml -t --gpus 0,1,2,3,4,5,6,7
+nohup bash scripts-new/4_train_stage2.sh > /dev/null 2>&1 &
 ```
 
-*Notes*  
-- Adjust the compression ratio in the config files (and related scripts).  
-- Change the padding length in the dataloader as needed.  
-- To train the Custom Audio Encoder, format data as in `ldm/data/joinaudiodataset_con.py`, set the trained VAE path in `ae_con.yaml`, and proceed with training.
+3. The F0 generator for notes-only synthesis (about 6.5 h; it needs only the data, not the models above):
+
+```bash
+nohup bash scripts-new/5_train_f0gen.sh > /dev/null 2>&1 &
+```
+
+`bash scripts-new/run_all.sh` runs the data steps and all three trainings in order. Logs are in `work/logs/`.
+
+*Notes*
+- One GPU was used and tested (`GPUS` in `scripts-new/config.sh`).
+- The Custom Audio Encoder for speech prompts (`configs/ae_con.yaml`) is not part of the pipeline; the main model does
+  not use it.
+- Evaluation scripts are in `scripts/`.
 
 ### Inference with TCSinger 2
 
+With the models the pipeline trained:
+
 ```bash
-python scripts/sing.py --score examples/twinkle_en.json --out samples/twinkle.wav --singer "female alto"
-python scripts/sing.py --score examples/f0_vibrato_it.json --out samples/with_f0.wav --prompt voice.wav
+bash scripts-new/6_sing.sh --score examples/twinkle_en.json --out samples/twinkle.wav --singer "female alto"
+bash scripts-new/6_sing.sh --score examples/twinkle_en.json --out samples/twinkle_f0gen.wav --f0_model work/ckpts/f0gen.ckpt
+bash scripts-new/6_sing.sh --score examples/f0_vibrato_it.json --out samples/with_f0.wav --prompt voice.wav
 ```
 
-*The score is a JSON file of words with their notes (format in `ldm/infer/score.py`); the style is a caption and/or an audio prompt; the F0 curve is optional and goes into the score as `"f0"`. `examples/README.md` lists the example scores, among them eight with the F0 of a recorded performance; `python scripts/sing.py -h` lists the options. This replaces the released `scripts/test_sing.py`, which resynthesised training rows.*
+*The score is a JSON file of words with their notes (format in `ldm/infer/score.py`); the style is a caption and/or an
+audio prompt; the F0 curve is optional and goes into the score as `"f0"`. Without it the main model predicts the F0
+from the notes, or the F0 generator makes it with `--f0_model`. `examples/README.md` lists the example scores, among
+them eight with the F0 of a recorded performance; `bash scripts-new/6_sing.sh -h` lists the options. This replaces
+the released `scripts/test_sing.py`, which resynthesised training rows.*
 
-Inference also runs on macOS with Apple silicon (the models run on MPS, about 2 s per 10 s score on an M4 Max once loaded). Copy `useful_ckpts/` from the training machine, then:
+`python scripts-new/py/sing.py` takes the same options and defaults to models in `useful_ckpts/`
+(`tcsinger2_gtsinger.ckpt`, `vae_gtsinger.ckpt`) with `configs/tcsinger2.yaml`.
+
+Inference also runs on macOS with Apple silicon (the models run on MPS, about 2 s per 10 s score on an M4 Max once
+loaded). Copy `useful_ckpts/` from the training machine, then:
 
 ```bash
 bash scripts/setup_env_mac.sh        # .venv with torch 2.11 (requirements-mac.txt) and the pronunciation dictionaries in data/mfa_dict
 source .venv/bin/activate
-python scripts/sing.py --score examples/twinkle_en.json --out samples/twinkle.wav --singer "female alto"
+python scripts-new/py/sing.py --score examples/twinkle_en.json --out samples/twinkle.wav --singer "female alto"
 ```
 
-*`--device` defaults to `cuda`, else `mps`, else `cpu`. To sing many scores, load the model once from Python (`ldm.infer.pipeline.Singer`) instead of calling the script per score.*
+*`--device` defaults to `cuda`, else `mps`, else `cpu`. To sing many scores, load the model once from Python
+(`ldm.infer.pipeline.Singer`) instead of calling the script per score.*
 
 
 ## Acknowledgements

@@ -46,6 +46,7 @@ parser.add_argument('--stage2_config', default='configs/tcsinger2.yaml')
 parser.add_argument('--synth', type=int, default=0, help='clips to synthesise with stage 2 (0 = none)')
 parser.add_argument('--out_dir', default='samples/wp10')
 parser.add_argument('--table_only', action='store_true', help='only print the table of the results found')
+parser.add_argument('--save_curves', action='store_true', help='also write <label>_curves.npz (the curve of every seed and clip)')
 args = parser.parse_args()
 
 out_dir = os.path.join(args.out_dir, args.split)
@@ -142,7 +143,7 @@ def evaluate(method):
         summary['by_corpus']['GTSinger unseen KO/IT'] = summary['by_corpus'].get('GTSinger')
     if len(per_seed) > 1:
         summary['all']['seed_spread_cents'] = round(float(np.nanmedian([f0_metrics(a, b)[2] for a, b in zip(per_seed[0], per_seed[1])])), 2)
-    return summary, clips, per_seed[0]
+    return summary, clips, per_seed
 
 
 def synthesise(curves_by_label):
@@ -206,8 +207,12 @@ curves_by_label = {}
 if not args.table_only or args.synth:
     for method in args.methods:
         label = label_of(method)
-        summary, clips, curves = evaluate(method)
-        curves_by_label[label] = curves
+        summary, clips, per_seed = evaluate(method)
+        curves_by_label[label] = per_seed[0]
+        if args.save_curves:
+            np.savez_compressed(os.path.join(out_dir, f'{label}_curves.npz'), names=np.array([it['name'] for it in items]),
+                                **{f's{seed}_c{k}': np.asarray(c, np.float32) for seed, curves in enumerate(per_seed)
+                                   for k, c in enumerate(curves)})
         if not args.table_only:
             with open(os.path.join(out_dir, f'{label}.json'), 'w', encoding='utf-8') as f:
                 json.dump(dict(method=method, label=label, split=args.split, clips=len(items), seeds=args.seeds, steps=args.steps,

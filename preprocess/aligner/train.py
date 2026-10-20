@@ -125,6 +125,8 @@ if __name__ == '__main__':
                         num_workers=args.num_workers, collate_fn=collate, persistent_workers=args.num_workers > 0,
                         worker_init_fn=lambda w: np.random.seed(args.seed * 1000 + w))
     valid = DataLoader(Clips(valid_df, class_id, args.crop, False), batch_size=16, num_workers=min(4, args.num_workers), collate_fn=collate)
+    if len(loader) == 0:  # drop_last: the loop below would never take a step
+        raise SystemExit(f'error: {len(train_df)} training clips, fewer than one batch of {args.batch_size}')
 
     config = dict(hidden=args.hidden, layers=args.layers)
     model = FrameClassifier(len(classes), **config).to(device)

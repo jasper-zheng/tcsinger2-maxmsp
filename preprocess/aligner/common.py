@@ -5,6 +5,7 @@ aligned by a Viterbi pass over its known phoneme sequence, in which a rest may b
 the first syllable, between syllables and after the last one.
 """
 import json
+import os
 
 import numba
 import numpy as np
@@ -17,7 +18,9 @@ REST = ('<AP>', '<SP>')
 INITIALS = {p + '_zh' for p in 'b p m f d t n l g k h j q x zh ch sh r z c s'.split()}
 
 
-def load_classes(phone_set='data/meta/phone_set.json'):
+def load_classes(phone_set=None):
+    """REST and the Chinese phonemes of the phone set (TCSINGER2_PHONE_SET if set, as in ldm/data/phone_set.py)."""
+    phone_set = phone_set or os.environ.get('TCSINGER2_PHONE_SET', 'data/meta/phone_set.json')
     with open(phone_set, encoding='utf-8') as f:
         phones = json.load(f)
     return list(REST) + sorted(p for p in phones if p.endswith('_zh'))

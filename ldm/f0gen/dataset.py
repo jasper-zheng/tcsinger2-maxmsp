@@ -1,6 +1,6 @@
 """Dataset of the F0 generator (WP10): the stage-2 manifests, F0 files only.
 
-Every F0 of the manifests is held in memory, read from one cache file (CACHE_DIR, built on first use, about
+Every F0 of the manifests is held in memory, read from one cache file (CACHE_DIR, or TCSINGER2_F0GEN_CACHE if set; built on first use, about
 5 min; rebuilt when a manifest names an F0 file it lacks). Batching is the stage-2 one
 (JoinManifestSpecs.epoch_batches: clips of similar length, a frame budget, a share of the extra corpora).
 
@@ -20,7 +20,7 @@ from ldm.data.phone_set import MIDI_PAD_ID, NOTE_TYPE_PAD, PH_PAD_ID, ph2id
 from ldm.data.tcsinger2_dataset import JoinManifestSpecs
 from ldm.f0gen import features
 
-CACHE_DIR = '/notebooks/data/f0gen_cache'
+CACHE_DIR = os.environ.get('TCSINGER2_F0GEN_CACHE', '/notebooks/data/f0gen_cache')
 
 
 def load_f0_cache(paths, cache_dir=CACHE_DIR):
