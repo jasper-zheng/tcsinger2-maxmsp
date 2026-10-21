@@ -6,7 +6,8 @@ id, so no slot is ever reused. The runtime keeps every tensor of a call in its s
 then holds all its intermediates, about 51 GB on the M4 Max (more than its 48 GB), and swaps. Upstream ExecuTorch
 fixed this after 1.3.1 by coalescing slots that share (id_space, idx) into one runtime id; apply() installs
 that fix (the two methods as upstream has them) on the builder of this process, when the installed one lacks
-it. It changes which slot holds a tensor, not what is computed.
+it. It changes which slot holds a tensor, not what is computed. ExecuTorch 1.5.1 (neural_tilde 0.1.0) has the fix,
+so there apply() does nothing.
 
     from export import mlx_slots
     mlx_slots.apply()   # before lowering

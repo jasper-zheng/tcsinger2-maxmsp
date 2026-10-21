@@ -15,8 +15,8 @@ The module is export.modules.sing.SingPipeline; `--steps` points of the stage-2 
 
 Writes <out>.pte, <out>.json and the tokenizer bundle (<out>.tokenizer.json, <out>.tokenizer.config.json).
 
-Usage (from TCSinger2/, in et131):
-  ~/miniforge3/envs/et131/bin/python export/export_sing.py [--steps 8] [--out export/artifacts/tcsinger2_sing]
+Usage (from TCSinger2/, in envs/et151, see export/requirements.txt):
+  envs/et151/bin/python export/export_sing.py [--steps 8] [--out export/artifacts/tcsinger2_sing]
 """
 import argparse
 import contextlib

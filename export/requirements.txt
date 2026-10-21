@@ -1,0 +1,17 @@
+# Export environment for export/export_sing.py and export/export_f0.py (neural_tilde 0.1.0, ExecuTorch 1.5.1).
+# The executorch version must match the runtime the neural_tilde externals link. Build it with:
+#   uv venv envs/et151 --python 3.12 --python-preference only-managed
+#   uv pip install --python envs/et151/bin/python -r "$HOME/Documents/Max 9/Packages/neural_tilde/requirements.txt"
+#   uv pip install --python envs/et151/bin/python -e "$HOME/Documents/Max 9/Packages/neural_tilde" --no-deps
+#   uv pip install --python envs/et151/bin/python -r export/requirements.txt
+# The first install gives torch 2.14.0, executorch 1.5.1, coremltools 9.0 and cached_conv.
+einops==0.8.2
+omegaconf==2.3.1
+scipy==1.17.1
+sentencepiece==0.2.1
+tokenizers==0.22.2
+transformers==5.0.0rc1
+pillow==12.2.0
+pandas
+soundfile
+pypinyin

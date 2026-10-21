@@ -1,5 +1,5 @@
 """The parts of TCSinger2 as plain nn.Modules (EWP0), built without Lightning or instantiate_from_config, so that
-they load in the ExecuTorch env (et131: torch 2.12, transformers 5) as in the repo's .venv.
+they load in the ExecuTorch env (envs/et151: torch 2.14, transformers 5) as in the repo's .venv.
 
     from export.modules.load import load_all
     parts = load_all()   # dit, vae, t5, vocoder, f0net, scale_factor; eval mode, CPU, fp32

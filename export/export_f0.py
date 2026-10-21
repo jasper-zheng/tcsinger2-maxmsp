@@ -11,8 +11,8 @@ The module is export.modules.score2f0.F0Pipeline; `--f0_steps` Euler steps of th
 
 Writes <out>.pte, <out>.json and <out>.export.json.
 
-Usage (from TCSinger2/, in et131):
-  ~/miniforge3/envs/et131/bin/python export/export_f0.py [--f0_steps 16] [--out export/artifacts/tcsinger2_f0]
+Usage (from TCSinger2/, in envs/et151, see export/requirements.txt):
+  envs/et151/bin/python export/export_f0.py [--f0_steps 16] [--out export/artifacts/tcsinger2_f0]
 """
 import argparse
 import contextlib

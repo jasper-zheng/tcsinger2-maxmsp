@@ -117,7 +117,35 @@ function nfc(s) {
 
 const isNumber = (v) => typeof v === "number" && !Number.isNaN(v);
 
+// a string to UTF-8 bytes (e.g. for Max's File.writebytes)
+function utf8Encode(s) {
+  const out = [];
+  for (const ch of s) {
+    const c = ch.codePointAt(0);
+    if (c < 0x80) out.push(c);
+    else if (c < 0x800) out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+    else if (c < 0x10000) out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    else out.push(0xf0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+  }
+  return out;
+}
+
+// UTF-8 bytes (e.g. from Max's File.readbytes) to a string
+function utf8Decode(bytes) {
+  let s = "";
+  for (let i = 0; i < bytes.length;) {
+    const b = bytes[i++] & 0xff;
+    let cp;
+    if (b < 0x80) cp = b;
+    else if (b < 0xe0) cp = ((b & 0x1f) << 6) | (bytes[i++] & 0x3f);
+    else if (b < 0xf0) cp = ((b & 0x0f) << 12) | ((bytes[i++] & 0x3f) << 6) | (bytes[i++] & 0x3f);
+    else cp = ((b & 0x07) << 18) | ((bytes[i++] & 0x3f) << 12) | ((bytes[i++] & 0x3f) << 6) | (bytes[i++] & 0x3f);
+    s += String.fromCodePoint(cp);
+  }
+  return s;
+}
+
 module.exports = {
   TcsError, scoreError, g2pError, valueError, own, has, reprStr, repr, pyRound, searchsortedRight, cumsum, pySum,
-  stripChars, nfc, HAS_NORMALIZE, isNumber,
+  stripChars, nfc, HAS_NORMALIZE, isNumber, utf8Encode, utf8Decode,
 };

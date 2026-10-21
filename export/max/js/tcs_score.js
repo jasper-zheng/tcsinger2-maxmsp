@@ -152,4 +152,4 @@ function scoreSeconds(score) {
   return pySum(score.words.map(wordSeconds));
 }
 
-module.exports = { parseScore, noteToMidi, wordSeconds, scoreSeconds, MAX_SECONDS, F0_FPS };
+module.exports = { parseScore, noteToMidi, wordSeconds, scoreSeconds, MAX_SECONDS, MAX_MIDI, F0_FPS };

@@ -46,6 +46,7 @@ untitled.txt
 WORK_PACKAGES.md
 demo.ipynb
 EXPORTING_WORK_PACKAGES.md
+UI_WORK_PACKAGES.md
 # Max export: the exported models and constants, the generated data of the JS front-end
 # (scripts/build_max_js_data.py) and the model symlinks next to the patch
 /export/artifacts/
@@ -58,3 +59,5 @@ EXPORTING_WORK_PACKAGES.md
 
 *probe.js
 *.maxpat
+
+reference.png
