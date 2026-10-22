@@ -7,6 +7,7 @@
 //    maxBeats, beatsPerBar, snap,         how far the roll goes; 4/4 by default; snap "1/1" ... "1/16" or "off"
 //    limitSeconds, midiLo, midiHi,        display settings: the shaded limit and the pitch rows (TCSinger2's by default)
 //    showPh}                              the front-end's phonemes drawn above the words (UWP5)
+// (The mode, notes or F0, is the editor's, tcs_ui_edit.js: the toolbar's layout takes it.)
 //
 // The roll is the box less the keys (left), the ruler (top) and the toolbar with the status line (bottom). Row m (a
 // MIDI note) is centred at midiToY(m), so a note's box and its F0 curve value land on the same y. Snap values are note
@@ -216,10 +217,14 @@ function notesInRect(v, notes, x0, y0, x1, y1) {
 const inRestBand = (v, x, y) => x >= v.keysW && y >= v.rulerH && y < v.rulerH + REST_BAND;
 const inRoll = (v, x, y) => x >= v.keysW && x < v.w && y >= v.rulerH && y < v.h - v.statusH;
 
-// ---- the toolbar, at the left of the bottom bar: [{id, x, y, w, h, kind}] and where the status text starts
+// ---- the toolbar, at the left of the bottom bar: [{id, x, y, w, h, kind}] and where the status text starts. Its
+// tools are the mode's (UWP6): the notes' select and pencil and the snap, or the F0 curve's tools.
 
-const TOOLBAR = [["select", 20, "tool"], ["pencil", 20, "tool"], [null, 8]]
-  .concat(SNAPS.map((s) => [`snap:${s}`, s === "1/16" ? 30 : 26, "snap"]))
+const TOOLS = {
+  notes: [["select", 20, "tool"], ["pencil", 20, "tool"], [null, 8]].concat(SNAPS.map((s) => [`snap:${s}`, s === "1/16" ? 30 : 26, "snap"])),
+  f0: [["draw", 20, "tool"], ["line", 20, "tool"], ["smooth", 20, "tool"], ["erase", 20, "tool"], ["unvoice", 20, "tool"]],
+};
+const toolbar = (mode) => [["mode", 24, "mode"], [null, 8]].concat(TOOLS[mode === "f0" ? "f0" : "notes"])
   .concat([[null, 8], ["undo", 20, "action"], ["redo", 20, "action"], [null, 8], ["fit", 26, "action"], ["ph", 24, "toggle"]]);
 
 // the phonemes shown or not
@@ -227,21 +232,21 @@ function setPhonemes(v, on) {
   return { ...v, showPh: !!on };
 }
 
-function toolbarLayout(v) {
+function toolbarLayout(v, mode = "notes") {
   const y = v.h - v.statusH + 2;
   const h = Math.max(1, v.statusH - 4);
   const buttons = [];
   let x = 4;
-  for (const [id, w, kind] of TOOLBAR) {
+  for (const [id, w, kind] of toolbar(mode)) {
     if (id) buttons.push({ id, x, y, w, h, kind });
     x += w + (id ? 2 : 0);
   }
   return { buttons, textX: x + 10 };
 }
 
-function hitToolbar(v, x, y) {
+function hitToolbar(v, x, y, mode = "notes") {
   if (y < v.h - v.statusH) return null;
-  const b = toolbarLayout(v).buttons.find((r) => x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h);
+  const b = toolbarLayout(v, mode).buttons.find((r) => x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h);
   return b ? b.id : null;
 }
 

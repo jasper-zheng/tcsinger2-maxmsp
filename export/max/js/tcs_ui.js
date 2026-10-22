@@ -2,7 +2,8 @@
 // their lyrics, and the rests between them) and the F0 curve of buffer~ tcs_f0 over them, sends the notes to
 // [v8 tcs_max.js], and saves itself with the patch. It checks nothing (U10): notes may overlap, and tcs_max.js makes
 // them singable (tcs_notes.js), with warnings that come back here through `fe`. The lyrics are typed in a [textedit]
-// (U5, UWP5), and the front-end's phonemes are drawn above the words.
+// (U5, UWP5), and the front-end's phonemes are drawn above the words. In the F0 mode (UWP6) the mouse edits the curve:
+// the generated curve (from score2f0) is kept, and the working one, edited, goes into the buffer after each stroke.
 //
 // Inlet:
 //   read <file.json>, dictionary <name>   load a score (the format of ldm/infer/score.py); the view fits it
@@ -17,9 +18,15 @@
 //                                         notes' lyrics, or spaces when there is no ";" (Chinese, Japanese and Korean
 //                                         characters one per note); "-" continues a word
 //   phonemes 0|1                          hide or show the phonemes (also the toolbar's ph button)
-//   f0 refresh                            read the curve from the buffer (after score2f0's done bang)
+//   f0 refresh                            read the curve from the buffer (after score2f0's done bang): it is the generated
+//                                         curve and the working one; hand edits are dropped (U4)
 //   f0 buffer <name>, f0 clear            the buffer to read (default tcs_f0); forget the curve
-//   tool select|pencil                    the mouse's tool (also the toolbar and the B key)
+//   f0 offset <st> [<s0> <s1>]            the curve edits (UWP6), one undo step each; times in seconds. Without a range
+//   f0 vibrato <rate> <depth> [<s0> <s1>] (or with s1 <= s0, e.g. 0 0): the selected notes' spans, or the whole curve.
+//   f0 unvoice|reset|snap|smooth [<s0> <s1>]   unvoice: 0; reset: the generated curve; snap: the notes' pitches
+//   f0 draw <s> <midi> <s> <midi>..., f0 line <s0> <m0> <s1> <m1>
+//   mode notes|f0                         what the mouse edits (also the toolbar's F0 button and the F key)
+//   tool select|pencil|draw|line|smooth|erase|unvoice   the mouse's tool, and so the mode (also the toolbar and keys)
 //   select <ids...> | all | none          the selection
 //   add <start> <dur> <midi> [lyric]      a note (beats); delete [ids], move <dBeats> <dMidi>, resize <id> <start> <end>,
 //   split <id> <beat>, join [ids]         without ids: the selection
@@ -28,16 +35,21 @@
 //   view fit, view <beat0> <beat1> <midiLo> <midiHi>, zoom <fx> <fy>, scrollby <beats> <rows>
 //   snap 1/1 | 1/2 | 1/4 | 1/8 | 1/16 | off, bar <beats>    the grid (U1); a bar is 4 beats by default
 //   limit <seconds>, range <lo> <hi>      the shaded limit (20 s) and the pitch rows (1..98): display only
-//   playhead <seconds>                    the playhead (drawn; playback drives it later)
+//   play [<s>], stop                      play buffer~ tcs_out from <s> (else from the playhead, or the start) to the
+//                                         phrase's end; stop. Also a press on the ruler (play from there) and Space.
+//   stopped                               from the patch: the playback reached its end
+//   playhead <seconds>, playhead off      the playhead (the patch sends the playback position; drawn when it moves)
 //   snapshot <file.png> [scale]           draw the roll into an image file (scale 2 by default)
 //   stats [reset], report                 the paint times; a digest of the state (out of outlet 2)
 // Outlet 0: dictionary tcs_notes, after every committed edit (for tcs_max.js).
-// Outlet 1: bang when the roll has written the curve into the buffer itself (on restore): send init f0 to sing.
+// Outlet 1: bang when the roll has written the curve into the buffer itself (a curve edit, its undo, a restore): send
+//   init f0 to sing.
 // Outlet 2: ok <notes> <seconds> | warning <text> | error <text> | message <text> | stats <json> | snapshot <file> |
 //   report <json> | restored embed|pattr <notes>
 // Outlet 3: to the [textedit]: set <line> (the lyrics of the notes the line fills, whenever they change), select (a
 //   double-click on a note: its lyric is the start of the line)
-// Mouse and keys: see tcs_ui_edit.js (the toolbar at the bottom: tools, snap, undo, redo, fit). The wheel scrolls the
+// Outlet 4: the transport (UWP7): play <from_ms> <to_ms> <dur_ms> | stop, for the patch's [line~] -> [play~ tcs_out]
+// Mouse and keys: see tcs_ui_edit.js (the toolbar at the bottom: the mode, its tools, snap, undo, redo, fit, ph). The wheel scrolls the
 // pitch (a trackpad also the time); with Shift it scrolls the time, with Cmd it zooms the time and with Alt the pitch.
 //
 // Saved with the patch (U8): save() embeds the state (tcs_ui_state.js) in the box, and getvalueof/setvalueof carry it
@@ -48,12 +60,13 @@
 
 autowatch = 1;
 inlets = 1;
-outlets = 4;
-setinletassist(0, "read, dictionary, language, tempo, bang, clear, write, fe, text, phonemes, f0, tool, select, add, delete, move, resize, split, join, rest, undo, redo, copy, cut, paste, duplicate, view, zoom, scrollby, snap, bar, limit, range, playhead, snapshot, stats, report");
+outlets = 5;
+setinletassist(0, "read, dictionary, language, tempo, bang, clear, write, fe, text, phonemes, f0, mode, tool, select, add, delete, move, resize, split, join, rest, undo, redo, copy, cut, paste, duplicate, view, zoom, scrollby, snap, bar, limit, range, play, stop, stopped, playhead, snapshot, stats, report");
 setoutletassist(0, "dictionary tcs_notes: the notes for tcs_max.js");
-setoutletassist(1, "bang: the curve was written into the buffer (send init f0 to sing)");
+setoutletassist(1, "bang: the roll wrote the curve into the buffer (send init f0 to sing)");
 setoutletassist(2, "status: ok / warning / error / message / stats / snapshot / report");
 setoutletassist(3, "to the lyrics textedit: set <line>, select");
+setoutletassist(4, "the transport: play <from_ms> <to_ms> <dur_ms> | stop");
 
 mgraphics.init();
 mgraphics.relative_coords = 0;
@@ -63,6 +76,7 @@ const M = require("tcs_ui_model.js");
 const V = require("tcs_ui_view.js");
 const D = require("tcs_ui_draw.js");
 const E = require("tcs_ui_edit.js");
+const F = require("tcs_ui_f0.js");
 const N = require("tcs_notes.js");
 const ST = require("tcs_ui_state.js");
 const { utf8Decode, utf8Encode } = require("tcs_util.js");
@@ -88,11 +102,14 @@ const S = {
   labels: null,    // the phonemes of the front-end's words by first note id (D.phonemeLabels), null until it answers
   line: null,      // the lyrics line last sent to the textedit
   drawn: [],       // the phonemes of the last paint
-  f0: { buffer: "tcs_f0", gen: null, work: null, stale: false },
+  f0: { buffer: "tcs_f0", stale: false }, // the curves are the editor's (S.ed.gen, S.ed.curve: UWP6, one undo)
+  writes: 0,       // the curve written into the buffer (pokes)
+  hoverFrame: null, // the curve's frame under the pointer, in the F0 mode
   view: V.makeView(mgraphics.size[0], mgraphics.size[1]),
   hover: null,
   hoverRest: null,
   playhead: null,
+  playing: false,  // the roll asked the patch to play, and it has not stopped yet (UWP7)
   auto: null,      // {x, y, m, dx, dy} while a drag auto-scrolls
   autoTimer: null,
   paints: { ms: [], at: [], since: Date.now() },
@@ -128,9 +145,9 @@ function every(fn, ms) {
 
 function scene() {
   const g = S.ed.gesture;
-  return { model: model(), gaps: S.gaps, overlaps: S.overlaps, curve: S.f0.work, curveStale: S.f0.stale,
+  return { model: model(), gaps: S.gaps, overlaps: S.overlaps, curve: S.ed.curve, gen: S.ed.gen, curveStale: S.f0.stale,
     selection: new Set(S.ed.selection), hover: S.hover, hoverRest: S.hoverRest, playhead: S.playhead,
-    rubber: g && g.kind === "rubber" ? { x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1 } : null, tool: S.ed.tool,
+    rubber: g && g.kind === "rubber" ? { x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1 } : null, mode: S.ed.mode, tool: S.ed.tool, f0tool: S.ed.f0tool,
     canUndo: S.ed.history.past.length > 0, canRedo: S.ed.history.future.length > 0, status: S.status, phonemes: S.labels };
 }
 
@@ -168,6 +185,7 @@ function load(obj, name) {
   S.ed = E.reset(S.ed, res.model);
   S.name = res.model.name || name;
   S.hover = null;
+  S.playhead = null;
   S.view = V.fit(S.view, model());
   changed();
   // the status last: whatever it sets off (a check, a recall) then finds the change complete
@@ -234,16 +252,39 @@ function frontEnd() {
   return s;
 }
 
+// the curve under the pointer (F0 mode): its time, value and the generated value
+function curveText(j) {
+  const c = S.ed.curve;
+  const t = `${(j / F.FPS).toFixed(2)} s`;
+  const pitch = (x) => {
+    const cents = Math.round((x - Math.round(x)) * 100);
+    return `${x.toFixed(2)} (${noteName(x)} ${cents >= 0 ? "+" : ""}${cents} ct)`;
+  };
+  const now = c[j] > 0 ? pitch(c[j]) : "unvoiced";
+  const gen = S.ed.gen && S.ed.gen[j] !== c[j] ? ` · generated ${S.ed.gen[j] > 0 ? S.ed.gen[j].toFixed(2) : "unvoiced"}` : "";
+  return `${t} · ${now}${gen}`;
+}
+
+function curveState() {
+  if (!S.ed.curve) return S.ed.mode === "f0" ? " · no F0 curve: generate it" : "";
+  let s = S.f0.stale ? " · F0 stale: generate again" : "";
+  const n = F.edited(S.ed.gen, S.ed.history.curve).frames;
+  if (n) s += ` · F0: ${n} frame(s) edited`;
+  return s;
+}
+
 function statusLine() {
   const m = model();
   if (S.message) S.status = S.message;
+  else if (S.ed.mode === "f0" && S.hoverFrame !== null && S.ed.curve) S.status = curveText(S.hoverFrame) + curveState();
   else if (S.hover) {
     const n = m.notes.find((x) => x.id === S.hover.id);
     S.status = n ? `${noteName(n.midi)} · ${beatName(n.start)} · ${Math.round(n.dur * 1000) / 1000} beat(s) · ${JSON.stringify(n.lyric)}` +
       phonemeText(n.id) + frontEnd() : "";
   } else {
     S.status = `${S.name} · ${m.language} · ${Math.round(m.tempo * 100) / 100} bpm · ${M.seconds(m).toFixed(2)} / ${S.view.limitSeconds} s · ` +
-      `${m.notes.length} notes · ${S.ed.tool}` + frontEnd();
+      `${m.notes.length} notes · ${S.ed.mode === "f0" ? `F0 ${S.ed.f0tool}` : S.ed.tool}` + frontEnd() + curveState();
+    if (S.playing && S.playhead !== null) S.status = `▶ ${S.playhead.toFixed(2)} s · ${S.status}`;
   }
   redraw();
 }
@@ -253,7 +294,7 @@ function sendNotes() {
   S.fe.words = null; // no phonemes from an older answer
   S.labels = null;
   if (!m.notes.length) return;
-  if (S.f0.work) S.f0.stale = true;
+  if (S.ed.curve) S.f0.stale = true;
   S.fe.status = null; // tcs_max.js answers (through fe) while outlet 0 runs
   S.fe.warnings = [];
   const d = new Dict(NOTES_DICT);
@@ -283,7 +324,7 @@ function dictionary(name) {
   load(obj, String(name));
 }
 
-// the result of tcs_ui_edit.js: keep it; a commit sends the notes
+// the result of tcs_ui_edit.js: keep it; a commit sends the notes, a curve step writes the buffer
 function route(r) {
   S.ed = r.ed;
   if (r.view) S.view = r.view;
@@ -293,7 +334,13 @@ function route(r) {
   }
   if (r.commit) changed();
   else update();
+  if (r.curve) {
+    writeCurve();
+    if (!r.commit) notifyclients();
+  }
   if (r.focus === "lyrics") outlet(3, "select");
+  if (r.transport === "toggle") (S.playing ? stop : play)();
+  else if (r.transport) play(r.transport.at);
 }
 
 // a message's command: its errors are errors
@@ -316,10 +363,10 @@ function bang() {
 }
 
 function clear() {
-  S.f0.gen = null;
-  S.f0.work = null;
+  S.ed = E.setCurve(S.ed, null).ed;
   S.f0.stale = false;
   S.hover = null;
+  S.playhead = null;
   command(E.apply(S.ed, "clear", (m) => ({ ...m, notes: [], tail: [] }), { selection: [] }));
 }
 
@@ -389,6 +436,10 @@ function tool(t) {
   command(E.setTool(S.ed, String(t)));
 }
 
+function mode(m) {
+  command(E.setMode(S.ed, String(m)));
+}
+
 function select() {
   const a = Array.from(arguments);
   if (a[0] === "all") route(E.selectAll(S.ed));
@@ -437,47 +488,59 @@ function anything() {
   fail(`unknown message ${messagename}`);
 }
 
-// ---- the curve (U3: the generated one and the working one; the same until F0 editing, UWP6)
+// ---- the curve (U3: the generated one and the working one, which the F0 mode edits, UWP6)
 
-function f0(what, arg) {
+function f0(what) {
   const w = String(what);
-  if (w === "buffer" && arg !== undefined) S.f0.buffer = String(arg);
-  else if (w === "clear") { S.f0.gen = null; S.f0.work = null; S.f0.stale = false; }
+  const args = Array.from(arguments).slice(1);
+  if (w === "buffer" && args.length) S.f0.buffer = String(args[0]);
+  else if (w === "clear") { S.ed = E.setCurve(S.ed, null).ed; S.f0.stale = false; }
   else if (w === "refresh") {
+    let gen;
     try {
       const b = new Buffer(S.f0.buffer);
       const n = b.framecount();
       if (!(n > 0)) throw new Error(`buffer~ ${S.f0.buffer} is empty or missing`);
       const vals = b.peek(1, 0, n);
-      S.f0.gen = Array.from(typeof vals === "number" ? [vals] : vals);
-      S.f0.work = S.f0.gen.slice();
-      S.f0.stale = false;
+      gen = Array.from(typeof vals === "number" ? [vals] : vals);
     } catch (e) {
       return fail(e);
     }
-  } else return fail(`f0: expected refresh, buffer <name> or clear, not ${w}`);
+    const r = E.setCurve(S.ed, gen);
+    S.ed = r.ed;
+    S.f0.stale = false;
+    if (r.dropped) {
+      S.message = `regenerated: ${r.dropped} hand-edited frame(s) dropped`;
+      outlet(2, "message", S.message);
+    }
+  } else {
+    S.message = null;
+    return command(E.f0(S.ed, S.view, w, args));
+  }
   notifyclients();
-  redraw();
+  statusLine();
 }
 
-// the working curve into the buffer (sized to it, at 50 Hz), then outlet 1 so that sing reads it again
+// the working curve into the buffer (sized to it, at 50 Hz): one poke, then outlet 1 so that sing reads it again
 function writeCurve() {
-  if (!S.f0.work) return;
+  const c = S.ed.curve;
+  if (!c) return;
   try {
     const b = new Buffer(S.f0.buffer);
-    if (b.framecount() !== S.f0.work.length) b.send("sizeinsamps", S.f0.work.length);
+    if (b.framecount() !== c.length) b.send("sizeinsamps", c.length);
     b.send("sr", CURVE_SR);
-    b.poke(1, 0, S.f0.work);
+    b.poke(1, 0, c);
   } catch (e) {
     return fail(`f0: ${e.message}`);
   }
+  S.writes++;
   outlet(1, "bang");
 }
 
 // ---- saving with the patch (U8)
 
 function currentState() {
-  return ST.pack({ model: model(), view: S.view, f0: S.f0 });
+  return ST.pack({ model: model(), view: S.view, f0: { gen: S.ed.gen, work: S.ed.history.curve, stale: S.f0.stale } });
 }
 
 function save() {
@@ -520,12 +583,11 @@ function restore(json, via) {
     return fail(`restore (${via}): ${e.message}`);
   }
   const m = st.model || M.emptyModel(); // a roll saved empty before UWP4 had no model
-  S.ed = E.reset(S.ed, m);
+  S.ed = E.reset(S.ed, m, st.f0.work, st.f0.gen);
   S.name = m.name || (st.model ? S.name : "untitled") || "score";
-  S.f0.gen = st.f0.gen;
-  S.f0.work = st.f0.work;
   S.f0.stale = st.f0.stale;
   S.hover = null;
+  S.playhead = null;
   S.fe.status = null;
   S.labels = null;
   S.view = V.clampView({ ...S.view, ...st.view, maxBeats: V.extentBeats(m, S.view.limitSeconds) });
@@ -565,6 +627,13 @@ function report() {
   d.line = S.line;
   d.phonemes = S.labels ? [...S.labels].map(([id, l]) => ({ id, text: l.text, source: l.source, typed: l.typed, ids: l.ids })) : null;
   d.drawn = S.drawn;
+  d.mode = S.ed.mode;
+  d.f0tool = S.ed.f0tool;
+  d.gen_hash = S.ed.gen ? ST.fnv(JSON.stringify(Array.from(S.ed.gen, Math.fround))) : null;
+  d.edited = F.edited(S.ed.gen, S.ed.history.curve);
+  d.writes = S.writes;
+  d.playing = S.playing;
+  d.playhead = S.playhead;
   outlet(2, "report", JSON.stringify(d));
 }
 
@@ -603,9 +672,40 @@ function limit(seconds) { viewSetting((v) => V.setLimit(v, seconds, model())); }
 function range(lo, hi) { viewSetting((v) => V.setRange(v, lo, hi)); }
 function phonemes(on) { viewSetting((v) => V.setPhonemes(v, on === undefined || (Number(on) !== 0 && String(on) !== "off"))); }
 
+// ---- playback (UWP7): the patch plays buffer~ tcs_out with [line~] -> [play~], and sends the position back
+
+// from `at` seconds, else from the playhead (or the start, when there is none or it is at the phrase's end)
+function play(at) {
+  const m = model();
+  let from = at === undefined ? S.playhead : Number(at);
+  if (from === null || !Number.isFinite(from) || (at === undefined && from >= M.seconds(m) - 1e-3)) from = 0;
+  const r = E.playRange(m, from);
+  const ms = (x) => Math.round(x * 1000);
+  S.playing = true;
+  S.playhead = r.from;
+  outlet(4, "play", ms(r.from), ms(r.to), ms(r.to) - ms(r.from));
+  statusLine();
+}
+
+function stop() {
+  S.playing = false;
+  outlet(4, "stop");
+  statusLine();
+}
+
+function stopped() {
+  if (!S.playing) return;
+  S.playing = false;
+  statusLine();
+}
+
+// the position while playing (snapshot~ sends it on and on with the audio on: drawn only when it moves)
 function playhead(seconds) {
-  S.playhead = seconds === undefined || seconds === "off" ? null : Number(seconds);
-  redraw();
+  const p = seconds === undefined || seconds === "off" ? null : Number(seconds);
+  if (p === S.playhead) return;
+  S.playhead = p;
+  if (S.playing) statusLine();
+  else redraw();
 }
 
 // ---- painting
@@ -720,10 +820,21 @@ function onwheel(x, y, dx, dy, cmd, shift, capslock, alt) {
   statusLine();
 }
 
-// the note (or its edge) or the rest label under the pointer; true if it changed
+// the note (or its edge) or the rest label under the pointer, or in the F0 mode the curve's frame; true if it changed
 function hoverAt(x, y) {
   S.ed = { ...S.ed, pointer: { x, y } };
   const m = model();
+  if (S.ed.mode === "f0") {
+    const c = S.ed.curve;
+    const j = c && V.inRoll(S.view, x, y) ? Math.round(V.beatsToSeconds(V.xToBeat(S.view, x), m.tempo) * F.FPS) : null;
+    const f = j !== null && j >= 0 && j < c.length ? j : null;
+    const was = S.hoverFrame !== f || S.hover || S.hoverRest;
+    S.hover = null;
+    S.hoverRest = null;
+    S.hoverFrame = f;
+    return !!was;
+  }
+  S.hoverFrame = null;
   const h = V.hitNote(S.view, m.notes, x, y);
   const r = !h && V.inRestBand(S.view, x, y) ? M.restAt(m, V.xToBeat(S.view, x)) : null;
   const key = (h ? `${h.id}:${h.part}` : "") + (r ? `r${r.start}` : "");
@@ -739,7 +850,7 @@ function onidle(x, y) {
 
 function onidleout() {
   S.ed = { ...S.ed, pointer: null };
-  if (S.hover || S.hoverRest) { S.hover = null; S.hoverRest = null; statusLine(); }
+  if (S.hover || S.hoverRest || S.hoverFrame !== null) { S.hover = null; S.hoverRest = null; S.hoverFrame = null; statusLine(); }
 }
 
 function onresize(w, h) {

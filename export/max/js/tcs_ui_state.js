@@ -6,7 +6,7 @@
 //
 // The model is kept whole (ids, restBefore, word), not as a score, so an invalid model mid-edit still saves. Curve
 // values are written with 9 significant digits, which gives every float32 back exactly: a restored buffer~ equals the
-// saved one bit for bit.
+// saved one bit for bit, and decode rounds them back to those float32 values.
 
 "use strict";
 
@@ -35,7 +35,7 @@ function encode(state) {
 function checkCurve(c, name) {
   if (c === null || c === undefined) return null;
   if (!Array.isArray(c) || !c.every(isNumber)) throw stateError(`f0.${name} is not a list of numbers`);
-  return c;
+  return c.map(Math.fround); // the buffer's values exactly, so edits after a restore start from them (UWP6)
 }
 
 // a model, or null for an empty roll
@@ -80,8 +80,9 @@ function fnv(str) {
   return h.toString(16).padStart(8, "0");
 }
 
+// (the curves in their saved form, so a packed state and a decoded one give the same hashes)
 function digest(state) {
-  const f = state.f0;
+  const f = { ...state.f0, gen: curve(state.f0.gen), work: curve(state.f0.work) };
   return { notes: state.model ? state.model.notes.length : 0, tempo: state.model ? state.model.tempo : null,
     language: state.model ? state.model.language : null, f0_gen: f.gen ? f.gen.length : 0, f0_work: f.work ? f.work.length : 0,
     stale: f.stale, curve_hash: f.work ? fnv(JSON.stringify(f.work)) : null,

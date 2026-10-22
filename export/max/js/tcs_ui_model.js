@@ -277,30 +277,50 @@ function lyricLine(model, ids) {
   return lyrics.join(";") + (lyrics.length === 1 ? ";" : "");
 }
 
-// ---- undo: snapshots of the model (they share the notes that did not change)
+// ---- undo: snapshots of the model and the working F0 curve (UWP6: one history for both; they share what did not change)
 
-function history(model) {
-  return { past: [], present: model, future: [] };
+function history(model, curve = null) {
+  return { past: [], present: model, curve, future: [] };
 }
 
-function push(h, model, label = "") {
-  return { past: h.past.concat([{ model: h.present, label }]).slice(-UNDO_STEPS), present: model, future: [] };
+function push(h, model, label = "", curve = h.curve) {
+  return { past: h.past.concat([{ model: h.present, curve: h.curve, label }]).slice(-UNDO_STEPS), present: model, curve, future: [] };
 }
 
 function undo(h) {
   if (!h.past.length) return h;
   const last = h.past[h.past.length - 1];
-  return { past: h.past.slice(0, -1), present: last.model, future: [{ model: h.present, label: last.label }].concat(h.future) };
+  return { past: h.past.slice(0, -1), present: last.model, curve: last.curve,
+    future: [{ model: h.present, curve: h.curve, label: last.label }].concat(h.future) };
 }
 
 function redo(h) {
   if (!h.future.length) return h;
   const next = h.future[0];
-  return { past: h.past.concat([{ model: h.present, label: next.label }]), present: next.model, future: h.future.slice(1) };
+  return { past: h.past.concat([{ model: h.present, curve: h.curve, label: next.label }]), present: next.model, curve: next.curve,
+    future: h.future.slice(1) };
+}
+
+// a new generated curve (U4: it replaces the hand edits): every step gets it, and the steps that only changed the curve
+// (the same model on both sides) are dropped, so the note steps stay undoable
+function newCurve(h, curve) {
+  const states = h.past.map((e) => e.model).concat([h.present], h.future.map((e) => e.model));
+  const labels = h.past.map((e) => e.label).concat(h.future.map((e) => e.label)); // labels[i]: the step into state i + 1
+  const p = h.past.length;
+  const kept = [0];
+  const into = [];
+  let q = 0; // the present among the kept states
+  for (let i = 1; i < states.length; i++) {
+    if (states[i] !== states[kept[kept.length - 1]]) { kept.push(i); into.push(labels[i - 1]); }
+    if (i === p) q = kept.length - 1;
+  }
+  const entry = (k, label) => ({ model: states[kept[k]], curve, label });
+  return { past: kept.slice(0, q).map((_, k) => entry(k, into[k])), present: states[kept[q]], curve,
+    future: kept.slice(q + 1).map((_, k) => entry(q + 1 + k, into[q + k])) };
 }
 
 module.exports = {
   emptyModel, gaps, restsFor, setRestType, restAt, seconds, noteSeconds, overlapping, sorted, addNote, deleteNotes,
   moveNotes, resizeNote, resizeNotes, splitNote, joinNotes, setLyric, setTempo, setLanguage, copyNotes, pasteNotes,
-  splitLyricLine, lyricTargets, setLyrics, lyricLine, history, push, undo, redo, EPS, REST_TYPES,
+  splitLyricLine, lyricTargets, setLyrics, lyricLine, history, push, undo, redo, newCurve, EPS, REST_TYPES,
 };
