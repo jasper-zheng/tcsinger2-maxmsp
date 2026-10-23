@@ -1,8 +1,9 @@
 // tcs_ui_state.js: what the piano roll saves with the patch (UI_WORK_PACKAGES.md, U8, UWP3): the model, the view's
 // scroll and zoom, and both curves, as one JSON string (embedmessage, and the Dict of getvalueof). No Max globals.
 //
-//   {format: "tcs_ui_state", version: 1, model, view: {beat0, pxPerBeat, midiTop, rowH, beatsPerBar, snap, showPh},
-//    f0: {gen, work, stale}}                    (showPh from UWP5; a state without it shows the phonemes)
+//   {format: "tcs_ui_state", version: 1, model, view: {beat0, pxPerBeat, midiTop, rowH, beatsPerBar, snap, showPh,
+//    root, scale}, f0: {gen, work, stale}}      (showPh from UWP5; a state without it shows the phonemes; root and
+//                                                scale later: without them, the roll's own stay)
 //
 // The model is kept whole (ids, restBefore, word), not as a score, so an invalid model mid-edit still saves. Curve
 // values are written with 9 significant digits, which gives every float32 back exactly: a restored buffer~ equals the
@@ -14,7 +15,7 @@ const { TcsError, isNumber } = require("./lib/tcs_util.js");
 
 const FORMAT = "tcs_ui_state";
 const VERSION = 1;
-const VIEW_KEYS = ["beat0", "pxPerBeat", "midiTop", "rowH", "beatsPerBar", "snap", "showPh"];
+const VIEW_KEYS = ["beat0", "pxPerBeat", "midiTop", "rowH", "beatsPerBar", "snap", "showPh", "root", "scale"];
 
 const stateError = (m) => new TcsError("StateError", m);
 

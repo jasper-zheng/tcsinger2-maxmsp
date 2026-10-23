@@ -13,7 +13,7 @@
 //   phonemeLabels(words) -> Map(first note id -> {text, source, typed, ids})   the front-end's words (dict tcs_cond, with
 //             the note ids tcs_notes.js gives them) as labels: the phonemes go above a word's notes (UWP5)
 //
-// Layers, back to front: rows and grid, the area past the limit (20 s), rest labels, notes, phonemes, curve, the region's
+// Layers, back to front: rows (the key's, root and scale, tinted) and grid, the area past the limit (20 s), rest labels, notes, phonemes, curve, the region's
 // span (F0 mode), playhead and rubber band, then the keys, the ruler with the range strip at its foot, and the toolbar
 // with the status line over everything. The curve's hand-edited runs
 // (UWP6: where it differs from the generated one) are drawn in an accent over a faint line of the generated curve; in
@@ -39,9 +39,9 @@ const C = {
   limit: [0.95, 0.35, 0.35, 0.8],
   rest: [1, 1, 1, 0.38],
   restHover: [1, 1, 1, 0.85],
-  note: [0.92, 0.78, 0.50, 1],
-  melisma: [0.92, 0.78, 0.50, 0.72],
-  noteSel: [1.0, 0.86, 0.58, 1],
+  note: [0.95, 0.7, 0.4, 1],
+  melisma: [0.95, 0.7, 0.4, 0.72],
+  noteSel: [1.0, 0.78, 0.66, 1],
   noteLine: [0.55, 0.25, 0.28, 1],
   noteText: [0.13, 0.06, 0.07, 1],
   hover: [1, 1, 1, 0.22],
@@ -71,7 +71,7 @@ const C = {
   status: [0.09, 0.09, 0.09, 1],
   statusText: [0.78, 0.78, 0.78, 1],
   button: [1, 1, 1, 0.06],
-  buttonOn: [0.97, 0.83, 0.55, 0.85],
+  buttonOn: [0.95, 0.7, 0.4, 0.85],
   buttonText: [0.82, 0.82, 0.82, 1],
   buttonTextOn: [0.13, 0.06, 0.07, 1],
   buttonOff: [0.82, 0.82, 0.82, 0.3],
@@ -79,7 +79,13 @@ const C = {
   phDict: [0.97, 0.76, 0.36, 0.9], // from the dictionary, not the training lexicon
   phFallback: [1, 0.4, 0.4, 0.95], // no pronunciation: sung as the language's fallback
   phFallbackLine: [0.8, 0.05, 0.12, 1], // under its notes (a darker red, seen on the notes' pink)
+  scaleRow: [0.97, 0.73, 0.45, 0.05], // the rows of the scale (root, scale), and the root's
+  scaleRoot: [0.97, 0.73, 0.45, 0.12],
+  scaleKey: [0.97, 0.7, 0.35, 0.75], // their keys' marks
+  scaleRootKey: [0.97, 0.6, 0.25, 1],
 };
+
+const SCALE_MARK = 3; // px: the mark at the right edge of a key of the scale
 
 const PH_SIZE = 8;
 
@@ -127,7 +133,7 @@ function fitText(g, s, maxW) {
 
 // ---- layers
 
-function drawRows(g, v) {
+function drawRows(g, v, sum) {
   const x0 = v.keysW;
   const w = v.w - x0;
   fillRect(g, C.bg, x0, v.rulerH, w, v.h - v.rulerH);
@@ -136,6 +142,12 @@ function drawRows(g, v) {
   for (let m = lo; m <= hi; m++) {
     const top = V.midiToY(v, m) - v.rowH / 2;
     if (BLACK[m % 12]) fillRect(g, C.rowBlack, x0, top, w, v.rowH);
+    const deg = V.scaleDegree(v, m);
+    if (deg !== null) {
+      fillRect(g, deg === 0 ? C.scaleRoot : C.scaleRow, x0, top, w, v.rowH);
+      sum.scale.rows.push(m);
+      if (deg === 0) sum.scale.roots.push(m);
+    }
     const bottom = px(top + v.rowH);
     line(g, m % 12 === 0 ? C.octaveLine : C.rowLine, x0, bottom, v.w, bottom);
   }
@@ -361,6 +373,7 @@ function drawKeys(g, v) {
   const hi = Math.min(v.midiHi, Math.ceil(v.midiTop));
   const blackW = Math.round(w * 0.6);
   const size = Math.max(7, Math.min(10, v.rowH - 2));
+  const markW = v.scale ? SCALE_MARK + 1 : 0; // the labels keep clear of the marks
   for (let m = lo; m <= hi; m++) {
     const y = V.midiToY(v, m);
     if (BLACK[m % 12]) {
@@ -369,10 +382,12 @@ function drawKeys(g, v) {
     } else if (!BLACK[(m + 1) % 12]) {
       line(g, C.keyLine, 0, px(y - v.rowH / 2), w, px(y - v.rowH / 2)); // E-F and B-C
     }
+    const deg = V.scaleDegree(v, m);
+    if (deg !== null) fillRect(g, deg === 0 ? C.scaleRootKey : C.scaleKey, w - 1 - SCALE_MARK, y - v.rowH / 2 + 1, SCALE_MARK, Math.max(1, v.rowH - 2));
     if (m % 12 === 0 && v.rowH >= 7) {
       g.set_font_size(size);
       const s = `C${m / 12 - 1}`;
-      text(g, C.keyText, size, w - 3 - g.text_measure(s)[0], y + size * 0.36, s);
+      text(g, C.keyText, size, w - 3 - markW - g.text_measure(s)[0], y + size * 0.36, s);
     }
   }
   line(g, C.keyLine, px(w - 1), top, px(w - 1), v.h - v.statusH);
@@ -542,11 +557,11 @@ function drawBar(g, v, scene, sum) {
 
 function draw(g, v, scene) {
   const sum = { notes: [], lyrics: [], rests: [], curveRuns: 0, curvePoints: 0, editedRuns: 0, buttons: [], phonemes: [], playhead: null,
-    region: null };
+    region: null, scale: { rows: [], roots: [] } };
   const m = scene.model;
   const tempo = m ? m.tempo : 60;
   g.select_font_face(FONT);
-  drawRows(g, v);
+  drawRows(g, v, sum);
   drawGrid(g, v);
   drawLimit(g, v, tempo);
   if (m) {

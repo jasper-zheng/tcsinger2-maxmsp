@@ -44,6 +44,10 @@
 //   view fit, view <beat0> <beat1> <midiLo> <midiHi>, zoom <fx> <fy>, scrollby <beats> <rows>
 //   snap 1/1 | 1/2 | 1/4 | 1/8 | 1/16 | off, bar <beats>    the grid (U1); a bar is 4 beats by default
 //   limit <seconds>, range <lo> <hi>      the shaded limit (20 s) and the pitch rows (1..98): display only
+//   root <C|C#|Db|...|B|number>           the key the rows highlight (display only, saved with the patch): the root (a
+//   scale major|minor|dorian|mixolydian|lydian|off   number mod 12, so a MIDI note too; C by default) and the scale
+//                                         (ionian, aeolian too; minor is the natural minor; off by default). Its rows
+//                                         are tinted, the root's more, and its keys marked at the strip's right edge
 //   play [<beats>], stop                  play buffer~ tcs_out from <beats> (less the sync offset, as seek; else from the
 //                                         playhead, or the start) to the phrase's end; stop. Also a press on the ruler
 //                                         (play from there) and Space.
@@ -82,7 +86,7 @@
 autowatch = 1;
 inlets = 1;
 outlets = 6;
-setinletassist(0, "read, dictionary, language, tempo, bang, clear, write, writecond, out, outscore, text, phonemes, f0, region, vibrato, offset, mode, tool, select, add, delete, move, resize, split, join, rest, undo, redo, copy, cut, paste, duplicate, view, zoom, scrollby, snap, bar, limit, range, play, stop, stopped, seek, sync, playhead, snapshot, stats, report");
+setinletassist(0, "read, dictionary, language, tempo, bang, clear, write, writecond, out, outscore, text, phonemes, f0, region, vibrato, offset, mode, tool, select, add, delete, move, resize, split, join, rest, undo, redo, copy, cut, paste, duplicate, view, zoom, scrollby, snap, bar, limit, range, root, scale, play, stop, stopped, seek, sync, playhead, snapshot, stats, report");
 setoutletassist(0, "dictionary tcs_cond: the conditions for both neural.gen~");
 setoutletassist(1, "bang: the roll wrote the curve into the buffer (send init f0 to sing)");
 setoutletassist(2, "status: ok / converted / warning / error / message / phonemes / stats / snapshot / report");
@@ -316,7 +320,8 @@ function statusLine() {
       phonemeText(n.id) + frontEnd() : "";
   } else {
     S.status = `${M.seconds(m).toFixed(2)} s · ` +
-      `${S.ed.mode === "f0" ? `F0 ${S.ed.f0tool}` : S.ed.tool}` + (S.sync ? ` · sync ${S.sync}` : "") + frontEnd() + curveState();
+      `${S.ed.mode === "f0" ? `F0 ${S.ed.f0tool}` : S.ed.tool}` + (S.view.scale ? ` · ${V.scaleName(S.view)}` : "") +
+      (S.sync ? ` · sync ${S.sync}` : "") + frontEnd() + curveState();
     if (S.playing && S.playhead !== null) S.status = `▶ ${S.playhead.toFixed(2)} s · ${S.status}`;
   }
   redraw();
@@ -734,6 +739,8 @@ function report() {
   d.playhead = S.playhead;
   d.region = S.ed.region;
   d.sync = S.sync;
+  d.root = S.view.root;
+  d.scale = S.view.scale;
   outlet(2, "report", JSON.stringify(d));
 }
 
@@ -770,6 +777,12 @@ function snap(value) { viewSetting((v) => V.setSnap(v, String(value))); }
 function bar(beats) { viewSetting((v) => V.setBar(v, beats)); }
 function limit(seconds) { viewSetting((v) => V.setLimit(v, seconds, model())); }
 function range(lo, hi) { viewSetting((v) => V.setRange(v, lo, hi)); }
+// the key the rows highlight (saved with the patch, as snap)
+function root(r) {
+  if (r === undefined) return fail("root needs a note: C, C#, Db ... B, or a number");
+  viewSetting((v) => V.setRoot(v, r));
+}
+function scale(name) { viewSetting((v) => V.setScale(v, name)); }
 // phonemes 0|1|on|off: hide or show the labels; phonemes <Language>: list that language's phonemes
 function phonemes(on) {
   const a = on === undefined ? null : String(on);

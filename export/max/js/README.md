@@ -194,6 +194,8 @@ The patch's F0 row under the lyrics line has the range commands: `f0 snap` (the 
 - **The beats** are the roll's beats at the roll's tempo, so set the roll's `tempo` to the host's or the two drift apart. A loaded score does not change it.
 - **The offset** is not saved with the patch. `sync off` removes it, and while it is set the status line shows "sync <beats>".
 
+**A key** (`root`, `scale`): `root D` then `scale dorian` tints the rows of the scale's pitches across the roll, the root's rows more strongly, and marks their keys with a bar at the right edge of the key strip (the root's stronger). The status line shows "D dorian". It is display only: notes are not moved or snapped to it. The root and the scale are saved with the patch, like `snap`; a patch saved before them opens with no scale.
+
 **Lyrics** (U5): `[textedit @outputmode 1 @keymode 1]` under the roll, cabled both ways (its `text <line>` into the roll; the roll's outlet 3 sends it `set <line>` and `select`).
 - **Which notes:** the line fills the selected notes in time order, or all the notes when none is selected. The box always shows the lyrics of exactly those notes, so a line can be edited rather than retyped, and Enter fills them (one undo step).
 - **Splitting:** with a `;` in the line, it is split at the `;`s only (`one two;three` is two lyrics; an empty entry, `a;;b`, leaves its note as it is). Without one, it is split at the spaces, and Chinese, Japanese and Korean characters are one lyric each, small kana too, as in the training lexicon (`一闪一闪亮晶晶`, `きょう` → き ょ う). `-` continues the word before it.
@@ -256,6 +258,8 @@ Beats for the notes, seconds for the curve and playback. Without ids, the note e
 | `bar <beats>` | the beats in a bar (4) |
 | `limit <seconds>` | the shaded limit (20 s), display only |
 | `range <lo> <hi>` | the pitch rows (1–98), display only |
+| `root <note>` | the key's root, display only: a name (`C`, `C#`, `Db` … `B`, any case) or a number mod 12, so a MIDI note works too (`root 62` is D). C by default |
+| `scale <name>` | highlights a scale's rows and keys, display only: `major`, `minor` (natural), `dorian`, `mixolydian` or `lydian` (any case; also `ionian`, `aeolian`); `scale off` removes it |
 | **Playback** | |
 | `play [<beats>]` | plays `buffer~ tcs_out` from a beat (after a `sync`, the host's beat, as `seek`), else from the playhead (or the start), to the phrase's end plus 0.5 s. Before 0 it plays a lead-in of silence |
 | `stop` | stops |

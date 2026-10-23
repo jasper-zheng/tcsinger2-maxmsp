@@ -7,7 +7,9 @@
 //    beat0, pxPerBeat, midiTop, rowH,     the scroll (the beat at the left edge, the pitch at the top edge) and the zoom
 //    maxBeats, beatsPerBar, snap,         how far the roll goes; 4/4 by default; snap "1/1" ... "1/16" or "off"
 //    limitSeconds, midiLo, midiHi,        display settings: the shaded limit and the pitch rows (TCSinger2's by default)
-//    showPh}                              the front-end's phonemes drawn above the words (UWP5)
+//    showPh,                              the front-end's phonemes drawn above the words (UWP5)
+//    root, scale}                         the key the rows highlight: the root's pitch class 0..11 (C) and a name of
+//                                         SCALES, or null (none)
 // (The mode, notes or F0, is the editor's, tcs_ui_edit.js: the toolbar's layout takes it.)
 //
 // The roll is the box less the keys (left), the ruler (top; its lowest REGION_H px are the range strip, where a drag
@@ -28,9 +30,20 @@ const EDGE_PX = 6;
 const GRID_MIN_PX = 8;
 const REST_BAND = 14; // px under the ruler: the rest labels
 const REGION_H = 12; // px at the ruler's foot: the range strip (UWP9)
+// the scales the rows can highlight: the pitch classes above the root (minor: the natural minor)
+const SCALES = {
+  major: [0, 2, 4, 5, 7, 9, 11],
+  minor: [0, 2, 3, 5, 7, 8, 10],
+  dorian: [0, 2, 3, 5, 7, 9, 10],
+  mixolydian: [0, 2, 4, 5, 7, 9, 10],
+  lydian: [0, 2, 4, 6, 7, 9, 11],
+};
+const SCALE_ALIASES = { ionian: "major", aeolian: "minor" };
+const PITCH_CLASS = { c: 0, d: 2, e: 4, f: 5, g: 7, a: 9, b: 11 };
+const ROOT_NAMES = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]; // as keys are usually named
 
 const DEFAULT = { keysW: 46, rulerH: 32 + REGION_H, statusH: 22, beat0: 0, pxPerBeat: 60, midiTop: 76.5, rowH: 14, maxBeats: 20,
-  beatsPerBar: 4, snap: "1/4", limitSeconds: MAX_SECONDS, midiLo: 1, midiHi: MAX_MIDI, showPh: true };
+  beatsPerBar: 4, snap: "1/4", limitSeconds: MAX_SECONDS, midiLo: 1, midiHi: MAX_MIDI, showPh: true, root: 0, scale: null };
 
 const rollW = (v) => Math.max(1, v.w - v.keysW);
 const rollH = (v) => Math.max(1, v.h - v.rulerH - v.statusH);
@@ -243,6 +256,39 @@ function setPhonemes(v, on) {
   return { ...v, showPh: !!on };
 }
 
+// the key's root: a name (C, c#, Db, B#: a letter, then # or b) or an integer (mod 12, so a MIDI note too)
+function setRoot(v, root) {
+  const s = String(root).trim();
+  const m = /^([a-gA-G])([#b]?)$/.exec(s);
+  let pc;
+  if (m) pc = PITCH_CLASS[m[1].toLowerCase()] + (m[2] === "#" ? 1 : m[2] === "b" ? -1 : 0);
+  else if (/^-?\d+$/.test(s)) pc = Number(s);
+  else throw new Error(`bad root ${root}: expected C, C#, Db ... B, or a number`);
+  return { ...v, root: ((pc % 12) + 12) % 12 };
+}
+
+// the scale: a name of SCALES (any case; ionian, aeolian too), or off
+function setScale(v, name) {
+  const s = name === undefined ? "off" : String(name).trim().toLowerCase();
+  if (s === "off" || s === "none") return { ...v, scale: null };
+  const k = SCALE_ALIASES[s] || s;
+  if (!SCALES[k]) throw new Error(`bad scale ${name}: expected ${Object.keys(SCALES).join(", ")} or off`);
+  return { ...v, scale: k };
+}
+
+// the step of a MIDI note in the view's scale (0: the root), or null: no scale, or not in it
+function scaleDegree(v, midi) {
+  const steps = v.scale ? SCALES[v.scale] : null;
+  if (!steps) return null;
+  const k = steps.indexOf((((Math.round(midi) - (v.root || 0)) % 12) + 12) % 12);
+  return k < 0 ? null : k;
+}
+
+// "D dorian", or "" with no scale
+function scaleName(v) {
+  return v.scale && SCALES[v.scale] ? `${ROOT_NAMES[v.root || 0]} ${v.scale}` : "";
+}
+
 function toolbarLayout(v, mode = "notes") {
   const y = v.h - v.statusH + 2;
   const h = Math.max(1, v.statusH - 4);
@@ -283,6 +329,6 @@ function hitCurve(v, curve, tempo, x, y, tolPx = 5) {
 module.exports = {
   makeView, resize, beatToX, xToBeat, midiToY, yToMidi, rowAt, beatEnd, midiBottom, rollW, rollH, secondsToBeats,
   beatsToSeconds, extentBeats, clampView, setExtent, scroll, zoomTime, zoomPitch, showRange, fit, snapBeats, setSnap,
-  setBar, setLimit, setRange, setPhonemes, gridStep, snapBeat, labelStep, visible, hitNote, notesInRect, inRestBand, inRoll, toolbarLayout,
-  hitToolbar, frameToX, hitCurve, timeH, inRuler, inRegionStrip, SNAPS, MAX_MIDI, MAX_SECONDS, CURVE_FPS, REST_BAND, REGION_H,
+  setBar, setLimit, setRange, setPhonemes, setRoot, setScale, scaleDegree, scaleName, gridStep, snapBeat, labelStep, visible, hitNote, notesInRect, inRestBand, inRoll, toolbarLayout,
+  hitToolbar, frameToX, hitCurve, timeH, inRuler, inRegionStrip, SNAPS, SCALES, MAX_MIDI, MAX_SECONDS, CURVE_FPS, REST_BAND, REGION_H,
 };
