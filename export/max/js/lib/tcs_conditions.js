@@ -8,8 +8,8 @@
 
 "use strict";
 
-const { valueError } = require("tcs_util.js");
-const data = require("tcs_data.js");
+const { valueError } = require("./lib/tcs_util.js");
+const data = require("./lib/tcs_data.js");
 
 const N_PIECES = 256;
 const PREDICT = -1.0;

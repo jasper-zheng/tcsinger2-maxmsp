@@ -3,9 +3,9 @@
 
 "use strict";
 
-const { valueError, repr } = require("tcs_util.js");
+const { valueError, repr } = require("./lib/tcs_util.js");
 
-const TIMBRE_TECHS = ["mix", "falsetto", "breathy", "pharyngeal"];
+const TIMBRE_TECHS = ["mix", "falsetto", "breathy", "pharyngeal", "glissando", "none"];
 const GENDERS = ["female", "male"];
 const VOCAL_RANGES = ["soprano", "alto", "tenor", "bass"];
 const EMOTIONS = ["happy", "sad"];

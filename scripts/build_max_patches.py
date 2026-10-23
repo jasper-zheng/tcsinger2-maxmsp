@@ -1,5 +1,5 @@
 """Writes the Max patch of the TCSinger2 export, tcsinger2.maxpat, into export/max/js/, next to the JS front-end
-(Max's v8 `require` finds its modules only there) and the model files (symlinks, see export/max/js/README.md):
+(Max's v8 `require` resolves the modules' "./lib/…" paths against the patch's folder) and the model files (symlinks, see export/max/js/README.md):
 a score -> the conditions dict and the caption -> score2f0 -> the F0 buffer~ (shown and editable in a waveform~) -> sing -> the
 audio buffer~ -> playback.
 
@@ -70,9 +70,10 @@ class Patch:
 def transport(p, roll, play, gain, ids, x=420, y=730):
     """The roll's playback (UWP7): play~ reads the position of a [line~] in ms, which [snapshot~] also sends back to the
     roll, so its playhead is where play~ reads; a 5 ms fade in and out (another [line~] on a [*~]) avoids clicks and
-    silences play~ when the position stops."""
+    silences play~ when the position stops. A play from below 0 (a seek before the sync point) is a lead-in: the
+    position ramps up from below 0, and [>=~ 0.] keeps the output silent until it reaches 0."""
     rt = p.obj('route play stop', x, y, outs=3, outtype=['', '', ''])
-    p.link(roll, 4, rt)
+    p.link(roll, 5, rt)
     t_play = p.obj('t l b', x, y + 30, outs=2, outtype=['', 'bang'])
     p.link(rt, 0, t_play)
     ramp = p.msg('$1, $2 $3', x, y + 60)
@@ -88,7 +89,13 @@ def transport(p, roll, play, gain, ids, x=420, y=730):
     p.link(fade_out, 0, fader)
     out = p.obj('*~', x + 160, y + 120, ins=2, outs=1, outtype=['signal'])
     p.link(play, 0, out)
-    p.link(fader, 0, out, 1)
+    # the lead-in: silent while the position is below 0
+    gate = p.obj('>=~ 0.', x + 270, y + 60, ins=2, outs=1, outtype=['signal'])
+    p.link(pos, 0, gate)
+    gated = p.obj('*~', x + 100, y + 150, ins=2, outs=1, outtype=['signal'])
+    p.link(fader, 0, gated)
+    p.link(gate, 0, gated, 1)
+    p.link(gated, 0, out, 1)
     p.link(out, 0, gain)
     # stop: the position holds, the fade goes out
     t_stop = p.obj('t b b', x + 200, y + 30, outs=2, outtype=['bang', 'bang'])
@@ -119,41 +126,56 @@ def transport(p, roll, play, gain, ids, x=420, y=730):
 
 def f0_row(p, ui, ids, shown=lambda bid: bid, aux=(600, 645)):
     """The F0 curve's range commands (UWP6) under the lyrics line, into the roll: snap, reset, unvoice, smooth,
-    offset -1/1, and the vibrato with its rate, depth, start and end boxes (0 0: the selected notes, or the whole
-    curve). `shown` puts a box in presentation too; `aux` places the boxes behind the vibrato; ids gets the vibrato's
-    boxes (the checks)."""
+    offset -1/1 and the vibrato (with its rate and depth boxes). One start and one end box (seconds) are the range of
+    every button: each goes through [zl.join] (the range in its right inlet), so it sends f0 <command> ... <start> <end>;
+    0 0 (a range that doesn't end after it starts) means the selected notes, or the whole curve. `shown` puts a box in
+    presentation too; `aux` places the boxes behind the row; ids gets the buttons, the vibrato and the range boxes (the
+    checks)."""
     ax, ay = aux
+    rng = p.obj('zl.join', ax + 160, ay + 60, ins=2, outs=2, outtype=['', ''])  # (append's right inlet ignores a list)
+    ids['f0_append'] = rng
+    p.link(rng, 0, ui)
+    p.link(p.obj('loadmess 0. 0.', ax + 230, ay + 60), 0, rng, 1)
     x = 20
+    ids['f0_buttons'] = {}
     for text in ['f0 snap', 'f0 reset', 'f0 unvoice', 'f0 smooth', 'f0 offset -1', 'f0 offset 1']:
         m = shown(p.msg(text, x, 530))
-        p.link(m, 0, ui)
+        p.link(m, 0, rng)
+        ids['f0_buttons'][text] = m
         x += 7 * len(text) + 16 + 8
     rate = shown(p.box('flonum', 20, 556, w=50, ins=1, outs=2, outtype=['', 'bang'], minimum=0.0))
     depth = shown(p.box('flonum', 75, 556, w=50, ins=1, outs=2, outtype=['', 'bang'], minimum=0.0))
-    vstart = shown(p.box('flonum', 130, 556, w=50, ins=1, outs=2, outtype=['', 'bang'], minimum=0.0))
-    vend = shown(p.box('flonum', 185, 556, w=50, ins=1, outs=2, outtype=['', 'bang'], minimum=0.0))
     p.link(p.obj('loadmess 5.5', ax, ay), 0, rate)
     p.link(p.obj('loadmess 0.5', ax + 110, ay), 0, depth)
-    vib_pak = p.obj('pak 5.5 0.5 0. 0.', ax, ay + 30, ins=4, outs=1)
-    for k, box in enumerate((rate, depth, vstart, vend)):
-        p.link(box, 0, vib_pak, k)
-    vib = shown(p.msg('f0 vibrato 5.5 0.5 0 0', 240, 556, w=150))
+    vib_pak = p.obj('pak 5.5 0.5', ax, ay + 30, ins=2, outs=1)
+    p.link(rate, 0, vib_pak)
+    p.link(depth, 0, vib_pak, 1)
+    vib = shown(p.msg('f0 vibrato 5.5 0.5', 130, 556, w=125))
     vib_set = p.obj('prepend set f0 vibrato', ax + 160, ay + 30)
     p.link(vib_pak, 0, vib_set)
     p.link(vib_set, 0, vib)
-    p.link(vib, 0, ui)
+    p.link(vib, 0, rng)
+    # the range of every button
+    shown(p.comment('range (s):', 275, 556, w=70))
+    start = shown(p.box('flonum', 345, 556, w=50, ins=1, outs=2, outtype=['', 'bang'], minimum=0.0))
+    stop = shown(p.box('flonum', 400, 556, w=50, ins=1, outs=2, outtype=['', 'bang'], minimum=0.0))
+    rng_pak = p.obj('pak 0. 0.', ax, ay + 60, ins=2, outs=1)
+    ids['f0_range_pak'] = rng_pak
+    p.link(start, 0, rng_pak)
+    p.link(stop, 0, rng_pak, 1)
+    p.link(rng_pak, 0, rng, 1)
     ids['f0_vibrato'] = vib
-    ids['f0_vib_start'] = vstart
-    ids['f0_vib_end'] = vend
+    ids['f0_start'] = ids['f0_vib_start'] = start
+    ids['f0_end'] = ids['f0_vib_end'] = stop
     shown(p.comment('F0: F or the roll\'s F0 button, then draw on the curve (D draw, L line, S smooth, E erase, U unvoice; '
-                    'Shift: semitones). The buttons act on the selected notes (none: the whole curve). Vibrato: rate (Hz), '
-                    'depth (semitones), start and end (s; 0 0: the selected notes).', 20, 582, w=580))
+                    'Shift: semitones). The buttons act on the range start-end in seconds; with 0 0, on the selected notes '
+                    '(none: the whole curve). Vibrato: rate (Hz), depth (semitones).', 20, 582, w=580))
 
 
 def sing_section(p, inits, gate, fe, tok, roll=None, ids=None):
     """3. sing (generate, seed, cfg_scale; `inits` send init f0 to it, `gate` bangs generate) and the audio: buffer~
     tcs_out, its waveform~, playback and writewave. Returns the sing object. With a `roll` (UWP7), the roll drives the
-    playback: its outlet 4 (play <from_ms> <to_ms> <dur_ms> | stop) -> [line~] -> [play~], and the position goes back
+    playback: its outlet 5 (play <from_ms> <to_ms> <dur_ms> | stop) -> [line~] -> [play~], and the position goes back
     to it as playhead <s> (and stopped at the end); `ids` gets the playhead's and the output's boxes (the checks)."""
     # 3. sing
     p.comment('3. Sing the curve (cfg_scale, seed)', 20, 560, w=300)
@@ -171,7 +193,7 @@ def sing_section(p, inits, gate, fe, tok, roll=None, ids=None):
     if gate is not None:
         p.link(gate, 0, sing_btn)
     p.link(fe, 0, sing)
-    p.link(tok, 0, sing)
+    p.link(tok, 0, sing, 8)  # input_ids is sing's 9th condition (neural_tilde 0.1.0: one inlet per input)
     sing_done = p.obj('print sing_done', 20, 695)
     p.link(sing, 0, sing_done)
 
@@ -203,35 +225,44 @@ def sing_section(p, inits, gate, fe, tok, roll=None, ids=None):
     return sing
 
 
-def main_patch():
+def main_patch(path=os.path.join(OUT_DIR, 'tcsinger2.maxpat'), hook=None):
+    """tcsinger2.maxpat, without the piano roll: [v8 tcs_max.js] turns a score file into dict tcs_cond for both models;
+    [v8 tcs_prompt.js] makes the caption from the style buttons -> neural.tokenizer -> sing (inlet 8). `hook(p, ids)` may
+    add boxes before the patch is written (the checks). Returns ids."""
     p = Patch(1260, 980)
+    ids = {}
     p.comment('TCSinger2 in Max: a score -> score2f0 (the F0 curve) -> sing (the voice). EWP7 of EXPORTING_WORK_PACKAGES.md.\n'
               'Setup: the model files next to this patch (symlinks, export/max/js/README.md) and the front-end data '
               '(python scripts/build_max_js_data.py). Phrases up to 20 s; generation: score2f0 about 0.4 s, sing about 0.9 s.',
               20, 10, w=1100)
 
     # 1. score -> conditions dict
-    p.comment('1. Open a score (JSON, examples/*.json), or change the style and bang', 20, 60, w=330)
+    p.comment('1. Open a score (JSON, examples/*.json). The style buttons set the caption.', 20, 60, w=330)
     open_btn = p.box('button', 20, 90, w=24, h=24, ins=1, outs=1, outtype=['bang'])
     dialog = p.obj('opendialog', 50, 90, ins=2, outs=2, outtype=['', 'bang'])
     pre_read = p.obj('prepend read', 50, 120)
     p.link(open_btn, 0, dialog)
     p.link(dialog, 0, pre_read)
-    fe = p.box('newobj', 20, 330, w=140, text='v8 tcs_max.js', ins=1, outs=3, outtype=['', '', ''])
+    fe = p.box('newobj', 20, 330, w=140, text='v8 tcs_max.js', ins=1, outs=2, outtype=['', ''])
+    ids['fe'] = fe
+    prompt_js = p.box('newobj', 180, 330, w=140, text='v8 tcs_prompt.js', ins=1, outs=2, outtype=['', ''])
+    ids['prompt'] = prompt_js
     for k, s in enumerate(STYLES):
         m = p.msg(s, 180 + (k % 2) * 140, 90 + (k // 2) * 26)
-        p.link(m, 0, fe)
+        p.link(m, 0, prompt_js)
     p.link(pre_read, 0, fe)
-    fe_status = p.obj('print tcs', 180, 370)
-    p.link(fe, 2, fe_status)
+    fe_status = p.obj('print tcs', 20, 400)
+    p.link(fe, 1, fe_status)
+    p.link(prompt_js, 1, p.obj('print tcs_prompt', 340, 330))
     p.obj('dict tcs_cond', 20, 370, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the front-end's dict alive
     show_caption = p.msg('', 20, 470, w=420)
     set_caption = p.obj('prepend set', 20, 440)
-    p.link(fe, 1, set_caption)
+    p.link(prompt_js, 0, set_caption)
     p.link(set_caption, 0, show_caption)
     prompt = p.obj('prepend prompt', 220, 440)
-    p.link(fe, 1, prompt)
+    p.link(prompt_js, 0, prompt)
     tok = p.obj('neural.tokenizer tcsinger2_sing', 220, 500, ins=1, outs=2, outtype=['', ''], w=220)
+    ids['tok'] = tok
     p.link(prompt, 0, tok)
 
     # 2. score2f0
@@ -241,6 +272,7 @@ def main_patch():
     p.link(seed, 0, pre_seed)
     gen_btn = p.msg('generate', 600, 110)
     f0gen = p.obj('neural.gen~ tcsinger2_f0 score2f0 tcs_f0', 500, 180, ins=8, outs=1, outtype=['bang'], w=280)
+    ids['f0gen'] = f0gen
     p.link(pre_seed, 0, f0gen)
     p.link(gen_btn, 0, f0gen)
     p.link(fe, 0, f0gen)
@@ -267,30 +299,34 @@ def main_patch():
         m = p.msg(s, 500 + k * 90, 510)
         p.link(m, 0, wave_f0)
 
-    sing_section(p, [init], gate, fe, tok)
+    ids['sing'] = sing_section(p, [init], gate, fe, tok)
 
     # inspection
     p.comment('The models\' inputs (neural.info):', 500, 760, w=300)
     p.obj('neural.info tcsinger2_f0', 500, 790, w=200)
     p.obj('neural.info tcsinger2_sing', 720, 790, w=200)
-    p.write(os.path.join(OUT_DIR, 'tcsinger2.maxpat'))
+    if hook:
+        hook(p, ids)
+    p.write(path)
+    return ids
 
 
 def ui_patch(path=os.path.join(OUT_DIR, 'tcsinger2_ui.maxpat'), hook=None):
-    """tcsinger2_ui.maxpat (UI_WORK_PACKAGES.md, UWP3-UWP7): the piano roll [v8ui tcs_ui.js] sends its notes to the front-end;
+    """tcsinger2_ui.maxpat (UI_WORK_PACKAGES.md, UWP3-UWP9): the piano roll [v8ui tcs_ui.js] sends the conditions of its notes
+    straight to both models, and [v8 tcs_prompt.js] the caption;
     score2f0 (by hand, or after each change with the toggle) -> the roll shows the curve, which its F0 mode edits -> sing;
     the roll plays the result (its ruler, Space) and shows the playhead.
     The roll saves its score and curves in its box. `hook(p, ids)` may add boxes before the patch is written (the
     checks). Returns ids."""
     p = Patch(1300, 1210)
     p.comment('TCSinger2 in Max with the piano roll (UI_WORK_PACKAGES.md). Open a score, or draw notes (the pencil, or a double-click), '
-              'and type their lyrics in the line under the roll; the roll sends them to the front-end, which makes them singable (see the '
-              'console for what it fixed) and gives the phonemes shown over the notes. Generate the F0 (or turn on "regenerate"), edit '
+              'and type their lyrics in the line under the roll; the roll makes them singable (its status line says what it fixed) '
+              'for both models, and shows their phonemes. Generate the F0 (or turn on "regenerate"), edit '
               'it in the F0 mode if you like, then sing, and play it (click the ruler, or Space). The roll and its curves are saved with '
               'the patch.', 20, 10, w=1100)
     ids = {}
     # the roll and its controls
-    ui = p.box('v8ui', 20, 75, w=900, h=420, ins=1, outs=5, outtype=['', '', '', '', ''], filename='tcs_ui.js', varname='ui',
+    ui = p.box('v8ui', 20, 75, w=900, h=420, ins=1, outs=6, outtype=[''] * 6, filename='tcs_ui.js', varname='ui',
                parameter_enable=0, presentation=1, presentation_rect=[20, 75, 900, 420],
                textfile=dict(filename='tcs_ui.js', flags=0, embed=0, autowatch=1))
     ids['ui'] = ui
@@ -338,28 +374,26 @@ def ui_patch(path=os.path.join(OUT_DIR, 'tcsinger2_ui.maxpat'), hook=None):
 
     f0_row(p, ui, ids, shown)
 
-    # the front-end
+    # the roll converts its notes: its outlet 0 (dictionary tcs_cond) goes straight to both models; the caption comes
+    # from tcs_prompt.js
     fy = 110  # below the F0 rows
-    fe = p.box('newobj', 20, 540 + fy, w=140, text='v8 tcs_max.js', ins=1, outs=3, outtype=['', '', ''])
-    ids['fe'] = fe
-    p.link(ui, 0, fe)
-    p.obj('dict tcs_notes', 300, 540 + fy, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the roll's dict alive
-    p.obj('dict tcs_cond', 20, 575 + fy, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the front-end's dict alive
-    p.link(ui, 2, p.obj('print tcs_ui', 480, 540 + fy))
-    pre_fe = p.obj('prepend fe', 180, 575 + fy)
-    p.link(fe, 2, pre_fe)
-    p.link(pre_fe, 0, ui)
-    p.link(fe, 2, p.obj('print tcs', 270, 575 + fy))
-    p.comment('Style (then bang the front-end):', 940, 75, w=300)
+    p.obj('dict tcs_cond', 20, 540 + fy, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the roll's dict alive
+    p.link(ui, 2, p.obj('print tcs_ui', 140, 540 + fy))
+    prompt_js = p.box('newobj', 20, 575 + fy, w=140, text='v8 tcs_prompt.js', ins=1, outs=2, outtype=['', ''])
+    ids['prompt'] = prompt_js
+    p.link(prompt_js, 1, p.obj('print tcs_prompt', 180, 575 + fy))
+    p.comment('Style (the caption changes at once):', 940, 75, w=300)
     for k, s in enumerate(STYLES):
-        p.link(p.msg(s, 940 + (k % 2) * 160, 100 + (k // 2) * 26), 0, fe)
+        p.link(p.msg(s, 940 + (k % 2) * 160, 100 + (k // 2) * 26), 0, prompt_js)
     show_caption = p.msg('', 20, 640 + fy, w=420)
     set_caption = p.obj('prepend set', 20, 610 + fy)
-    p.link(fe, 1, set_caption)
+    p.link(prompt_js, 0, set_caption)
     p.link(set_caption, 0, show_caption)
     prompt = p.obj('prepend prompt', 460, 610 + fy)
-    p.link(fe, 1, prompt)
+    p.link(prompt_js, 0, prompt)
     tok = p.obj('neural.tokenizer tcsinger2_sing', 460, 640 + fy, ins=1, outs=2, outtype=['', ''], w=220)
+    ids['tok'] = tok
+    p.link(prompt, 0, tok)
 
     # score2f0
     p.comment('2. The F0 curve: score2f0 (seed)', 940, 240, w=300)
@@ -372,13 +406,13 @@ def ui_patch(path=os.path.join(OUT_DIR, 'tcsinger2_ui.maxpat'), hook=None):
     ids['f0gen'] = f0gen
     p.link(pre_seed, 0, f0gen)
     p.link(gen_btn, 0, f0gen)
-    p.link(fe, 0, f0gen)
+    p.link(ui, 0, f0gen)
     # regenerate after each change: after the dict has reached score2f0 (deferlow), generate
     auto = p.box('toggle', 1080, 265, w=22, h=22, ins=1, outs=1, outtype=['int'])
     ids['auto'] = auto
     p.comment('regenerate F0 after each change', 1105, 265, w=180)
     on_dict = p.obj('route dictionary', 1080, 300, ins=1, outs=2, outtype=['', ''])
-    p.link(fe, 0, on_dict)
+    p.link(ui, 0, on_dict)
     t_dict = p.obj('t b', 1080, 325, outs=1, outtype=['bang'])
     p.link(on_dict, 0, t_dict)
     auto_gate = p.obj('gate', 1140, 325, ins=2, outs=1)
@@ -411,7 +445,7 @@ def ui_patch(path=os.path.join(OUT_DIR, 'tcsinger2_ui.maxpat'), hook=None):
 
     # 3. sing and the audio, below
     p.offset = (0, 140 + fy)
-    sing = sing_section(p, [init], sing_gate, fe, tok, roll=ui, ids=ids)
+    sing = sing_section(p, [init], sing_gate, ui, tok, roll=ui, ids=ids)
     p.offset = (0, 0)
     out_buf = next(b['box'] for b in p.boxes if b['box'].get('text') == 'buffer~ tcs_out')  # off the auto-F0 objects
     out_buf['patching_rect'][:2] = [1140, 455]
@@ -426,6 +460,7 @@ def ui_patch(path=os.path.join(OUT_DIR, 'tcsinger2_ui.maxpat'), hook=None):
 # a score as the roll's saved state (tcs_ui_state.js), as the roll would save it after reading the file: the notes, the
 # view fitted to them, no curve. Printed as {"json": <the state>, "digest": <its digest>}.
 ROLL_STATE_JS = r"""
+require(process.env.TCS_NODE_LIB); // the modules in lib/, with their "./lib/..." requires (export_check/node_lib.js)
 const fs = require("fs");
 const N = require("tcs_notes.js");
 const V = require("tcs_ui_view.js");
@@ -443,15 +478,15 @@ def roll_state(score, w=900, h=420):
     if not node:
         print(f'warning: no node, so the demo starts empty instead of with {score}')
         return None
-    env = dict(os.environ, NODE_PATH=os.path.abspath(OUT_DIR))
+    env = dict(os.environ, TCS_NODE_LIB=os.path.abspath('export_check/node_lib.js'))
     out = subprocess.run([node, '-e', ROLL_STATE_JS, os.path.abspath(score), str(w), str(h)], env=env,
                          capture_output=True, text=True, check=True).stdout
     return json.loads(out)
 
 
 def demo_patch(path=os.path.join(OUT_DIR, 'tcsinger2_demo.maxpat'), hook=None, score=DEMO_SCORE):
-    """tcsinger2_demo.maxpat (UWP9): the least the roll needs to sing. The roll -> tcs_max.js (conditions, caption) ->
-    score2f0 -> the roll shows and edits the curve -> sing -> the roll plays it. Without the UI patch's seeds, cfg_scale,
+    """tcsinger2_demo.maxpat (UWP9): the least the roll needs to sing. The roll (the conditions of its notes) ->
+    score2f0 -> the roll shows and edits the curve -> sing (with tcs_prompt.js's caption) -> the roll plays it. Without the UI patch's seeds, cfg_scale,
     waveform~s and auto toggles. It opens with `score` in the roll. `hook(p, ids)` may add boxes before the patch is
     written (the check). Returns ids."""
     p = Patch(1300, 1090)
@@ -471,7 +506,7 @@ def demo_patch(path=os.path.join(OUT_DIR, 'tcsinger2_demo.maxpat'), hook=None, s
     p.comment('1. The notes: open a score | its language. Or draw notes (the pencil, or a double-click).', 500, 42, w=420)
     state = roll_state(score) if score else None
     extra = dict(embedstate=[['state', state['json']]]) if state else {}
-    ui = p.box('v8ui', 20, 75, w=900, h=420, ins=1, outs=5, outtype=['', '', '', '', ''], filename='tcs_ui.js', varname='ui',
+    ui = p.box('v8ui', 20, 75, w=900, h=420, ins=1, outs=6, outtype=[''] * 6, filename='tcs_ui.js', varname='ui',
                parameter_enable=0, textfile=dict(filename='tcs_ui.js', flags=0, embed=0, autowatch=1), **extra)
     ids['ui'] = ui
     ids['state'] = state
@@ -486,24 +521,19 @@ def demo_patch(path=os.path.join(OUT_DIR, 'tcsinger2_demo.maxpat'), hook=None, s
               'arrows move, S split, J join, Cmd-Z undo, F the F0 mode.', 600, 500, w=320)
     f0_row(p, ui, ids, aux=(940, 240))
 
-    # the front-end: the roll's notes -> the conditions dict (both models) and the caption (sing)
-    p.comment('The front-end: the notes -> the conditions and the caption; its status goes back to the roll.', 20, 650, w=440)
-    fe = p.box('newobj', 20, 675, w=140, text='v8 tcs_max.js', ins=1, outs=3, outtype=['', '', ''])
-    ids['fe'] = fe
-    p.link(ui, 0, fe)
-    pre_fe = p.obj('prepend fe', 20, 710)
-    p.link(fe, 2, pre_fe)
-    p.link(pre_fe, 0, ui)
-    p.link(fe, 2, p.obj('print tcs', 110, 710))
-    p.obj('dict tcs_notes', 20, 745, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the roll's dict alive
-    p.obj('dict tcs_cond', 145, 745, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the front-end's dict alive
+    # the roll's outlet 0: the conditions (dictionary tcs_cond) of its notes, straight to both models; the caption
+    p.comment('The roll\'s outlet 0 -> both models; the style -> the caption.', 20, 650, w=440)
+    p.obj('dict tcs_cond', 20, 675, ins=2, outs=4, outtype=['dictionary', '', '', ''])  # keeps the roll's dict alive
+    prompt_js = p.box('newobj', 240, 675, w=140, text='v8 tcs_prompt.js', ins=1, outs=2, outtype=['', ''])
+    ids['prompt'] = prompt_js
     prompt = p.obj('prepend prompt', 240, 710)
-    p.link(fe, 1, prompt)
+    p.link(prompt_js, 0, prompt)
     tok = p.obj('neural.tokenizer tcsinger2_sing', 240, 745, ins=1, outs=2, outtype=['', ''], w=220)
+    ids['tok'] = tok
     p.link(prompt, 0, tok)
-    p.comment('Style: click one, then bang (the caption changes).', 940, 75, w=300)
+    p.comment('Style: the caption changes at once.', 940, 75, w=300)
     for k, s in enumerate(STYLES):
-        p.link(p.msg(s, 940 + (k % 2) * 160, 100 + (k // 2) * 26), 0, fe)
+        p.link(p.msg(s, 940 + (k % 2) * 160, 100 + (k // 2) * 26), 0, prompt_js)
 
     # 2. score2f0: the curve into buffer~ tcs_f0, then the roll reads it and sing is told
     p.comment('2. The F0 curve (score2f0): the roll shows it; edit it in its F0 mode.', 500, 650, w=420)
@@ -512,7 +542,7 @@ def demo_patch(path=os.path.join(OUT_DIR, 'tcsinger2_demo.maxpat'), hook=None, s
     ids['f0_generate'] = f0_btn
     ids['f0gen'] = f0gen
     p.link(f0_btn, 0, f0gen)
-    p.link(fe, 0, f0gen)
+    p.link(ui, 0, f0gen)
     p.obj('buffer~ tcs_f0', 800, 705, outs=2, outtype=['float', 'bang'])
     f0_done = p.obj('t b b', 500, 740, outs=2, outtype=['bang', 'bang'])
     p.link(f0gen, 0, f0_done)
@@ -530,8 +560,9 @@ def demo_patch(path=os.path.join(OUT_DIR, 'tcsinger2_demo.maxpat'), hook=None, s
     sing = p.obj('neural.gen~ tcsinger2_sing sing tcs_out', 20, 865, ins=9, outs=1, outtype=['bang'], w=280)
     ids['sing_generate'] = sing_btn
     ids['sing'] = sing
-    for src in (sing_btn, init, fe, tok):
+    for src in (sing_btn, init, ui):
         p.link(src, 0, sing)
+    p.link(tok, 0, sing, 8)  # input_ids is sing's 9th condition (neural_tilde 0.1.0: one inlet per input)
     p.obj('buffer~ tcs_out', 320, 865, outs=2, outtype=['float', 'bang'])
 
     # 4. playback: the roll's transport (its ruler, Space, or play/stop) -> [line~] -> [play~]; the playhead back

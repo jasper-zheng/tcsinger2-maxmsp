@@ -23,13 +23,13 @@
 
 "use strict";
 
-const { TcsError, isNumber } = require("tcs_util.js");
-const { parseScore, MAX_SECONDS, MAX_MIDI } = require("tcs_score.js");
-const { phonemize } = require("tcs_g2p.js");
-const { buildPieces } = require("tcs_pieces.js");
-const { convert } = require("tcs_frontend.js");
-const { N_PIECES } = require("tcs_conditions.js");
-const M = require("tcs_ui_model.js");
+const { TcsError, isNumber } = require("./lib/tcs_util.js");
+const { parseScore, MAX_SECONDS, MAX_MIDI } = require("./lib/tcs_score.js");
+const { phonemize } = require("./lib/tcs_g2p.js");
+const { buildPieces } = require("./lib/tcs_pieces.js");
+const { convert } = require("./lib/tcs_frontend.js");
+const { N_PIECES } = require("./lib/tcs_conditions.js");
+const M = require("./lib/tcs_ui_model.js");
 
 const FORMAT = "tcs_notes";
 const VERSION = 1;

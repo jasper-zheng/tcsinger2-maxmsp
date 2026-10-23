@@ -9,12 +9,12 @@
 
 "use strict";
 
-const { pyRound } = require("tcs_util.js");
-const { parseScore, wordSeconds, scoreSeconds } = require("tcs_score.js");
-const { phonemize } = require("tcs_g2p.js");
-const { buildPieces } = require("tcs_pieces.js");
-const { conditions, N_PIECES, FORMAT } = require("tcs_conditions.js");
-const { makeCaption } = require("tcs_caption.js");
+const { pyRound } = require("./lib/tcs_util.js");
+const { parseScore, wordSeconds, scoreSeconds } = require("./lib/tcs_score.js");
+const { phonemize } = require("./lib/tcs_g2p.js");
+const { buildPieces } = require("./lib/tcs_pieces.js");
+const { conditions, N_PIECES, FORMAT } = require("./lib/tcs_conditions.js");
+const { makeCaption } = require("./lib/tcs_caption.js");
 
 const FPS = 48000 / 256;
 const MAX_FRAMES = 3760;

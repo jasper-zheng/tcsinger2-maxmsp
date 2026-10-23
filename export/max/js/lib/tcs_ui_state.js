@@ -10,7 +10,7 @@
 
 "use strict";
 
-const { TcsError, isNumber } = require("tcs_util.js");
+const { TcsError, isNumber } = require("./lib/tcs_util.js");
 
 const FORMAT = "tcs_ui_state";
 const VERSION = 1;

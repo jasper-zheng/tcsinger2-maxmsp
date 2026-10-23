@@ -2,20 +2,22 @@
 // grid and snap, and the hit tests. No Max globals and no state: every function returns a new view, so tcs_ui.js keeps
 // the only copy (Max's `require` gives a new copy of a module on every call).
 //
-//   {w, h, keysW, rulerH, statusH,        the box and its fixed parts, in px (statusH: the toolbar and status line)
+//   {w, h, keysW, rulerH, statusH,        the box and its fixed parts, in px (rulerH: the ruler and, at its foot, the
+//                                         range strip, REGION_H; statusH: the toolbar and status line)
 //    beat0, pxPerBeat, midiTop, rowH,     the scroll (the beat at the left edge, the pitch at the top edge) and the zoom
 //    maxBeats, beatsPerBar, snap,         how far the roll goes; 4/4 by default; snap "1/1" ... "1/16" or "off"
 //    limitSeconds, midiLo, midiHi,        display settings: the shaded limit and the pitch rows (TCSinger2's by default)
 //    showPh}                              the front-end's phonemes drawn above the words (UWP5)
 // (The mode, notes or F0, is the editor's, tcs_ui_edit.js: the toolbar's layout takes it.)
 //
-// The roll is the box less the keys (left), the ruler (top) and the toolbar with the status line (bottom). Row m (a
+// The roll is the box less the keys (left), the ruler (top; its lowest REGION_H px are the range strip, where a drag
+// sets the vibrato button's range, UWP9) and the toolbar with the status line (bottom). Row m (a
 // MIDI note) is centred at midiToY(m), so a note's box and its F0 curve value land on the same y. Snap values are note
 // values: 1/4 is one beat. Every function that moves or zooms keeps the view inside its limits (clampView).
 
 "use strict";
 
-const { MAX_SECONDS, MAX_MIDI } = require("tcs_score.js");
+const { MAX_SECONDS, MAX_MIDI } = require("./lib/tcs_score.js");
 
 const CURVE_FPS = 50; // buffer~ tcs_f0 (EWP D7)
 const ROW_MAX = 40;
@@ -25,8 +27,9 @@ const SNAPS = ["1/1", "1/2", "1/4", "1/8", "1/16", "off"];
 const EDGE_PX = 6;
 const GRID_MIN_PX = 8;
 const REST_BAND = 14; // px under the ruler: the rest labels
+const REGION_H = 12; // px at the ruler's foot: the range strip (UWP9)
 
-const DEFAULT = { keysW: 46, rulerH: 32, statusH: 22, beat0: 0, pxPerBeat: 60, midiTop: 76.5, rowH: 14, maxBeats: 20,
+const DEFAULT = { keysW: 46, rulerH: 32 + REGION_H, statusH: 22, beat0: 0, pxPerBeat: 60, midiTop: 76.5, rowH: 14, maxBeats: 20,
   beatsPerBar: 4, snap: "1/4", limitSeconds: MAX_SECONDS, midiLo: 1, midiHi: MAX_MIDI, showPh: true };
 
 const rollW = (v) => Math.max(1, v.w - v.keysW);
@@ -213,16 +216,24 @@ function notesInRect(v, notes, x0, y0, x1, y1) {
   return notes.filter((n) => n.start < b1 && n.start + n.dur > b0 && n.midi - 0.5 < top && n.midi + 0.5 > bottom).map((n) => n.id);
 }
 
+// the ruler's time part (a press plays from there) and the range strip under it (UWP9)
+const timeH = (v) => Math.max(1, v.rulerH - REGION_H);
+const inRuler = (v, x, y) => x >= v.keysW && x < v.w && y >= 0 && y < timeH(v);
+const inRegionStrip = (v, x, y) => x >= v.keysW && x < v.w && y >= timeH(v) && y < v.rulerH;
+
 // the band under the ruler with the rest labels (a click there toggles a rest's type)
 const inRestBand = (v, x, y) => x >= v.keysW && y >= v.rulerH && y < v.rulerH + REST_BAND;
 const inRoll = (v, x, y) => x >= v.keysW && x < v.w && y >= v.rulerH && y < v.h - v.statusH;
 
 // ---- the toolbar, at the left of the bottom bar: [{id, x, y, w, h, kind}] and where the status text starts. Its
-// tools are the mode's (UWP6): the notes' select and pencil and the snap, or the F0 curve's tools.
+// tools are the mode's (UWP6): the notes' select and pencil and the snap, or the F0 curve's tools and the vibrato button
+// (UWP9: +0.05 semitone at 5.5 Hz per click, over the range strip's range) with the offset's up and down arrows beside
+// it, stacked in one slot (a "stack" is two half-height buttons, <id>Up over <id>Down).
 
 const TOOLS = {
   notes: [["select", 20, "tool"], ["pencil", 20, "tool"], [null, 8]].concat(SNAPS.map((s) => [`snap:${s}`, s === "1/16" ? 30 : 26, "snap"])),
-  f0: [["draw", 20, "tool"], ["line", 20, "tool"], ["smooth", 20, "tool"], ["erase", 20, "tool"], ["unvoice", 20, "tool"]],
+  f0: [["draw", 20, "tool"], ["line", 20, "tool"], ["smooth", 20, "tool"], ["erase", 20, "tool"], ["unvoice", 20, "tool"],
+    [null, 8], ["vibrato", 24, "action"], ["offset", 16, "stack"]],
 };
 const toolbar = (mode) => [["mode", 24, "mode"], [null, 8]].concat(TOOLS[mode === "f0" ? "f0" : "notes"])
   .concat([[null, 8], ["undo", 20, "action"], ["redo", 20, "action"], [null, 8], ["fit", 26, "action"], ["ph", 24, "toggle"]]);
@@ -238,7 +249,10 @@ function toolbarLayout(v, mode = "notes") {
   const buttons = [];
   let x = 4;
   for (const [id, w, kind] of toolbar(mode)) {
-    if (id) buttons.push({ id, x, y, w, h, kind });
+    if (kind === "stack") {
+      const hh = Math.floor((h - 1) / 2);
+      buttons.push({ id: `${id}Up`, x, y, w, h: hh, kind: "action" }, { id: `${id}Down`, x, y: y + h - hh, w, h: hh, kind: "action" });
+    } else if (id) buttons.push({ id, x, y, w, h, kind });
     x += w + (id ? 2 : 0);
   }
   return { buttons, textX: x + 10 };
@@ -270,5 +284,5 @@ module.exports = {
   makeView, resize, beatToX, xToBeat, midiToY, yToMidi, rowAt, beatEnd, midiBottom, rollW, rollH, secondsToBeats,
   beatsToSeconds, extentBeats, clampView, setExtent, scroll, zoomTime, zoomPitch, showRange, fit, snapBeats, setSnap,
   setBar, setLimit, setRange, setPhonemes, gridStep, snapBeat, labelStep, visible, hitNote, notesInRect, inRestBand, inRoll, toolbarLayout,
-  hitToolbar, frameToX, hitCurve, SNAPS, MAX_MIDI, MAX_SECONDS, CURVE_FPS, REST_BAND,
+  hitToolbar, frameToX, hitCurve, timeH, inRuler, inRegionStrip, SNAPS, MAX_MIDI, MAX_SECONDS, CURVE_FPS, REST_BAND, REGION_H,
 };

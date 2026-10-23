@@ -14,7 +14,7 @@
 
 "use strict";
 
-const { TcsError, isNumber } = require("tcs_util.js");
+const { TcsError, isNumber } = require("./lib/tcs_util.js");
 
 const EPS = 1e-6; // beats: closer than this is the same time
 const UNDO_STEPS = 200;

@@ -6,29 +6,30 @@
 //           unvoiced: the working curve), gen (the generated one), curveStale, selection (Set of ids), hover ({id, part}
 //           | null), hoverRest ({start} | null), playhead (seconds | null), rubber ({x0, y0, x1, y1} | null), mode
 //           ("notes" | "f0"), tool ("select" | "pencil"), f0tool, canUndo, canRedo, status (text), phonemes
-//           (phonemeLabels of the front-end's words, or null)}
+//           (phonemeLabels of the front-end's words, or null), region ({s0, s1} seconds | null: the range strip, UWP9)}
 //   summary: {notes: [ids drawn], lyrics: [{id, text}], rests: [{type, start, dur, shown}], curveRuns, curvePoints,
 //             editedRuns (drawn in the accent), buttons: [ids of the toolbar], phonemes: [{id, text, source}],
-//             playhead (the x of its marker on the ruler, or null)}
+//             playhead (the x of its marker on the ruler, or null), region ({x0, x1} of its bar in the strip, or null)}
 //   phonemeLabels(words) -> Map(first note id -> {text, source, typed, ids})   the front-end's words (dict tcs_cond, with
 //             the note ids tcs_notes.js gives them) as labels: the phonemes go above a word's notes (UWP5)
 //
-// Layers, back to front: rows and grid, the area past the limit (20 s), rest labels, notes, phonemes, curve, playhead and rubber
-// band, then the keys, the ruler, and the toolbar with the status line over everything. The curve's hand-edited runs
+// Layers, back to front: rows and grid, the area past the limit (20 s), rest labels, notes, phonemes, curve, the region's
+// span (F0 mode), playhead and rubber band, then the keys, the ruler with the range strip at its foot, and the toolbar
+// with the status line over everything. The curve's hand-edited runs
 // (UWP6: where it differs from the generated one) are drawn in an accent over a faint line of the generated curve; in
 // the F0 mode the notes are dimmed. No offscreen cache: UWP0
 // measured no gain. Nothing here checks the notes (U10): overlapping notes are simply drawn see-through.
 
 "use strict";
 
-const V = require("tcs_ui_view.js");
+const V = require("./lib/tcs_ui_view.js");
 
 const FONT = "Arial";
 const BLACK = [false, true, false, true, false, false, true, false, true, false, true, false];
 
 const C = {
-  bg: [0.118, 0.118, 0.137, 1],
-  rowBlack: [0.098, 0.098, 0.114, 1],
+  bg: [0.118, 0.118, 0.118, 1],
+  rowBlack: [0.098, 0.098, 0.098, 1],
   rowLine: [1, 1, 1, 0.045],
   octaveLine: [1, 1, 1, 0.11],
   bar: [1, 1, 1, 0.22],
@@ -38,37 +39,42 @@ const C = {
   limit: [0.95, 0.35, 0.35, 0.8],
   rest: [1, 1, 1, 0.38],
   restHover: [1, 1, 1, 0.85],
-  note: [0.91, 0.52, 0.55, 1],
-  melisma: [0.91, 0.52, 0.55, 0.72],
-  noteSel: [1, 0.74, 0.76, 1],
+  note: [0.92, 0.78, 0.50, 1],
+  melisma: [0.92, 0.78, 0.50, 0.72],
+  noteSel: [1.0, 0.86, 0.58, 1],
   noteLine: [0.55, 0.25, 0.28, 1],
   noteText: [0.13, 0.06, 0.07, 1],
   hover: [1, 1, 1, 0.22],
   edge: [1, 1, 1, 0.9],
   join: [0.91, 0.52, 0.55, 0.6],
-  curve: [0.92, 0.92, 0.95, 0.95],
-  curveStale: [0.92, 0.92, 0.95, 0.35],
+  curve: [0.92, 0.92, 0.92, 0.95],
+  curveStale: [0.92, 0.92, 0.92, 0.35],
   curveEdited: [0.45, 0.85, 1, 1],
   curveEditedStale: [0.45, 0.85, 1, 0.4],
-  curveGhost: [0.92, 0.92, 0.95, 0.3],
+  curveGhost: [0.92, 0.92, 0.92, 0.3],
   playhead: [0.55, 0.75, 1, 0.95],
   rubber: [0.55, 0.75, 1, 0.15],
   rubberLine: [0.55, 0.75, 1, 0.7],
-  keyWhite: [0.93, 0.93, 0.94, 1],
-  keyBlack: [0.12, 0.12, 0.13, 1],
-  keyLine: [0.6, 0.6, 0.62, 1],
-  keyText: [0.25, 0.25, 0.28, 1],
-  ruler: [0.16, 0.16, 0.19, 1],
+  keyWhite: [0.93, 0.93, 0.93, 1],
+  keyBlack: [0.12, 0.12, 0.12, 1],
+  keyLine: [0.6, 0.6, 0.6, 1],
+  keyText: [0.25, 0.25, 0.25, 1],
+  ruler: [0.16, 0.16, 0.16, 1],
   rulerLine: [1, 1, 1, 0.3],
-  rulerText: [0.82, 0.82, 0.85, 1],
-  rulerDim: [0.6, 0.6, 0.64, 1],
-  status: [0.09, 0.09, 0.105, 1],
-  statusText: [0.78, 0.78, 0.8, 1],
+  rulerText: [0.82, 0.82, 0.82, 1],
+  rulerDim: [0.6, 0.6, 0.6, 1],
+  strip: [0.12, 0.12, 0.12, 1], // the range strip (UWP9)
+  stripHint: [0.6, 0.6, 0.6, 0.55],
+  region: [0.55, 0.75, 1, 0.75],
+  regionEdge: [0.55, 0.75, 1, 1],
+  regionShade: [0.55, 0.75, 1, 0.07], // its span over the roll, in the F0 mode
+  status: [0.09, 0.09, 0.09, 1],
+  statusText: [0.78, 0.78, 0.78, 1],
   button: [1, 1, 1, 0.06],
-  buttonOn: [0.91, 0.52, 0.55, 0.85],
-  buttonText: [0.82, 0.82, 0.85, 1],
+  buttonOn: [0.97, 0.83, 0.55, 0.85],
+  buttonText: [0.82, 0.82, 0.82, 1],
   buttonTextOn: [0.13, 0.06, 0.07, 1],
-  buttonOff: [0.82, 0.82, 0.85, 0.3],
+  buttonOff: [0.82, 0.82, 0.82, 0.3],
   ph: [1, 1, 1, 0.55],
   phDict: [0.97, 0.76, 0.36, 0.9], // from the dictionary, not the training lexicon
   phFallback: [1, 0.4, 0.4, 0.95], // no pronunciation: sung as the language's fallback
@@ -321,6 +327,13 @@ function drawCurve(g, v, scene, tempo, sum) {
   }
 }
 
+// the region's span over the roll, in the F0 mode (under the curve)
+function drawRegionShade(g, v, scene, tempo) {
+  if (scene.mode !== "f0" || !scene.region) return;
+  const [x0, x1] = regionX(v, scene.region, tempo);
+  if (x1 > x0) fillRect(g, C.regionShade, x0, v.rulerH, x1 - x0, v.h - v.rulerH - v.statusH);
+}
+
 function drawOverlays(g, v, scene, tempo) {
   if (scene.playhead !== null && scene.playhead !== undefined) {
     const x = V.beatToX(v, V.secondsToBeats(scene.playhead, tempo));
@@ -369,9 +382,36 @@ function fmtSeconds(t, step) {
   return `${step < 1 ? t.toFixed(1) : String(Math.round(t))}s`;
 }
 
-function drawRuler(g, v, tempo, playhead, sum) {
+// the region's x span, clipped to the roll's width
+function regionX(v, r, tempo) {
+  const x0 = Math.max(v.keysW, V.beatToX(v, V.secondsToBeats(r.s0, tempo)));
+  const x1 = Math.min(v.w, V.beatToX(v, V.secondsToBeats(r.s1, tempo)));
+  return [x0, x1];
+}
+
+// the range strip at the ruler's foot (UWP9): the region as a bar with its ends marked, or a hint to drag
+function drawStrip(g, v, tempo, region, sum) {
+  const y = V.timeH(v);
+  const h = v.rulerH - y;
+  fillRect(g, C.strip, v.keysW, y, v.w - v.keysW, h);
+  if (!region) {
+    text(g, C.stripHint, 8, v.keysW + 4, y + h - 3, "drag here to edit f0 (click to clear)");
+    return;
+  }
+  const [x0, x1] = regionX(v, region, tempo);
+  if (x1 <= x0) return;
+  fillRect(g, C.region, x0, y + 3, x1 - x0, h - 6);
+  for (const s of [region.s0, region.s1]) {
+    const x = V.beatToX(v, V.secondsToBeats(s, tempo));
+    if (x >= v.keysW && x <= v.w) line(g, C.regionEdge, px(x), y + 1, px(x), v.rulerH - 1, 1.5);
+  }
+  sum.region = { x0, x1 };
+}
+
+function drawRuler(g, v, tempo, playhead, sum, region) {
+  const tH = V.timeH(v); // the time part; the range strip is under it
   fillRect(g, C.ruler, 0, 0, v.w, v.rulerH);
-  const mid = Math.round(v.rulerH / 2);
+  const mid = Math.round(tH / 2);
   const b1 = V.beatEnd(v);
   // bars and beats (top half)
   const bpb = v.beatsPerBar;
@@ -399,22 +439,24 @@ function drawRuler(g, v, tempo, playhead, sum) {
     const t = k * step;
     const x = V.beatToX(v, V.secondsToBeats(t, tempo));
     if (x < v.keysW) continue;
-    line(g, C.rulerLine, px(x), v.rulerH - 5, px(x), v.rulerH);
-    text(g, C.rulerDim, 9, x + 3, v.rulerH - 4, fmtSeconds(t, step));
+    line(g, C.rulerLine, px(x), tH - 5, px(x), tH);
+    text(g, C.rulerDim, 9, x + 3, tH - 4, fmtSeconds(t, step));
   }
+  drawStrip(g, v, tempo, region, sum);
   const lx = limitX(v, tempo);
   if (lx >= v.keysW && lx < v.w) line(g, C.limit, px(lx), 0, px(lx), v.rulerH, 1.5);
+  line(g, C.rulerLine, 0, px(tH - 1), v.w, px(tH - 1));
   line(g, C.rulerLine, 0, px(v.rulerH - 1), v.w, px(v.rulerH - 1));
   // the corner: the tempo
   fillRect(g, C.ruler, 0, 0, v.keysW, v.rulerH);
   text(g, C.rulerText, 9, 4, mid - 4, `${Math.round(tempo * 100) / 100}`);
-  text(g, C.rulerDim, 9, 4, v.rulerH - 4, "bpm");
+  text(g, C.rulerDim, 9, 4, tH - 4, "bpm");
   // the playhead's marker (UWP7): a triangle at the ruler's foot, so a stopped playhead is easy to find
   if (playhead !== null && playhead !== undefined) {
     const x = V.beatToX(v, V.secondsToBeats(playhead, tempo));
     if (x >= v.keysW && x <= v.w) {
       rgba(g, C.playhead);
-      g.move_to(x - 5, v.rulerH - 9); g.line_to(x + 5, v.rulerH - 9); g.line_to(x, v.rulerH - 1); g.close_path(); g.fill();
+      g.move_to(x - 5, tH - 9); g.line_to(x + 5, tH - 9); g.line_to(x, tH - 1); g.close_path(); g.fill();
       line(g, C.playhead, px(x), 0, px(x), v.rulerH, 1.5);
       sum.playhead = x;
     }
@@ -445,6 +487,21 @@ function icon(g, id, x, y, w, h) {
     g.set_line_width(1.5);
     g.move_to(cx - 6, cy + 2); g.line_to(cx - 1, cy - 4); g.line_to(cx + 5, cy + 1); g.line_to(cx, cy + 6); g.close_path(); g.stroke();
     g.move_to(cx - 3.5, cy - 1); g.line_to(cx + 2.5, cy + 4); g.stroke();
+  } else if (id === "vibrato") { // a tight wave, and a plus: one click adds depth
+    g.set_line_width(1.3);
+    g.move_to(cx - 8, cy + 1);
+    for (let k = 0; k < 3; k++) {
+      const x0 = cx - 8 + k * 4;
+      g.curve_to(x0 + 1, cy - 3, x0 + 1, cy - 3, x0 + 2, cy + 1);
+      g.curve_to(x0 + 3, cy + 5, x0 + 3, cy + 5, x0 + 4, cy + 1);
+    }
+    g.stroke();
+    g.set_line_width(1.5);
+    g.move_to(cx + 5.5, cy - 6); g.line_to(cx + 5.5, cy - 1); g.stroke();
+    g.move_to(cx + 3, cy - 3.5); g.line_to(cx + 8, cy - 3.5); g.stroke();
+  } else if (id === "offsetUp" || id === "offsetDown") { // the offset's arrows: a triangle up or down
+    const k = id === "offsetUp" ? -1 : 1;
+    g.move_to(cx - 4, cy - 2 * k); g.line_to(cx + 4, cy - 2 * k); g.line_to(cx, cy + 2.5 * k); g.close_path(); g.fill();
   } else if (id === "unvoice") { // a line with a gap
     g.set_line_width(1.5);
     g.move_to(cx - 7, cy); g.line_to(cx - 2.5, cy); g.stroke(); g.move_to(cx + 2.5, cy); g.line_to(cx + 7, cy); g.stroke();
@@ -484,7 +541,8 @@ function drawBar(g, v, scene, sum) {
 }
 
 function draw(g, v, scene) {
-  const sum = { notes: [], lyrics: [], rests: [], curveRuns: 0, curvePoints: 0, editedRuns: 0, buttons: [], phonemes: [], playhead: null };
+  const sum = { notes: [], lyrics: [], rests: [], curveRuns: 0, curvePoints: 0, editedRuns: 0, buttons: [], phonemes: [], playhead: null,
+    region: null };
   const m = scene.model;
   const tempo = m ? m.tempo : 60;
   g.select_font_face(FONT);
@@ -496,10 +554,11 @@ function draw(g, v, scene) {
     drawNotes(g, v, scene, sum);
     drawPhonemes(g, v, scene, sum);
   }
+  drawRegionShade(g, v, scene, tempo);
   drawCurve(g, v, scene, tempo, sum);
   drawOverlays(g, v, scene, tempo);
   drawKeys(g, v);
-  drawRuler(g, v, tempo, scene.playhead, sum);
+  drawRuler(g, v, tempo, scene.playhead, sum, scene.region || null);
   drawBar(g, v, scene, sum);
   return sum;
 }

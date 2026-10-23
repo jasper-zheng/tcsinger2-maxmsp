@@ -8,8 +8,8 @@
 
 "use strict";
 
-const { has } = require("tcs_util.js");
-const data = require("tcs_data.js");
+const { has } = require("./lib/tcs_util.js");
+const data = require("./lib/tcs_data.js");
 
 const isHan = (ch) => (ch >= "一" && ch <= "鿿") || (ch >= "㐀" && ch <= "䶿");
 

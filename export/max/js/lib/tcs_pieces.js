@@ -12,9 +12,9 @@
 
 "use strict";
 
-const { valueError, cumsum, pySum, searchsortedRight, reprStr } = require("tcs_util.js");
-const data = require("tcs_data.js");
-const { wordSeconds } = require("tcs_score.js");
+const { valueError, cumsum, pySum, searchsortedRight, reprStr } = require("./lib/tcs_util.js");
+const data = require("./lib/tcs_data.js");
+const { wordSeconds } = require("./lib/tcs_score.js");
 
 function isNucleus(ph) {
   const id = data.ph2id().get(ph);

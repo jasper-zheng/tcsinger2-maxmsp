@@ -1,23 +1,25 @@
 // tcs_ui.js: the TCSinger2 piano roll in Max: [v8ui tcs_ui.js] (UI_WORK_PACKAGES.md). It shows and edits notes (with
-// their lyrics, and the rests between them) and the F0 curve of buffer~ tcs_f0 over them, sends the notes to
-// [v8 tcs_max.js], and saves itself with the patch. It checks nothing (U10): notes may overlap, and tcs_max.js makes
-// them singable (tcs_notes.js), with warnings that come back here through `fe`. The lyrics are typed in a [textedit]
-// (U5, UWP5), and the front-end's phonemes are drawn above the words. In the F0 mode (UWP6) the mouse edits the curve:
+// their lyrics, and the rests between them) and the F0 curve of buffer~ tcs_f0 over them, converts the notes into the
+// conditions dict of both neural.gen~ objects (the front-end, tcs_notes.convertNotes), and saves itself with the patch.
+// It checks nothing while editing (U10): notes may overlap, and the conversion makes them singable (tcs_notes.js), with
+// warnings in the status line. The caption is not made here: [v8 tcs_prompt.js] makes it from the style messages. The
+// lyrics are typed in a [textedit] (U5, UWP5), and the front-end's phonemes are drawn above the words. In the F0 mode (UWP6) the mouse edits the curve:
 // the generated curve (from score2f0) is kept, and the working one, edited, goes into the buffer after each stroke.
 //
 // Inlet:
 //   read <file.json>, dictionary <name>   load a score (the format of ldm/infer/score.py); the view fits it
 //   language <L>, tempo <bpm>             change the notes (a tempo keeps the beats, so the seconds change)
-//   bang                                  send the notes again;  clear: no notes
-//   write <file.json>                     write the notes as a score (made singable, as tcs_max.js does)
-//   fe ok|warning|error ...               the front-end's status (wire tcs_max.js's last outlet back through
-//                                         [prepend fe]); on ok, its words and pieces are read from dict tcs_cond, and
-//                                         the words' phonemes drawn over their notes (by the note ids of each word)
+//   bang                                  convert the notes again and send the dict;  clear: no notes
+//   write <file.json>                     write the notes as a score (made singable, as the conversion does)
+//   writecond <file.json>                 write the last conversion (with the score's caption, as scripts/score_to_max.py)
+//   out <name>                            the name of the conditions dict (default tcs_cond)
+//   outscore <name>                       the name of the score dict of outlet 4 (default tcs_score)
 //   text <line>                           the lyrics line of the [textedit @outputmode 1 @keymode 1] (U5): it fills the
 //                                         selected notes, or all when nothing is selected; ";" between the
 //                                         notes' lyrics, or spaces when there is no ";" (Chinese, Japanese and Korean
 //                                         characters one per note); "-" continues a word
 //   phonemes 0|1                          hide or show the phonemes (also the toolbar's ph button)
+//   phonemes <Language>                   list the phonemes a score's "ph" may use (out of outlet 2)
 //   f0 refresh                            read the curve from the buffer (after score2f0's done bang): it is the generated
 //                                         curve and the working one; hand edits are dropped (U4)
 //   f0 buffer <name>, f0 clear            the buffer to read (default tcs_f0); forget the curve
@@ -25,6 +27,12 @@
 //   f0 vibrato <rate> <depth> [<s0> <s1>] (or with s1 <= s0, e.g. 0 0): the selected notes' spans, or the whole curve.
 //   f0 unvoice|reset|snap|smooth [<s0> <s1>]   unvoice: 0; reset: the generated curve; snap: the notes' pitches
 //   f0 draw <s> <midi> <s> <midi>..., f0 line <s0> <m0> <s1> <m1>
+//   region <s0> <s1>, region clear        the range strip under the ruler (UWP9; also a drag there, a click clears it):
+//                                         the range of the vibrato button; not saved
+//   vibrato                               the F0 toolbar's vibrato button (also V in the F0 mode): +0.05 semitone at
+//                                         5.5 Hz over the region (none: the selected notes, or the whole curve)
+//   offset <st>                           the F0 toolbar's offset arrows (up: 0.2, down: -0.2): the voiced
+//                                         frames over the same region move by <st> semitones
 //   mode notes|f0                         what the mouse edits (also the toolbar's F0 button and the F key)
 //   tool select|pencil|draw|line|smooth|erase|unvoice   the mouse's tool, and so the mode (also the toolbar and keys)
 //   select <ids...> | all | none          the selection
@@ -38,17 +46,28 @@
 //   play [<s>], stop                      play buffer~ tcs_out from <s> (else from the playhead, or the start) to the
 //                                         phrase's end; stop. Also a press on the ruler (play from there) and Space.
 //   stopped                               from the patch: the playback reached its end
-//   playhead <seconds>, playhead off      the playhead (the patch sends the playback position; drawn when it moves)
+//   seek <beats>                          move the playhead (the roll's beats, less the sync offset: so the host's
+//                                         beats after a sync): while playing, play from there (as a click on the ruler);
+//                                         stopped, the next play starts there. Before 0: a lead-in of silence
+//   sync <beats>, sync off                the host's playhead now (beats) is the roll's 0, and the playhead goes to 0;
+//                                         later seeks are in the host's beats (not saved; the tempos should match)
+//   playhead <seconds>, playhead off      from the patch: the playback position (snapshot~ of the line~; drawn when it
+//                                         moves). Not a seek: line~ holds its position, so snapshot~ would send it back;
+//                                         after a seek, a read or a clear while stopped it is ignored until play
 //   snapshot <file.png> [scale]           draw the roll into an image file (scale 2 by default)
 //   stats [reset], report                 the paint times; a digest of the state (out of outlet 2)
-// Outlet 0: dictionary tcs_notes, after every committed edit (for tcs_max.js).
+// Outlet 0: dictionary tcs_cond, the conditions (without the caption), after every committed edit of the notes, a load
+//   and a restore: to both neural.gen~ objects. After a failed conversion nothing goes out, so the last good dict stays.
 // Outlet 1: bang when the roll has written the curve into the buffer itself (a curve edit, its undo, a restore): send
 //   init f0 to sing.
-// Outlet 2: ok <notes> <seconds> | warning <text> | error <text> | message <text> | stats <json> | snapshot <file> |
-//   report <json> | restored embed|pattr <notes>
+// Outlet 2: ok <notes> <seconds> (a load) | converted <pieces> <seconds> | warning <text> | error <text> |
+//   message <text> | phonemes <Language> <ph...> | stats <json> | snapshot <file> | report <json> |
+//   restored embed|pattr <notes>. A conversion sends its warnings and its status before the dict.
 // Outlet 3: to the [textedit]: set <line> (the lyrics of the notes the line fills, whenever they change), select (a
 //   double-click on a note: its lyric is the start of the line)
-// Outlet 4: the transport (UWP7): play <from_ms> <to_ms> <dur_ms> | stop, for the patch's [line~] -> [play~ tcs_out]
+// Outlet 4: dictionary tcs_score, the edited notes as a score (the format of read; the score write writes: made
+//   singable, no "f0"), with every conversion and before it, so also when the conversion then fails.
+// Outlet 5: the transport (UWP7): play <from_ms> <to_ms> <dur_ms> | stop, for the patch's [line~] -> [play~ tcs_out]
 // Mouse and keys: see tcs_ui_edit.js (the toolbar at the bottom: the mode, its tools, snap, undo, redo, fit, ph). The wheel scrolls the
 // pitch (a trackpad also the time); with Shift it scrolls the time, with Cmd it zooms the time and with Alt the pitch.
 //
@@ -60,34 +79,37 @@
 
 autowatch = 1;
 inlets = 1;
-outlets = 5;
-setinletassist(0, "read, dictionary, language, tempo, bang, clear, write, fe, text, phonemes, f0, mode, tool, select, add, delete, move, resize, split, join, rest, undo, redo, copy, cut, paste, duplicate, view, zoom, scrollby, snap, bar, limit, range, play, stop, stopped, playhead, snapshot, stats, report");
-setoutletassist(0, "dictionary tcs_notes: the notes for tcs_max.js");
+outlets = 6;
+setinletassist(0, "read, dictionary, language, tempo, bang, clear, write, writecond, out, outscore, text, phonemes, f0, region, vibrato, offset, mode, tool, select, add, delete, move, resize, split, join, rest, undo, redo, copy, cut, paste, duplicate, view, zoom, scrollby, snap, bar, limit, range, play, stop, stopped, seek, sync, playhead, snapshot, stats, report");
+setoutletassist(0, "dictionary tcs_cond: the conditions for both neural.gen~");
 setoutletassist(1, "bang: the roll wrote the curve into the buffer (send init f0 to sing)");
-setoutletassist(2, "status: ok / warning / error / message / stats / snapshot / report");
+setoutletassist(2, "status: ok / converted / warning / error / message / phonemes / stats / snapshot / report");
 setoutletassist(3, "to the lyrics textedit: set <line>, select");
-setoutletassist(4, "the transport: play <from_ms> <to_ms> <dur_ms> | stop");
+setoutletassist(4, "dictionary tcs_score: the edited score (the format of read)");
+setoutletassist(5, "the transport: play <from_ms> <to_ms> <dur_ms> | stop");
 
 mgraphics.init();
 mgraphics.relative_coords = 0;
 mgraphics.autofill = 0;
 
-const M = require("tcs_ui_model.js");
-const V = require("tcs_ui_view.js");
-const D = require("tcs_ui_draw.js");
-const E = require("tcs_ui_edit.js");
-const F = require("tcs_ui_f0.js");
-const N = require("tcs_notes.js");
-const ST = require("tcs_ui_state.js");
-const { utf8Decode, utf8Encode } = require("tcs_util.js");
+const M = require("./lib/tcs_ui_model.js");
+const V = require("./lib/tcs_ui_view.js");
+const D = require("./lib/tcs_ui_draw.js");
+const E = require("./lib/tcs_ui_edit.js");
+const F = require("./lib/tcs_ui_f0.js");
+const N = require("./lib/tcs_notes.js");
+const ST = require("./lib/tcs_ui_state.js");
+const data = require("./lib/tcs_data.js");
+const { languagePhonemes } = require("./lib/tcs_g2p.js");
+const { utf8Decode, utf8Encode } = require("./lib/tcs_util.js");
+
+data.setOnLoad((name, ms) => post(`tcs_ui: loaded ${name} in ${ms} ms\n`));
 
 const WHEEL_PX = 300; // px per wheel unit (UWP0: steps of 1/256, at most 0.09 per event)
 const WHEEL_ZOOM = 3; // zoom factor exp(dy * WHEEL_ZOOM)
 const AUTO_MS = 40; // auto-scroll while dragging at the roll's edge
 const AUTO_EDGE = 8; // px: the right edge zone (the left, top and bottom use the keys, ruler and toolbar)
 const SNAPSHOT_MATRIX = "tcs_ui_snapshot";
-const NOTES_DICT = "tcs_notes";
-const COND_DICT = "tcs_cond";
 const CURVE_SR = 50;
 const NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
@@ -98,8 +120,12 @@ const S = {
   overlaps: new Set(),
   status: "",
   message: null,   // a note from the last edit (e.g. a join that can't be done)
-  fe: { status: null, pieces: null, seconds: null, warnings: [], words: null, pieceList: null, shown: null },
-  labels: null,    // the phonemes of the front-end's words by first note id (D.phonemeLabels), null until it answers
+  conv: { status: null, pieces: null, seconds: null, warnings: [], words: null, pieceList: null, shown: null },
+  result: null,    // the last good conversion (with its caption), for writecond
+  outName: "tcs_cond", // the conditions dict
+  scoreName: "tcs_score", // the score dict (outlet 4)
+  dicts: {},       // the Dicts the roll sends, by name: kept, or Max frees a named dict nobody else holds
+  labels: null,    // the phonemes of the converted words by first note id (D.phonemeLabels)
   line: null,      // the lyrics line last sent to the textedit
   drawn: [],       // the phonemes of the last paint
   f0: { buffer: "tcs_f0", stale: false }, // the curves are the editor's (S.ed.gen, S.ed.curve: UWP6, one undo)
@@ -110,6 +136,8 @@ const S = {
   hoverRest: null,
   playhead: null,
   playing: false,  // the roll asked the patch to play, and it has not stopped yet (UWP7)
+  held: false,     // the playhead was set while stopped (seek, a read, a clear): the patch's position is ignored until play
+  sync: 0,         // the host's beat that is the roll's 0 (sync <beats>): seek subtracts it
   auto: null,      // {x, y, m, dx, dy} while a drag auto-scrolls
   autoTimer: null,
   paints: { ms: [], at: [], since: Date.now() },
@@ -148,7 +176,8 @@ function scene() {
   return { model: model(), gaps: S.gaps, overlaps: S.overlaps, curve: S.ed.curve, gen: S.ed.gen, curveStale: S.f0.stale,
     selection: new Set(S.ed.selection), hover: S.hover, hoverRest: S.hoverRest, playhead: S.playhead,
     rubber: g && g.kind === "rubber" ? { x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1 } : null, mode: S.ed.mode, tool: S.ed.tool, f0tool: S.ed.f0tool,
-    canUndo: S.ed.history.past.length > 0, canRedo: S.ed.history.future.length > 0, status: S.status, phonemes: S.labels };
+    canUndo: S.ed.history.past.length > 0, canRedo: S.ed.history.future.length > 0, status: S.status, phonemes: S.labels,
+    region: S.ed.region };
 }
 
 function redraw() {
@@ -186,6 +215,7 @@ function load(obj, name) {
   S.name = res.model.name || name;
   S.hover = null;
   S.playhead = null;
+  S.held = !S.playing;
   S.view = V.fit(S.view, model());
   changed();
   // the status last: whatever it sets off (a check, a recall) then finds the change complete
@@ -244,9 +274,9 @@ function beatName(b) {
 }
 
 function frontEnd() {
-  const f = S.fe;
+  const f = S.conv;
   let s = "";
-  if (f.status === "ok") s = ` · front-end: ${f.pieces}/${N.N_PIECES} pieces`;
+  if (f.status === "ok") s = ``;
   else if (f.status === "error") s = ` · front-end error: ${f.shown}`;
   if (f.warnings.length) s += ` · ${f.warnings.length} warning(s): ${f.warnings[0]}`;
   return s;
@@ -279,27 +309,77 @@ function statusLine() {
   else if (S.ed.mode === "f0" && S.hoverFrame !== null && S.ed.curve) S.status = curveText(S.hoverFrame) + curveState();
   else if (S.hover) {
     const n = m.notes.find((x) => x.id === S.hover.id);
-    S.status = n ? `${noteName(n.midi)} · ${beatName(n.start)} · ${Math.round(n.dur * 1000) / 1000} beat(s) · ${JSON.stringify(n.lyric)}` +
+    S.status = n ? `${noteName(n.midi)} · ${JSON.stringify(n.lyric)}` +
       phonemeText(n.id) + frontEnd() : "";
   } else {
-    S.status = `${S.name} · ${m.language} · ${Math.round(m.tempo * 100) / 100} bpm · ${M.seconds(m).toFixed(2)} / ${S.view.limitSeconds} s · ` +
-      `${m.notes.length} notes · ${S.ed.mode === "f0" ? `F0 ${S.ed.f0tool}` : S.ed.tool}` + frontEnd() + curveState();
+    S.status = `${S.name} · ${M.seconds(m).toFixed(2)} s · ` +
+      `${S.ed.mode === "f0" ? `F0 ${S.ed.f0tool}` : S.ed.tool}` + (S.sync ? ` · sync ${S.sync}` : "") + frontEnd() + curveState();
     if (S.playing && S.playhead !== null) S.status = `▶ ${S.playhead.toFixed(2)} s · ${S.status}`;
   }
   redraw();
 }
 
+// the named dict, made once and kept
+function dictNamed(name) {
+  if (!S.dicts[name]) S.dicts[name] = new Dict(name);
+  return S.dicts[name];
+}
+
+// the notes as a score (tcs_notes.toScore: made singable): {score, warnings}; throws when nothing can be sung
+function scoreOf() {
+  return N.toScore(N.payload(model(), S.name));
+}
+
+// the notes -> the score -> dict tcs_score -> outlet 4; then the conditions (tcs_notes.convertNotes: made singable,
+// with a warning per kind of fix) -> dict tcs_cond -> outlet 0, to both neural.gen~ objects. The status goes out first
+// (outlet 2), so the dict comes last, as from tcs_max.js. The caption of the result is not sent (tcs_prompt.js makes
+// it); writecond keeps it. The score's warnings are the conversion's too, so they go out once, with it.
 function sendNotes() {
   const m = model();
-  S.fe.words = null; // no phonemes from an older answer
+  const c = S.conv;
+  c.words = null; // no phonemes from an older conversion
+  c.pieceList = null;
+  c.warnings = [];
   S.labels = null;
-  if (!m.notes.length) return;
+  if (!m.notes.length) { c.status = null; return; }
   if (S.ed.curve) S.f0.stale = true;
-  S.fe.status = null; // tcs_max.js answers (through fe) while outlet 0 runs
-  S.fe.warnings = [];
-  const d = new Dict(NOTES_DICT);
-  d.parse(JSON.stringify(N.payload(m, S.name)));
-  outlet(0, "dictionary", NOTES_DICT);
+  let made = null;
+  try {
+    made = scoreOf();
+  } catch (e) {
+    made = null; // the conversion fails the same way and says so
+  }
+  if (made) {
+    dictNamed(S.scoreName).parse(JSON.stringify(made.score));
+    outlet(4, "dictionary", S.scoreName);
+  }
+  let out;
+  try {
+    const t = Date.now();
+    out = N.convertNotes(N.payload(m, S.name), { name: S.name });
+    post(`tcs_ui: ${S.name}: ${out.meta.n_pieces} pieces, ${out.meta.seconds} s, converted in ${Date.now() - t} ms\n`);
+  } catch (e) {
+    c.status = "error";
+    c.shown = e && e.message ? e.message : String(e);
+    error(`tcs_ui: ${c.shown}\n`);
+    statusLine();
+    outlet(2, "error", c.shown);
+    return;
+  }
+  S.result = out;
+  c.status = "ok";
+  c.pieces = out.meta.n_pieces;
+  c.seconds = out.meta.seconds;
+  c.warnings = out.meta.warnings.slice();
+  c.words = out.words || null;
+  c.pieceList = out.pieces || null;
+  S.labels = c.words ? D.phonemeLabels(c.words) : null;
+  const { caption, ...cond } = out;
+  dictNamed(S.outName).parse(JSON.stringify(cond));
+  statusLine();
+  for (const w of out.meta.warnings) outlet(2, "warning", w);
+  outlet(2, "converted", out.meta.n_pieces, out.meta.seconds);
+  outlet(0, "dictionary", S.outName);
 }
 
 function read(path) {
@@ -367,6 +447,7 @@ function clear() {
   S.f0.stale = false;
   S.hover = null;
   S.playhead = null;
+  S.held = !S.playing;
   command(E.apply(S.ed, "clear", (m) => ({ ...m, notes: [], tail: [] }), { selection: [] }));
 }
 
@@ -374,7 +455,7 @@ function write(path) {
   if (path === undefined) return fail("write needs a file name");
   let res;
   try {
-    res = N.toScore(N.payload(model(), S.name));
+    res = scoreOf();
   } catch (e) {
     return fail(e);
   }
@@ -392,32 +473,28 @@ function write(path) {
   }
 }
 
-// the front-end's status: ok <pieces> <seconds> | warning <text> | error <text>
-function fe(kind) {
-  const args = Array.from(arguments).slice(1).map(String);
-  const k = String(kind);
-  if (k === "ok") {
-    S.fe.status = "ok";
-    S.fe.pieces = Number(args[0]);
-    S.fe.seconds = Number(args[1]);
-    try {
-      const r = JSON.parse(new Dict(COND_DICT).stringify());
-      S.fe.words = r.words || null;
-      S.fe.pieceList = r.pieces || null;
-    } catch (e) {
-      S.fe.words = null;
-      S.fe.pieceList = null;
-    }
-    S.labels = S.fe.words ? D.phonemeLabels(S.fe.words) : null;
-  } else if (k === "warning") {
-    S.fe.warnings.push(args.join(" "));
-  } else if (k === "error") {
-    S.fe.status = "error";
-    S.fe.shown = args.join(" ");
-    S.fe.words = null;
-    S.labels = null;
-  } else return;
-  statusLine();
+// the last conversion, with the caption the score's style gives (as scripts/score_to_max.py writes it)
+function writecond(path) {
+  if (path === undefined) return fail("writecond needs a file name");
+  if (!S.result) return fail("nothing converted yet");
+  try {
+    const d = new Dict();
+    d.parse(JSON.stringify(S.result));
+    d.export_json(String(path));
+    post(`tcs_ui: wrote ${path}\n`);
+  } catch (e) {
+    fail(e);
+  }
+}
+
+function out(name) {
+  if (name === undefined) return fail("out needs a dict name");
+  S.outName = String(name);
+}
+
+function outscore(name) {
+  if (name === undefined) return fail("outscore needs a dict name");
+  S.scoreName = String(name);
 }
 
 // ---- the lyrics line (U5, UWP5)
@@ -438,6 +515,24 @@ function tool(t) {
 
 function mode(m) {
   command(E.setMode(S.ed, String(m)));
+}
+
+// the range strip (UWP9): region <s0> <s1> | region clear
+function region(a, b) {
+  if (a === undefined || String(a) === "clear") return route(E.clearRegion(S.ed));
+  command(E.setRegion(S.ed, a, b));
+}
+
+// the vibrato button: its message (the total depth so far) goes to the status line
+function vibrato() {
+  S.message = null;
+  route(E.vibratoClick(S.ed, S.view));
+}
+
+// the offset's arrows: offset <semitones>
+function offset(st) {
+  S.message = null;
+  route(E.offsetClick(S.ed, S.view, Number(st)));
 }
 
 function select() {
@@ -588,7 +683,7 @@ function restore(json, via) {
   S.f0.stale = st.f0.stale;
   S.hover = null;
   S.playhead = null;
-  S.fe.status = null;
+  S.conv.status = null;
   S.labels = null;
   S.view = V.clampView({ ...S.view, ...st.view, maxBeats: V.extentBeats(m, S.view.limitSeconds) });
   update();
@@ -634,6 +729,8 @@ function report() {
   d.writes = S.writes;
   d.playing = S.playing;
   d.playhead = S.playhead;
+  d.region = S.ed.region;
+  d.sync = S.sync;
   outlet(2, "report", JSON.stringify(d));
 }
 
@@ -670,11 +767,21 @@ function snap(value) { viewSetting((v) => V.setSnap(v, String(value))); }
 function bar(beats) { viewSetting((v) => V.setBar(v, beats)); }
 function limit(seconds) { viewSetting((v) => V.setLimit(v, seconds, model())); }
 function range(lo, hi) { viewSetting((v) => V.setRange(v, lo, hi)); }
-function phonemes(on) { viewSetting((v) => V.setPhonemes(v, on === undefined || (Number(on) !== 0 && String(on) !== "off"))); }
+// phonemes 0|1|on|off: hide or show the labels; phonemes <Language>: list that language's phonemes
+function phonemes(on) {
+  const a = on === undefined ? null : String(on);
+  if (a !== null && !/^(0|1|on|off)$/.test(a) && !Number.isFinite(Number(a))) {
+    const list = languagePhonemes(a);
+    if (!list) return fail(`unknown language ${a}`);
+    return outlet(2, ["phonemes", a].concat(list));
+  }
+  viewSetting((v) => V.setPhonemes(v, a === null || (Number(a) !== 0 && a !== "off")));
+}
 
 // ---- playback (UWP7): the patch plays buffer~ tcs_out with [line~] -> [play~], and sends the position back
 
-// from `at` seconds, else from the playhead (or the start, when there is none or it is at the phrase's end)
+// from `at` seconds, else from the playhead (or the start, when there is none or it is at the phrase's end); before 0
+// the patch's line~ starts below 0 and its gate keeps play~ silent until 0 (a lead-in)
 function play(at) {
   const m = model();
   let from = at === undefined ? S.playhead : Number(at);
@@ -682,14 +789,15 @@ function play(at) {
   const r = E.playRange(m, from);
   const ms = (x) => Math.round(x * 1000);
   S.playing = true;
+  S.held = false;
   S.playhead = r.from;
-  outlet(4, "play", ms(r.from), ms(r.to), ms(r.to) - ms(r.from));
+  outlet(5, "play", ms(r.from), ms(r.to), ms(r.to) - ms(r.from));
   statusLine();
 }
 
 function stop() {
   S.playing = false;
-  outlet(4, "stop");
+  outlet(5, "stop");
   statusLine();
 }
 
@@ -699,8 +807,32 @@ function stopped() {
   statusLine();
 }
 
-// the position while playing (snapshot~ sends it on and on with the audio on: drawn only when it moves)
+// a new playhead at <beats> (less the sync offset): while playing, play from there; stopped, keep it (the patch's held
+// position is ignored until play). Past the end: the end; before 0: a lead-in
+function seek(beats) {
+  const b = Number(beats);
+  if (beats === undefined || !Number.isFinite(b)) return fail("seek needs a position in beats");
+  const m = model();
+  const at = Math.min(V.beatsToSeconds(b - S.sync, m.tempo), M.seconds(m));
+  if (S.playing) return play(at);
+  S.held = true;
+  S.playhead = at;
+  statusLine();
+}
+
+// sync <beats>: the host is at <beats> now, which becomes the roll's 0 (and the playhead goes there); sync off | 0: none
+function sync(beats) {
+  const off = beats === undefined || String(beats) === "off";
+  const b = off ? 0 : Number(beats);
+  if (!Number.isFinite(b)) return fail("sync needs the host's position in beats, or off");
+  S.sync = b;
+  if (b) seek(b);
+  else statusLine();
+}
+
+// the position from the patch (snapshot~ sends it on and on with the audio on: drawn only when it moves)
 function playhead(seconds) {
+  if (S.held && !S.playing) return;
   const p = seconds === undefined || seconds === "off" ? null : Number(seconds);
   if (p === S.playhead) return;
   S.playhead = p;
@@ -792,7 +924,8 @@ function onkeydown(code, char, updown, cmd, shift, capslock, alt) {
 function autoScroll(x, y, m) {
   const v = S.view;
   const dx = x < v.keysW ? x - v.keysW : x > v.w - AUTO_EDGE ? x - (v.w - AUTO_EDGE) : 0;
-  const dy = y < v.rulerH ? y - v.rulerH : y > v.h - v.statusH ? y - (v.h - v.statusH) : 0;
+  const strip = S.ed.gesture && S.ed.gesture.kind === "region"; // the range strip is above the roll: no pitch scroll
+  const dy = strip ? 0 : y < v.rulerH ? y - v.rulerH : y > v.h - v.statusH ? y - (v.h - v.statusH) : 0;
   if ((dx || dy) && S.ed.gesture) {
     S.auto = { x, y, m, dx: Math.max(-40, Math.min(40, dx)), dy: Math.max(-40, Math.min(40, dy)) };
     if (!S.autoTimer) S.autoTimer = every(autoTick, AUTO_MS);

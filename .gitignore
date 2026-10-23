@@ -50,7 +50,7 @@ UI_WORK_PACKAGES.md
 # Max export: the exported models and constants, the generated data of the JS front-end
 # (scripts/build_max_js_data.py) and the model symlinks next to the patch
 /export/artifacts/
-/export/max/js/data/
+/export/max/js/lib/data/
 /export/max/js/tcsinger2_*
 # conditions files that scripts/score_to_max.py writes next to each score
 *.max.json

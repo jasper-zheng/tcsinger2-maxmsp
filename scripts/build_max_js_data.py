@@ -1,6 +1,6 @@
 """The data of the JS front-end in Max (export/max/js, D1 of EXPORTING_WORK_PACKAGES.md).
 
-Writes CommonJS modules (`module.exports = JSON.parse("...")`) into export/max/js/data/, so that the JS
+Writes CommonJS modules (`module.exports = JSON.parse("...")`) into export/max/js/lib/data/, so that the JS
 g2p gives what ldm/infer/g2p.py gives without porting what can be precomputed:
 
   tcs_data_phones.js        phone set (id order), pads, nucleus flag per phoneme (timing.is_nucleus),
@@ -16,7 +16,7 @@ g2p gives what ldm/infer/g2p.py gives without porting what can be precomputed:
                             initials and finals, for pinyin typed as text (ported in tcs_pinyin.js).
 
 Each file records the hash of data/meta/phone_set.json, which the JS checks. The files are generated, not
-committed (about 53 MB). Usage (from TCSinger2/):  python scripts/build_max_js_data.py [--out export/max/js/data]
+committed (about 53 MB). Usage (from TCSinger2/):  python scripts/build_max_js_data.py [--out export/max/js/lib/data]
 """
 import argparse
 import hashlib
@@ -89,7 +89,7 @@ def pinyin():
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('--out', default='export/max/js/data')
+    p.add_argument('--out', default='export/max/js/lib/data')
     args = p.parse_args()
     os.makedirs(args.out, exist_ok=True)
     head = dict(format=FORMAT, phone_set_sha1=phone_set_hash())

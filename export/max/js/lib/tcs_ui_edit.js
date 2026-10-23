@@ -2,7 +2,9 @@
 // and no state: tcs_ui.js routes its handlers here and keeps what comes back, so Node can run the same events as Max.
 //
 //   ed = {model, curve, gen, history, selection: [ids], mode: "notes" | "f0", tool: "select" | "pencil",
-//         f0tool: "draw" | "line" | "smooth" | "erase" | "unvoice", clip: [notes], gesture, pointer: {x, y} | null}
+//         f0tool: "draw" | "line" | "smooth" | "erase" | "unvoice", clip: [notes], gesture, pointer: {x, y} | null,
+//         region: {s0, s1} | null}
+//     region      the range strip's range in seconds (UWP9): the vibrato button's range; not in the history, not saved
 //     curve, gen  the working F0 curve (edited, previewed while a stroke is drawn) and the generated one (U3), or null
 //   every function -> {ed, view?, commit?: label, curve?: label, message?: text, consumed?: bool}
 //     view    the view, when it changed (snap, fit)
@@ -27,6 +29,11 @@
 // Keys: Backspace deletes; up/down transpose (Shift: an octave); left/right nudge by the snap (Shift: a bar); Cmd-A,
 // Esc; Cmd-Z, Cmd-Shift-Z; Cmd-C/X/V/D; B toggles the pencil; S splits at the pointer; J joins; F: the F0 mode.
 // Playback (UWP7, both modes): a press on the ruler plays from there; Space plays or stops.
+// The range strip (UWP9, both modes; the ruler's foot): a drag sets the region (snapped; Cmd: free), a click clears it,
+// Esc during the drag puts the old one back. The vibrato button (F0 toolbar, or V in the F0 mode) adds a vibrato of
+// VIB_STEP semitone at VIB_RATE Hz over the region (none: the selected notes, or the whole curve); clicks add up, as the
+// vibrato is added to the curve with its phase from the range's start, and each is one undo step. The offset's arrows
+// beside it (F0 toolbar) move the voiced frames over the same range by OFFSET_STEP semitone per click.
 //
 // The F0 mode (UWP6): the mouse edits the curve and the notes can't be edited. draw: a stroke, linear between the
 // pointer's points; line: from the press to the release; smooth, erase (back to the generated curve) and unvoice:
@@ -39,9 +46,9 @@
 
 "use strict";
 
-const M = require("tcs_ui_model.js");
-const V = require("tcs_ui_view.js");
-const F = require("tcs_ui_f0.js");
+const M = require("./lib/tcs_ui_model.js");
+const V = require("./lib/tcs_ui_view.js");
+const F = require("./lib/tcs_ui_f0.js");
 
 const DRAG_PX = 3; // a press moves nothing until the pointer has moved this far
 const MIN_OFF = 1 / 32; // the shortest note with snap off, in beats
@@ -50,6 +57,9 @@ const BRUSH_PX = 8; // the F0 brushes: the frames this close to the pointer's pa
 const NOTE_TOOLS = ["select", "pencil"];
 const F0_TOOLS = ["draw", "line", "smooth", "erase", "unvoice"];
 const F0_KEYS = { d: "draw", l: "line", s: "smooth", e: "erase", u: "unvoice" };
+const VIB_RATE = 5.5; // Hz: the vibrato button's rate (UWP9)
+const VIB_STEP = 0.05; // semitone: the depth one click adds
+const OFFSET_STEP = 0.2; // semitone: one click on the offset's arrows (UWP9)
 const EPS = M.EPS;
 
 const KEY = { backspace: -7, esc: -3, space: -2 };
@@ -61,12 +71,12 @@ const round9 = (x) => Math.round(x * 1e9) / 1e9;
 
 function create(model, tool = "select", curve = null, gen = curve) {
   return { model, curve, gen, history: M.history(model, curve), selection: [], mode: "notes", tool, f0tool: "draw", clip: [],
-    gesture: null, pointer: null };
+    gesture: null, pointer: null, region: null };
 }
 
-// a new model (a load or a restore): no history, no selection; the curve stays unless one is given (a restore)
+// a new model (a load or a restore): no history, no selection, no region; the curve stays unless one is given (a restore)
 function reset(ed, model, curve = ed.history.curve, gen = ed.gen) {
-  return { ...ed, model, curve, gen, history: M.history(model, curve), selection: [], gesture: null };
+  return { ...ed, model, curve, gen, history: M.history(model, curve), selection: [], gesture: null, region: null };
 }
 
 // a new generated curve (f0 refresh), or none: it replaces the working one with no step, and the curve-only steps go
@@ -268,9 +278,8 @@ const NO_CURVE = "no F0 curve: generate it first";
 // each with an optional range <s0> <s1> in seconds (else, or when s1 <= s0, e.g. 0 0: the selected notes' spans, or the
 // whole curve); and
 // draw <s> <midi> <s> <midi>..., line <s0> <m0> <s1> <m1>
-function f0(ed, v, op, args = []) {
+function f0(ed, v, op, args = [], label = `F0 ${op}`) {
   const curve = ed.history.curve;
-  const label = `F0 ${op}`;
   if (!curve) return { ed, message: `${label}: ${NO_CURVE}` };
   const a = args.map(Number);
   if (a.some((x) => !Number.isFinite(x))) return { ed, message: `${label}: expected numbers` };
@@ -344,10 +353,11 @@ function f0Drag(e, v, g, x, y, mods) {
 function press(ed, v, x, y, mods = {}) {
   const e = { ...ed, pointer: { x, y }, gesture: null };
   const button = V.hitToolbar(v, x, y, e.mode);
-  if (button) return toolbar(e, v, button);
-  if (x >= v.keysW && x < v.w && y >= 0 && y < v.rulerH) {
+  if (button) return toolbar(e, v, button, mods);
+  if (V.inRuler(v, x, y)) {
     return { ed: e, transport: { at: Math.max(0, V.beatsToSeconds(V.xToBeat(v, x), e.history.present.tempo)) } };
   }
+  if (V.inRegionStrip(v, x, y)) return { ed: { ...e, gesture: { kind: "region", s: regionAt(e, v, x, mods), x0: x, before: e.region, moved: false } } };
   if (!V.inRoll(v, x, y)) return { ed: e };
   if (e.mode === "f0") return f0Press(e, v, x, y, mods);
   const base = e.history.present;
@@ -375,13 +385,15 @@ function press(ed, v, x, y, mods = {}) {
   return { ed: { ...e, selection: before, gesture: { kind: "rubber", x0: x, y0: y, x1: x, y1: y, before } } };
 }
 
-function toolbar(ed, v, id) {
+function toolbar(ed, v, id, mods = {}) {
   if (id === "mode") return setMode(ed, ed.mode === "f0" ? "notes" : "f0");
   if (NOTE_TOOLS.includes(id) || F0_TOOLS.includes(id)) return setTool(ed, id);
   if (id.startsWith("snap:")) return { ed, view: V.setSnap(v, id.slice(5)) };
   if (id === "undo") return undo(ed);
   if (id === "redo") return redo(ed);
   if (id === "fit") return { ed, view: V.fit(v, ed.model) };
+  if (id === "vibrato") return vibratoClick(ed, v);
+  if (id === "offsetUp" || id === "offsetDown") return offsetClick(ed, v, id === "offsetUp" ? OFFSET_STEP : -OFFSET_STEP);
   if (id === "ph") return { ed, view: V.setPhonemes(v, !v.showPh) };
   return { ed };
 }
@@ -391,6 +403,12 @@ function drag(ed, v, x, y, mods = {}) {
   const e = { ...ed, pointer: { x, y } };
   if (!g) return { ed: e };
   if (g.kind.startsWith("f0")) return f0Drag(e, v, g, x, y, mods);
+  if (g.kind === "region") {
+    if (!g.moved && Math.abs(x - g.x0) < DRAG_PX) return { ed: e };
+    const s = regionAt(e, v, x, mods);
+    const region = s === g.s ? null : { s0: Math.min(s, g.s), s1: Math.max(s, g.s) };
+    return { ed: { ...e, region, gesture: { ...g, moved: true } } };
+  }
   const free = !!mods.cmd;
   if (g.kind === "move") {
     if (!g.moved && Math.hypot(x - g.x0, y - g.y0) < DRAG_PX) return { ed: e };
@@ -439,6 +457,7 @@ function release(ed, v, x, y, mods = {}) {
   const r = drag(ed, v, x, y, mods);
   const e = { ...r.ed, gesture: null };
   if (g.kind.startsWith("f0")) return commitCurve(e, e.curve, { f0draw: "draw F0", f0line: "F0 line" }[g.kind] || `F0 ${g.tool}`);
+  if (g.kind === "region") return { ed: r.ed.gesture.moved ? e : { ...e, region: null } }; // a click clears it
   if (g.kind === "move" && !r.ed.gesture.moved) {
     // a click: a note of a group becomes the selection
     return { ed: { ...e, model: g.base, selection: g.was && !mods.shift ? [g.id] : e.selection } };
@@ -464,6 +483,7 @@ function dblclick(ed, v, x, y) {
 function cancel(ed) {
   if (!ed.gesture) return { ed };
   if (ed.gesture.kind.startsWith("f0")) return { ed: { ...ed, curve: ed.history.curve, gesture: null } };
+  if (ed.gesture.kind === "region") return { ed: { ...ed, region: ed.gesture.before, gesture: null } };
   return { ed: { ...ed, model: ed.gesture.base || ed.model, gesture: null } };
 }
 
@@ -479,7 +499,7 @@ function key(ed, v, code, char, mods = {}) {
   if (code === KEY.esc || char === CHAR.esc) return done(ed.gesture ? cancel(ed) : { ed: { ...ed, selection: [] } });
   if (ed.gesture) return { ed, consumed: true }; // no keys in the middle of a drag
   if ((code === KEY.space || char === 32) && !mods.cmd) return { ed, transport: "toggle", consumed: true };
-  if (ed.mode === "f0") return f0Key(ed, code, char, mods);
+  if (ed.mode === "f0") return f0Key(ed, v, code, char, mods);
   if (code === KEY.backspace || char === CHAR.backspace || char === CHAR.del) return done(del(ed));
   if (char === CHAR.up || char === CHAR.down) return done(move(ed, v, 0, (char === CHAR.up ? 1 : -1) * (mods.shift ? 12 : 1)));
   if (char === CHAR.left || char === CHAR.right) {
@@ -504,7 +524,7 @@ function key(ed, v, code, char, mods = {}) {
 }
 
 // the keys of the F0 mode: the note keys do nothing (and are not consumed), so a note can't be deleted unseen
-function f0Key(ed, code, char, mods) {
+function f0Key(ed, v, code, char, mods) {
   const done = (r) => ({ ...r, consumed: true });
   const k = letter(code, char);
   if (mods.cmd) {
@@ -514,15 +534,82 @@ function f0Key(ed, code, char, mods) {
   }
   if (k === "f") return done(setMode(ed, "notes"));
   if (F0_KEYS[k]) return done(setTool(ed, F0_KEYS[k]));
+  if (k === "v") return done(vibratoClick(ed, v));
   return { ed, consumed: false };
+}
+
+// ---- the range strip and the vibrato button (UWP9)
+
+// the strip's time at x: snapped to the grid (Cmd: free), in seconds, within 0..20 s
+function regionAt(ed, v, x, mods = {}) {
+  const tempo = ed.history.present.tempo;
+  const s = V.beatsToSeconds(snapTo(v, V.xToBeat(v, x), !!mods.cmd), tempo);
+  return Math.min(V.MAX_SECONDS, Math.max(0, round9(s)));
+}
+
+function setRegion(ed, s0, s1) {
+  const a = Number(s0);
+  const b = Number(s1);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return { ed, message: "region: expected <s0> <s1> or clear" };
+  const lo = Math.min(V.MAX_SECONDS, Math.max(0, Math.min(a, b)));
+  const hi = Math.min(V.MAX_SECONDS, Math.max(0, Math.max(a, b)));
+  return { ed: { ...ed, region: hi > lo ? { s0: lo, s1: hi } : null } };
+}
+
+function clearRegion(ed) {
+  return { ed: { ...ed, region: null } };
+}
+
+// where the buttons act: the region (as a range command's <s0> <s1>), else the selected notes, else the whole curve
+function target(ed) {
+  const r = ed.region;
+  const sel = existing(ed.history.present, ed.selection).length;
+  return { range: r ? [r.s0, r.s1] : [], where: r ? `${r.s0.toFixed(2)}-${r.s1.toFixed(2)} s` : sel ? `the ${sel} selected note(s)` : "the whole curve" };
+}
+
+// one click: VIB_STEP semitone more at VIB_RATE Hz over the region (none: the selected notes, or the whole curve);
+// the message says the depth so far, from the steps of the same label at the end of the history
+function vibratoClick(ed, v) {
+  if (ed.mode !== "f0") return { ed, message: "vibrato: in the F0 mode (F)" };
+  const { range, where } = target(ed);
+  const r = range.length ? { s0: range[0], s1: range[1] } : null;
+  const label = `F0 vibrato ${where}`;
+  const out = f0(ed, v, "vibrato", [VIB_RATE, VIB_STEP].concat(r ? [r.s0, r.s1] : []), label);
+  if (!out.curve) return out.message ? out : { ...out, message: `vibrato: nothing voiced over ${where}` };
+  const past = out.ed.history.past;
+  let n = 0;
+  while (n < past.length && past[past.length - 1 - n].label === label) n++;
+  const depth = Math.round(n * VIB_STEP * 100) / 100;
+  return { ...out, message: `vibrato over ${where}: ${depth} semitone at ${VIB_RATE} Hz` };
+}
+
+// one click on the offset's arrows: the voiced frames over the region (none: the selected notes, or the whole curve)
+// move by st semitones; the message says the total so far, from the offset steps over the same place at the end of
+// the history (their labels carry the amount)
+function offsetClick(ed, v, st) {
+  if (ed.mode !== "f0") return { ed, message: "offset: in the F0 mode (F)" };
+  if (!Number.isFinite(st) || st === 0) return { ed, message: "offset: expected a number of semitones" };
+  const { range, where } = target(ed);
+  const amount = (x) => `${x > 0 ? "+" : ""}${Math.round(x * 100) / 100}`;
+  const out = f0(ed, v, "offset", [st].concat(range), `F0 offset ${amount(st)} ${where}`);
+  if (!out.curve) return out.message ? out : { ...out, message: `offset: nothing voiced over ${where}` };
+  const past = out.ed.history.past;
+  let total = 0;
+  for (let k = past.length - 1; k >= 0; k--) {
+    const m = /^F0 offset ([+-][\d.]+) (.*)$/.exec(past[k].label);
+    if (!m || m[2] !== where) break;
+    total += Number(m[1]);
+  }
+  return { ...out, message: `offset over ${where}: ${amount(total)} semitone` };
 }
 
 // ---- playback (UWP7)
 
-// what a playback from `at` seconds plays: to the phrase's end and a little more (at least PLAY_TAIL), within 20 s
+// what a playback from `at` seconds plays: to the phrase's end and a little more (at least PLAY_TAIL), within 20 s.
+// Before 0 it starts there (a lead-in of silence: the patch gates play~ until 0)
 function playRange(model, at) {
   const to = Math.min(V.MAX_SECONDS, Math.max(M.seconds(model), at) + PLAY_TAIL);
-  return { from: Math.min(Math.max(0, at), to), to };
+  return { from: Math.min(at, to), to };
 }
 
 // S: the note under the pointer (else the selected notes) split at the snapped pointer beat
@@ -535,6 +622,7 @@ function splitAtPointer(ed, v) {
 }
 
 module.exports = {
-  create, reset, setCurve, playRange, apply, commit, commitCurve, setTool, setMode, f0, select, selectAll, addNote, del, move, resize, split, join, rest, lyrics, undo, redo,
+  create, reset, setCurve, playRange, apply, commit, commitCurve, setTool, setMode, f0, setRegion, clearRegion, vibratoClick,
+  offsetClick, regionAt, VIB_RATE, VIB_STEP, OFFSET_STEP, select, selectAll, addNote, del, move, resize, split, join, rest, lyrics, undo, redo,
   copy, cut, paste, duplicate, press, drag, release, dblclick, cancel, key, KEY, CHAR, NOTE_TOOLS, F0_TOOLS,
 };

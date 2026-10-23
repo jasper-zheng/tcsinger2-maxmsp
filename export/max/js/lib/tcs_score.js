@@ -9,8 +9,8 @@
 
 "use strict";
 
-const { scoreError, repr, isNumber, pySum } = require("tcs_util.js");
-const data = require("tcs_data.js");
+const { scoreError, repr, isNumber, pySum } = require("./lib/tcs_util.js");
+const data = require("./lib/tcs_data.js");
 
 const MAX_SECONDS = 20.0;
 const F0_FPS = 48000 / 256;

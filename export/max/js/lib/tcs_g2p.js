@@ -8,9 +8,9 @@
 
 "use strict";
 
-const { g2pError, own, has, reprStr, nfc, stripChars } = require("tcs_util.js");
-const data = require("tcs_data.js");
-const { chinese } = require("tcs_pinyin.js");
+const { g2pError, own, has, reprStr, nfc, stripChars } = require("./lib/tcs_util.js");
+const data = require("./lib/tcs_data.js");
+const { chinese } = require("./lib/tcs_pinyin.js");
 
 const REST = ["<AP>", "<SP>"];
 const STRIP = " \t.,;:!?¡¿\"()[]…«»";

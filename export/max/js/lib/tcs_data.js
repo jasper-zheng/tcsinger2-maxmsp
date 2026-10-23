@@ -1,8 +1,10 @@
 // tcs_data.js: loads the generated data modules (scripts/build_max_js_data.py) on first use and keeps them.
 //
-// The data modules are required as "./data/tcs_data_<name>.js": Max does not look into subfolders for a
-// bare name, and Max's require returns undefined (posting "could not find file") instead of throwing
-// when a file is missing. A bare name is tried second, for data placed elsewhere in Max's search path.
+// The data modules are required as "./lib/data/tcs_data_<name>.js": Max resolves a relative path against the
+// patch's folder (export/max/js), also from a module in lib/, and does not look into subfolders for a bare name;
+// Max's require returns undefined (posting "could not find file") instead of throwing when a file is missing. A
+// bare name is tried second, for data placed elsewhere in Max's search path. Under Node, export_check/node_lib.js
+// maps "./lib/..." to this folder.
 // The phone set of every file must be the one of the phones file, else the data is from another build.
 
 "use strict";
@@ -18,7 +20,7 @@ function load(name) {
   const t = Date.now();
   const file = "tcs_data_" + name + ".js";
   let data, why = "not found";
-  for (const path of ["./data/" + file, file]) {
+  for (const path of ["./lib/data/" + file, file]) {
     try {
       data = require(path);
     } catch (e) {
@@ -29,7 +31,7 @@ function load(name) {
   }
   if (!data)
     throw new Error(`cannot load ${file} (${why}); build it with scripts/build_max_js_data.py, which writes it into ` +
-      "export/max/js/data/");
+      "export/max/js/lib/data/");
   if (data.format !== FORMAT) throw new Error(`tcs_data_${name}.js has format ${data.format}, expected ${FORMAT}`);
   if (name !== "phones" && data.phone_set_sha1 !== phones().phone_set_sha1)
     throw new Error(`tcs_data_${name}.js was built from another phone set than tcs_data_phones.js; rebuild the data`);
