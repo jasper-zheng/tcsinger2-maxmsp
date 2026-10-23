@@ -7,7 +7,8 @@
 // the generated curve (from score2f0) is kept, and the working one, edited, goes into the buffer after each stroke.
 //
 // Inlet:
-//   read <file.json>, dictionary <name>   load a score (the format of ldm/infer/score.py); the view fits it
+//   read <file.json>, dictionary <name>   load a score (the format of ldm/infer/score.py); the view fits it. The roll
+//                                         keeps its own tempo: the notes keep their beats, so the score's tempo is not used
 //   language <L>, tempo <bpm>             change the notes (a tempo keeps the beats, so the seconds change)
 //   bang                                  convert the notes again and send the dict;  clear: no notes
 //   write <file.json>                     write the notes as a score (made singable, as the conversion does)
@@ -43,8 +44,9 @@
 //   view fit, view <beat0> <beat1> <midiLo> <midiHi>, zoom <fx> <fy>, scrollby <beats> <rows>
 //   snap 1/1 | 1/2 | 1/4 | 1/8 | 1/16 | off, bar <beats>    the grid (U1); a bar is 4 beats by default
 //   limit <seconds>, range <lo> <hi>      the shaded limit (20 s) and the pitch rows (1..98): display only
-//   play [<s>], stop                      play buffer~ tcs_out from <s> (else from the playhead, or the start) to the
-//                                         phrase's end; stop. Also a press on the ruler (play from there) and Space.
+//   play [<beats>], stop                  play buffer~ tcs_out from <beats> (less the sync offset, as seek; else from the
+//                                         playhead, or the start) to the phrase's end; stop. Also a press on the ruler
+//                                         (play from there) and Space.
 //   stopped                               from the patch: the playback reached its end
 //   seek <beats>                          move the playhead (the roll's beats, less the sync offset: so the host's
 //                                         beats after a sync): while playing, play from there (as a click on the ruler);
@@ -205,13 +207,14 @@ function readText(path) {
 }
 
 function load(obj, name) {
+  const bpm = model().tempo;
   let res;
   try {
     res = N.fromScore(obj, name);
   } catch (e) {
     return fail(e);
   }
-  S.ed = E.reset(S.ed, res.model);
+  S.ed = E.reset(S.ed, { ...res.model, tempo: bpm }); // the roll's tempo, not the score's
   S.name = res.model.name || name;
   S.hover = null;
   S.playhead = null;
@@ -312,7 +315,7 @@ function statusLine() {
     S.status = n ? `${noteName(n.midi)} · ${JSON.stringify(n.lyric)}` +
       phonemeText(n.id) + frontEnd() : "";
   } else {
-    S.status = `${S.name} · ${M.seconds(m).toFixed(2)} s · ` +
+    S.status = `${M.seconds(m).toFixed(2)} s · ` +
       `${S.ed.mode === "f0" ? `F0 ${S.ed.f0tool}` : S.ed.tool}` + (S.sync ? ` · sync ${S.sync}` : "") + frontEnd() + curveState();
     if (S.playing && S.playhead !== null) S.status = `▶ ${S.playhead.toFixed(2)} s · ${S.status}`;
   }
@@ -419,8 +422,8 @@ function route(r) {
     if (!r.commit) notifyclients();
   }
   if (r.focus === "lyrics") outlet(3, "select");
-  if (r.transport === "toggle") (S.playing ? stop : play)();
-  else if (r.transport) play(r.transport.at);
+  if (r.transport === "toggle") (S.playing ? stop : playFrom)();
+  else if (r.transport) playFrom(r.transport.at);
 }
 
 // a message's command: its errors are errors
@@ -780,9 +783,17 @@ function phonemes(on) {
 
 // ---- playback (UWP7): the patch plays buffer~ tcs_out with [line~] -> [play~], and sends the position back
 
+// play [<beats>]: from <beats> less the sync offset (as seek), else from the playhead
+function play(beats) {
+  if (beats === undefined) return playFrom();
+  const b = Number(beats);
+  if (!Number.isFinite(b)) return fail("play needs a position in beats");
+  playFrom(V.beatsToSeconds(b - S.sync, model().tempo));
+}
+
 // from `at` seconds, else from the playhead (or the start, when there is none or it is at the phrase's end); before 0
 // the patch's line~ starts below 0 and its gate keeps play~ silent until 0 (a lead-in)
-function play(at) {
+function playFrom(at) {
   const m = model();
   let from = at === undefined ? S.playhead : Number(at);
   if (from === null || !Number.isFinite(from) || (at === undefined && from >= M.seconds(m) - 1e-3)) from = 0;
@@ -814,7 +825,7 @@ function seek(beats) {
   if (beats === undefined || !Number.isFinite(b)) return fail("seek needs a position in beats");
   const m = model();
   const at = Math.min(V.beatsToSeconds(b - S.sync, m.tempo), M.seconds(m));
-  if (S.playing) return play(at);
+  if (S.playing) return playFrom(at);
   S.held = true;
   S.playhead = at;
   statusLine();

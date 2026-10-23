@@ -190,8 +190,8 @@ The patch's F0 row under the lyrics line has the range commands: `f0 snap` (the 
 
 **Playback** (UWP7): click the ruler to play `buffer~ tcs_out` from that point, or press Space to play from the playhead (from the start when it is at the end) and to stop; a click on the ruler while playing jumps there. Playback runs to the phrase's end plus half a second. The patch's `play` and `stop` buttons do the same. The roll sends `play <from_ms> <to_ms> <dur_ms>` or `stop` out of its outlet 5. The patch drives `[play~ tcs_out]` with a `[line~]` of positions, fades the output in and out over 5 ms, and sends the same position back as `playhead <s>` (`[snapshot~ 30]`), with `stopped` at the end. So the playhead is where `play~` reads. It stays where playback stopped, marked on the ruler, and is redrawn only when it moves. The audio must be on.
 
-**Syncing to a host** (e.g. Ableton): send `sync <beats>` with the host's playhead, and that beat becomes the roll's 0. After that, send the host's playheads as `seek <beats>`. After `sync 4`, `seek 4.5` puts the playhead half a beat into the phrase, and `seek 2` puts it 2 beats before the start. Playing from there gives a lead-in: the patch's `[line~]` starts below 0, and a `[>=~ 0.]` gate keeps the output silent until the position reaches 0, so the phrase starts exactly on the sync point. `seek` behaves as before: while playing it jumps, and stopped it only moves the playhead, for the next `play` (e.g. on the host's transport start).
-- **The beats** are the roll's beats at the score's tempo, so set the roll's `tempo` to the host's or the two drift apart.
+**Syncing to a host** (e.g. Ableton): send `sync <beats>` with the host's playhead, and that beat becomes the roll's 0. After that, send the host's playheads as `seek <beats>` or `play <beats>`, both in the host's beats. After `sync 4`, `seek 4.5` puts the playhead half a beat into the phrase, and `seek 2` puts it 2 beats before the start. Playing from there gives a lead-in: the patch's `[line~]` starts below 0, and a `[>=~ 0.]` gate keeps the output silent until the position reaches 0, so the phrase starts exactly on the sync point. `seek` behaves as before: while playing it jumps, and stopped it only moves the playhead, for the next `play` (e.g. on the host's transport start).
+- **The beats** are the roll's beats at the roll's tempo, so set the roll's `tempo` to the host's or the two drift apart. A loaded score does not change it.
 - **The offset** is not saved with the patch. `sync off` removes it, and while it is set the status line shows "sync <beats>".
 
 **Lyrics** (U5): `[textedit @outputmode 1 @keymode 1]` under the roll, cabled both ways (its `text <line>` into the roll; the roll's outlet 3 sends it `set <line>` and `select`).
@@ -207,8 +207,8 @@ Beats for the notes, seconds for the curve and playback. Without ids, the note e
 | message | what it does |
 |---|---|
 | **Scores** | |
-| `read <file.json>` | reads a score file (the format of `ldm/infer/score.py`); the view fits it |
-| `dictionary <name>` | a score held in a Max `dict` |
+| `read <file.json>` | reads a score file (the format of `ldm/infer/score.py`); the view fits it. The roll keeps its own tempo (120 bpm in a new roll): the notes keep their beats, and the score's `tempo` is not used, so a score written at another tempo sings faster or slower. Send `tempo` before the read to hear it at its own tempo (60 bpm for a score with none) |
+| `dictionary <name>` | a score held in a Max `dict` (the roll's tempo kept, as `read`) |
 | `write <file.json>` | writes the notes as a score, made singable as the conversion makes them |
 | `writecond <file.json>` | writes the last conversion, with the caption the score's style gives (as `scripts/score_to_max.py`) |
 | `out <name>` | the name of the conditions `dict` (default `tcs_cond`) |
@@ -257,7 +257,7 @@ Beats for the notes, seconds for the curve and playback. Without ids, the note e
 | `limit <seconds>` | the shaded limit (20 s), display only |
 | `range <lo> <hi>` | the pitch rows (1–98), display only |
 | **Playback** | |
-| `play [<s>]` | plays `buffer~ tcs_out` from `<s>`, else from the playhead (or the start), to the phrase's end plus 0.5 s |
+| `play [<beats>]` | plays `buffer~ tcs_out` from a beat (after a `sync`, the host's beat, as `seek`), else from the playhead (or the start), to the phrase's end plus 0.5 s. Before 0 it plays a lead-in of silence |
 | `stop` | stops |
 | `stopped` | from the patch: the playback reached its end |
 | `seek <beats>` | moves the playhead to a beat (after a `sync`, the host's beat): while playing, plays from there (as a click on the ruler); stopped, the next `play` or Space starts there. Past the end it stops at the end; before 0 it plays a lead-in of silence |
@@ -285,7 +285,7 @@ The roll also takes Max's own messages to a `v8ui`: the mouse and keys, and `get
 | 4 | `dictionary tcs_score`, the edited notes as a score: with every conversion and before it (also when the conversion then fails); nothing when nothing can be sung | anything that wants the score, e.g. `[dict.view]`, `[dict]` with `export_json`, or another roll's `dictionary` |
 | 5 | `play <from_ms> <to_ms> <dur_ms>` and `stop` (`from_ms` is below 0 for a lead-in) | `[route play stop]` → `[line~]` → `[play~ tcs_out]`; the position comes back as `playhead <s>` (`[snapshot~ 30]`), and `stopped` at the end |
 
-Outlet 4's score is the one `write` writes, in the format `read` takes: the notes made singable, with pitches as MIDI numbers, each rest with its `type`, the score's `style` and a `name`. It holds the notes only, with no `"f0"`. Read back by a roll (`dictionary tcs_score`), it gives the same notes and conditions.
+Outlet 4's score is the one `write` writes, in the format `read` takes: the notes made singable, with pitches as MIDI numbers, each rest with its `type`, the roll's `tempo`, the score's `style` and a `name`. It holds the notes only, with no `"f0"`. Read back by a roll (`dictionary tcs_score`), it gives the same notes and conditions.
 
 The status line at the roll's bottom shows the conversion's status (its pieces, the first warning, or the error), the hovered note or curve value, "F0 stale" and the playback position.
 
