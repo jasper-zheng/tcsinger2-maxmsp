@@ -15,10 +15,16 @@
 //   vibrato(curve, ranges, rate, depth)   + depth * sin(2 pi rate (t - s0)) on the voiced frames, s0 each range's start
 //   snap(curve, notes, tempo, frames)     the voiced frames to the pitch of the note sounding there (the later note wins)
 //   edited(gen, work)            {frames, runs: [[j0, j1), ...]} where they differ
+//   fromHz(f0, fps, n, stretch)  a score's "f0" (Hz at fps, 0 = unvoiced) as a curve of n frames, read as
+//                                ldm/infer/f0_input.curve_at reads it (log-linear between voiced frames, unvoiced where the
+//                                nearest frame is, and outside the span) at score time j / 50 * stretch: {curve, cut}, cut =
+//                                the voiced frames past the curve's end
+//   toHz(curve)                  the curve as a score's "f0" at 50 Hz (f0_fps 50): Hz to 1e-3, the unvoiced end left out
 
 "use strict";
 
 const FPS = 50;
+const FRAMES = 1003; // the curve of score2f0 and buffer~ tcs_f0 (EWP D7): 20.06 s
 const SMOOTH_HALF = 2; // the moving average: 2 frames on either side
 
 const f32 = Math.fround;
@@ -146,4 +152,42 @@ function edited(gen, work) {
   return { frames: count, runs };
 }
 
-module.exports = { frames, whole, spans, draw, smooth, unvoice, reset, offset, vibrato, snap, edited, FPS };
+const LN440 = Math.log(440);
+
+function fromHz(f0, fps, n = FRAMES, stretch = 1) {
+  const len = f0.length;
+  const curve = new Array(n).fill(0);
+  const voicedAt = (i) => f0[i] > 0;
+  // the voiced frame at or before / at or after each frame
+  const prev = new Array(len);
+  const next = new Array(len);
+  for (let i = 0, p = -1; i < len; i++) { if (voicedAt(i)) p = i; prev[i] = p; }
+  for (let i = len - 1, q = -1; i >= 0; i--) { if (voicedAt(i)) q = i; next[i] = q; }
+  const logf = (i) => Math.log(f0[i]);
+  for (let j = 0; j < n && len; j++) {
+    const k = (j / FPS) * stretch * fps; // the position in the score's frames
+    if (k < -0.5 || k > len - 1 + 0.5) continue;
+    const right = Math.min(Math.max(Math.ceil(k), 1), Math.max(len - 1, 0));
+    const nearest = len === 1 ? 0 : k - (right - 1) <= right - k ? right - 1 : right;
+    if (!voicedAt(nearest)) continue;
+    const a = prev[Math.min(Math.max(Math.floor(k), 0), len - 1)];
+    const b = Math.ceil(k) <= len - 1 ? next[Math.max(Math.ceil(k), 0)] : -1;
+    let lf;
+    if (a < 0) lf = logf(b);
+    else if (b < 0 || a === b) lf = logf(a);
+    else lf = logf(a) + ((logf(b) - logf(a)) * (k - a)) / (b - a);
+    curve[j] = f32(69 + (12 * (lf - LN440)) / Math.LN2);
+  }
+  let cut = 0;
+  for (let i = 0; i < len; i++) if (voicedAt(i) && i / fps / stretch >= n / FPS) cut++;
+  return { curve, cut };
+}
+
+function toHz(curve) {
+  const hz = Array.from(curve, (m) => (voiced(m) ? Math.round(440 * Math.pow(2, (m - 69) / 12) * 1000) / 1000 : 0));
+  let end = hz.length;
+  while (end > 1 && hz[end - 1] === 0) end--;
+  return hz.slice(0, Math.max(end, 1));
+}
+
+module.exports = { frames, whole, spans, draw, smooth, unvoice, reset, offset, vibrato, snap, edited, fromHz, toHz, FPS, FRAMES };

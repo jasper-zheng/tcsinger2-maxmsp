@@ -514,6 +514,15 @@ function icon(g, id, x, y, w, h) {
     g.set_line_width(1.5);
     g.move_to(cx + 5.5, cy - 6); g.line_to(cx + 5.5, cy - 1); g.stroke();
     g.move_to(cx + 3, cy - 3.5); g.line_to(cx + 8, cy - 3.5); g.stroke();
+  } else if (id === "clearf0") { // the vibrato's wave, and a cross: the curves go
+    g.set_line_width(1.3);
+    g.move_to(cx - 8, cy + 2);
+    g.curve_to(cx - 5, cy - 4, cx - 3, cy - 4, cx, cy + 2);
+    g.curve_to(cx + 2, cy + 6, cx + 4, cy + 6, cx + 6, cy + 2);
+    g.stroke();
+    g.set_line_width(1.5);
+    g.move_to(cx + 3, cy - 6); g.line_to(cx + 8, cy - 1); g.stroke();
+    g.move_to(cx + 8, cy - 6); g.line_to(cx + 3, cy - 1); g.stroke();
   } else if (id === "offsetUp" || id === "offsetDown") { // the offset's arrows: a triangle up or down
     const k = id === "offsetUp" ? -1 : 1;
     g.move_to(cx - 4, cy - 2 * k); g.line_to(cx + 4, cy - 2 * k); g.line_to(cx, cy + 2.5 * k); g.close_path(); g.fill();
@@ -540,7 +549,7 @@ function drawBar(g, v, scene, sum) {
   for (const b of buttons) {
     const on = b.kind === "tool" ? (f0 ? scene.f0tool : scene.tool) === b.id : b.kind === "snap" ? `snap:${v.snap}` === b.id :
       b.kind === "toggle" ? !!v.showPh : b.kind === "mode" ? f0 : false;
-    const off = (b.id === "undo" && !scene.canUndo) || (b.id === "redo" && !scene.canRedo);
+    const off = (b.id === "undo" && !scene.canUndo) || (b.id === "redo" && !scene.canRedo) || (b.id === "clearf0" && !scene.curve && !scene.gen);
     fillRect(g, on ? C.buttonOn : C.button, b.x, b.y, b.w, b.h);
     rgba(g, on ? C.buttonTextOn : off ? C.buttonOff : C.buttonText);
     if (b.kind === "snap" || b.kind === "mode" || b.id === "fit" || b.id === "ph") {

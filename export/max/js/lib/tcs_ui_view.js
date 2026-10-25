@@ -241,12 +241,13 @@ const inRoll = (v, x, y) => x >= v.keysW && x < v.w && y >= v.rulerH && y < v.h 
 // ---- the toolbar, at the left of the bottom bar: [{id, x, y, w, h, kind}] and where the status text starts. Its
 // tools are the mode's (UWP6): the notes' select and pencil and the snap, or the F0 curve's tools and the vibrato button
 // (UWP9: +0.05 semitone at 5.5 Hz per click, over the range strip's range) with the offset's up and down arrows beside
-// it, stacked in one slot (a "stack" is two half-height buttons, <id>Up over <id>Down).
+// it, stacked in one slot (a "stack" is two half-height buttons, <id>Up over <id>Down), then the clear button (both
+// curves forgotten, as f0 clear).
 
 const TOOLS = {
   notes: [["select", 20, "tool"], ["pencil", 20, "tool"], [null, 8]].concat(SNAPS.map((s) => [`snap:${s}`, s === "1/16" ? 30 : 26, "snap"])),
   f0: [["draw", 20, "tool"], ["line", 20, "tool"], ["smooth", 20, "tool"], ["erase", 20, "tool"], ["unvoice", 20, "tool"],
-    [null, 8], ["vibrato", 24, "action"], ["offset", 16, "stack"]],
+    [null, 8], ["vibrato", 24, "action"], ["offset", 16, "stack"], [null, 8], ["clearf0", 24, "action"]],
 };
 const toolbar = (mode) => [["mode", 24, "mode"], [null, 8]].concat(TOOLS[mode === "f0" ? "f0" : "notes"])
   .concat([[null, 8], ["undo", 20, "action"], ["redo", 20, "action"], [null, 8], ["fit", 26, "action"], ["ph", 24, "toggle"]]);

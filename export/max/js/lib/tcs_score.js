@@ -4,8 +4,8 @@
 //    "words": [{"rest": 1.0}, {"text": "where", "notes": [["C4", 1]]}, ...]}
 //
 // A Score is {language, words, style, name, f0, f0_fps}; a word is {text, notes: [[midi, seconds]], ph,
-// ph_durs, notes_per_syllable, isRest}. "f0" is checked as in Python and kept, though the Max front-end
-// does not use it.
+// ph_durs, notes_per_syllable, isRest}. "f0" is checked as in Python and kept: the conditions do not use it,
+// the piano roll takes it as its curve (tcs_notes.fromScore).
 
 "use strict";
 

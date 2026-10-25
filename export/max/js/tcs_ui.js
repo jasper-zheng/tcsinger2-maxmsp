@@ -8,10 +8,13 @@
 //
 // Inlet:
 //   read <file.json>, dictionary <name>   load a score (the format of ldm/infer/score.py); the view fits it. The roll
-//                                         keeps its own tempo: the notes keep their beats, so the score's tempo is not used
+//                                         keeps its own tempo: the notes keep their beats, so the score's tempo is not used.
+//                                         A score's "f0" becomes the generated and the working curve (at 50 Hz, stretched
+//                                         to the roll's tempo with a warning), written into the buffer (outlet 1)
 //   language <L>, tempo <bpm>             change the notes (a tempo keeps the beats, so the seconds change)
 //   bang                                  convert the notes again and send the dict;  clear: no notes
-//   write <file.json>                     write the notes as a score (made singable, as the conversion does)
+//   write <file.json>                     write the notes as a score (made singable, as the conversion does), with the
+//                                         working curve as its "f0" (as outlet 4)
 //   writecond <file.json>                 write the last conversion (with the score's caption, as scripts/score_to_max.py)
 //   out <name>                            the name of the conditions dict (default tcs_cond)
 //   outscore <name>                       the name of the score dict of outlet 4 (default tcs_score)
@@ -23,7 +26,8 @@
 //   phonemes <Language>                   list the phonemes a score's "ph" may use (out of outlet 2)
 //   f0 refresh                            read the curve from the buffer (after score2f0's done bang): it is the generated
 //                                         curve and the working one; hand edits are dropped (U4)
-//   f0 buffer <name>, f0 clear            the buffer to read (default tcs_f0); forget the curve
+//   f0 buffer <name>, f0 clear            the buffer to read (default tcs_f0); forget both curves (also the F0
+//                                         toolbar's clear button; not a step, the buffer is left as it is)
 //   f0 offset <st> [<s0> <s1>]            the curve edits (UWP6), one undo step each; times in seconds. Without a range
 //   f0 vibrato <rate> <depth> [<s0> <s1>] (or with s1 <= s0, e.g. 0 0): the selected notes' spans, or the whole curve.
 //   f0 unvoice|reset|snap|smooth [<s0> <s1>]   unvoice: 0; reset: the generated curve; snap: the notes' pitches
@@ -72,10 +76,13 @@
 // Outlet 3: to the [textedit]: set <line> (the lyrics of the notes the line fills, whenever they change), select (a
 //   double-click on a note: its lyric is the start of the line)
 // Outlet 4: dictionary tcs_score, the edited notes as a score (the format of read; the score write writes: made
-//   singable, no "f0"), with every conversion and before it, so also when the conversion then fails.
+//   singable, and the working curve, when there is one, as its "f0" in Hz with "f0_fps": 50), with every conversion
+//   and before it, so also when the conversion then fails, and after every change of the curve (an edit, its undo,
+//   f0 refresh, f0 clear).
 // Outlet 5: the transport (UWP7): play <from_ms> <to_ms> <dur_ms> | stop, for the patch's [line~] -> [play~ tcs_out]
-// Mouse and keys: see tcs_ui_edit.js (the toolbar at the bottom: the mode, its tools, snap, undo, redo, fit, ph). The wheel scrolls the
-// pitch (a trackpad also the time); with Shift it scrolls the time, with Cmd it zooms the time and with Alt the pitch.
+// Mouse and keys: see tcs_ui_edit.js (the toolbar at the bottom: the mode, its tools, snap, vibrato, offset, clear F0,
+// undo, redo, fit, ph). The wheel scrolls the pitch (a trackpad also the time); with Shift it scrolls the time, with
+// Cmd it zooms the time and with Alt the pitch.
 //
 // Saved with the patch (U8): save() embeds the state (tcs_ui_state.js) in the box, and getvalueof/setvalueof carry it
 // for pattr. On restore the curve is written back into the buffer and the notes are sent, without running score2f0.
@@ -218,13 +225,24 @@ function load(obj, name) {
   } catch (e) {
     return fail(e);
   }
-  S.ed = E.reset(S.ed, { ...res.model, tempo: bpm }); // the roll's tempo, not the score's
+  // the score's curve, on the score's seconds: stretched as the notes are (their beats kept at the roll's tempo)
+  const stretch = bpm / res.model.tempo;
+  const f0 = res.f0 ? F.fromHz(res.f0.values, res.f0.fps, F.FRAMES, stretch) : null;
+  if (f0 && stretch !== 1) res.warnings.push(`the score's "f0" was stretched by ${Math.round(stretch * 1e4) / 1e4} to the roll's tempo (${res.model.tempo} -> ${bpm} bpm)`);
+  if (f0 && f0.cut) res.warnings.push(`the score's "f0" was cut at ${F.FRAMES / F.FPS} s (${f0.cut} voiced frame(s) left out)`);
+  const curve = f0 ? f0.curve : undefined; // none: the roll's curve stays, stale
+  S.ed = E.reset(S.ed, { ...res.model, tempo: bpm }, curve, curve); // the roll's tempo, not the score's
   S.name = res.model.name || name;
   S.hover = null;
   S.playhead = null;
   S.held = !S.playing;
   S.view = V.fit(S.view, model());
   changed();
+  if (f0) {
+    S.f0.stale = false; // the curve belongs to these notes
+    writeCurve();
+    statusLine();
+  }
   // the status last: whatever it sets off (a check, a recall) then finds the change complete
   for (const w of res.warnings) outlet(2, "warning", w);
   outlet(2, "ok", model().notes.length, Math.round(M.seconds(model()) * 1000) / 1000);
@@ -333,9 +351,15 @@ function dictNamed(name) {
   return S.dicts[name];
 }
 
-// the notes as a score (tcs_notes.toScore: made singable): {score, warnings}; throws when nothing can be sung
+// the notes as a score (tcs_notes.toScore: made singable), with the working curve as its "f0": {score, warnings};
+// throws when nothing can be sung
 function scoreOf() {
-  return N.toScore(N.payload(model(), S.name));
+  const made = N.toScore(N.payload(model(), S.name));
+  if (S.ed.curve) {
+    made.score.f0 = F.toHz(S.ed.curve);
+    made.score.f0_fps = F.FPS;
+  }
+  return made;
 }
 
 // the notes -> the score -> dict tcs_score -> outlet 4; then the conditions (tcs_notes.convertNotes: made singable,
@@ -351,16 +375,7 @@ function sendNotes() {
   S.labels = null;
   if (!m.notes.length) { c.status = null; return; }
   if (S.ed.curve) S.f0.stale = true;
-  let made = null;
-  try {
-    made = scoreOf();
-  } catch (e) {
-    made = null; // the conversion fails the same way and says so
-  }
-  if (made) {
-    dictNamed(S.scoreName).parse(JSON.stringify(made.score));
-    outlet(4, "dictionary", S.scoreName);
-  }
+  sendScore();
   let out;
   try {
     const t = Date.now();
@@ -388,6 +403,20 @@ function sendNotes() {
   for (const w of out.meta.warnings) outlet(2, "warning", w);
   outlet(2, "converted", out.meta.n_pieces, out.meta.seconds);
   outlet(0, "dictionary", S.outName);
+}
+
+// the notes and the working curve as a score -> dict tcs_score -> outlet 4 (nothing when they can't be sung: the
+// conversion fails the same way and says so)
+function sendScore() {
+  if (!model().notes.length) return;
+  let made;
+  try {
+    made = scoreOf();
+  } catch (e) {
+    return;
+  }
+  dictNamed(S.scoreName).parse(JSON.stringify(made.score));
+  outlet(4, "dictionary", S.scoreName);
 }
 
 function read(path) {
@@ -424,7 +453,12 @@ function route(r) {
   else update();
   if (r.curve) {
     writeCurve();
-    if (!r.commit) notifyclients();
+    if (!r.commit) { sendScore(); notifyclients(); } // a commit sent the score already
+  }
+  if (r.cleared) {
+    S.f0.stale = false;
+    sendScore(); // without its "f0"
+    notifyclients();
   }
   if (r.focus === "lyrics") outlet(3, "select");
   if (r.transport === "toggle") (S.playing ? stop : playFrom)();
@@ -597,7 +631,7 @@ function f0(what) {
   const w = String(what);
   const args = Array.from(arguments).slice(1);
   if (w === "buffer" && args.length) S.f0.buffer = String(args[0]);
-  else if (w === "clear") { S.ed = E.setCurve(S.ed, null).ed; S.f0.stale = false; }
+  else if (w === "clear") return route(E.clearCurve(S.ed));
   else if (w === "refresh") {
     let gen;
     try {
@@ -616,6 +650,7 @@ function f0(what) {
       S.message = `regenerated: ${r.dropped} hand-edited frame(s) dropped`;
       outlet(2, "message", S.message);
     }
+    sendScore();
   } else {
     S.message = null;
     return command(E.f0(S.ed, S.view, w, args));

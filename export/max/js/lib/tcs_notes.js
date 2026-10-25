@@ -3,7 +3,8 @@
 // warning per kind of fix, so that inference always goes on. No Max globals: tcs_max.js and tcs_ui.js use it in Max,
 // the tests under Node.
 //
-//   fromScore(scoreObject, name) -> {model, warnings}            a score file into the roll (tcs_ui_model.js's model)
+//   fromScore(scoreObject, name) -> {model, warnings, f0}        a score file into the roll (tcs_ui_model.js's model);
+//                                                                 f0: the score's "f0" as {values (Hz), fps}, or null
 //   toScore(notes) -> {score, warnings, ids}                     notes (a tcs_notes dict, or the model) to a score; ids:
 //                                                                 per score word, the note ids it came from (null: a rest)
 //   convertNotes(notes, {name, style, caption}) -> result        toScore, unknown words sung as FALLBACK, cut to 256
@@ -50,7 +51,6 @@ const sumDur = (segs) => segs.reduce((s, x) => s + x.dur, 0);
 function fromScore(obj, name = "score") {
   const parsed = parseScore(obj, name); // the front-end's checks and messages; also the MIDI numbers
   const warnings = [];
-  if (obj.f0 !== undefined && obj.f0 !== null) warnings.push('the score\'s "f0" is not kept: in Max the curve comes from score2f0');
   const notes = [];
   let pending = [];
   let t = 0;
@@ -80,7 +80,7 @@ function fromScore(obj, name = "score") {
   });
   const model = { language: obj.language, tempo: obj.tempo || 60, name: obj.name || null, style: { ...(obj.style || {}) },
     nextId: id, notes, tail: pending };
-  return { model, warnings };
+  return { model, warnings, f0: parsed.f0 ? { values: parsed.f0, fps: parsed.f0_fps } : null };
 }
 
 // ---- notes to a score

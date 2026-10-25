@@ -13,6 +13,7 @@
 //     message a short note for the status line (e.g. "join: only touching notes")
 //     focus   "lyrics": the lyrics line should take the keys (a double-click on a note, UWP5)
 //     transport  {at: seconds} (a press on the ruler: play from there) | "toggle" (Space: play or stop) (UWP7)
+//     cleared the curves were forgotten (the clear button, f0 clear): tcs_ui.js sends the score again
 //
 // One history holds both (UWP6): a step changes the notes or the curve, and undo puts back whichever it was. A new
 // generated curve (setCurve, on f0 refresh) replaces the curve in every step and drops the curve-only ones (U4).
@@ -33,7 +34,8 @@
 // Esc during the drag puts the old one back. The vibrato button (F0 toolbar, or V in the F0 mode) adds a vibrato of
 // VIB_STEP semitone at VIB_RATE Hz over the region (none: the selected notes, or the whole curve); clicks add up, as the
 // vibrato is added to the curve with its phase from the range's start, and each is one undo step. The offset's arrows
-// beside it (F0 toolbar) move the voiced frames over the same range by OFFSET_STEP semitone per click.
+// beside it (F0 toolbar) move the voiced frames over the same range by OFFSET_STEP semitone per click. The clear button
+// after them forgets both curves, as a new generated curve replaces them (no step; the buffer is left as it is).
 //
 // The F0 mode (UWP6): the mouse edits the curve and the notes can't be edited. draw: a stroke, linear between the
 // pointer's points; line: from the press to the release; smooth, erase (back to the generated curve) and unvoice:
@@ -85,6 +87,13 @@ function setCurve(ed, gen) {
   const dropped = F.edited(ed.gen, ed.history.curve).frames;
   const f0Gesture = ed.gesture && ed.gesture.kind.startsWith("f0");
   return { ed: { ...ed, gen, curve: gen, history: M.newCurve(ed.history, gen), gesture: f0Gesture ? null : ed.gesture }, dropped };
+}
+
+// the clear button and f0 clear: no curves (setCurve(null)), with a message
+function clearCurve(ed) {
+  if (!ed.gen && !ed.history.curve) return { ed, message: "no F0 curve to clear" };
+  const r = setCurve(ed, null);
+  return { ed: r.ed, cleared: true, message: `F0 cleared${r.dropped ? `: ${r.dropped} hand-edited frame(s) dropped` : ""}` };
 }
 
 // ---- helpers
@@ -395,6 +404,7 @@ function toolbar(ed, v, id, mods = {}) {
   if (id === "vibrato") return vibratoClick(ed, v);
   if (id === "offsetUp" || id === "offsetDown") return offsetClick(ed, v, id === "offsetUp" ? OFFSET_STEP : -OFFSET_STEP);
   if (id === "ph") return { ed, view: V.setPhonemes(v, !v.showPh) };
+  if (id === "clearf0") return clearCurve(ed);
   return { ed };
 }
 
@@ -622,7 +632,7 @@ function splitAtPointer(ed, v) {
 }
 
 module.exports = {
-  create, reset, setCurve, playRange, apply, commit, commitCurve, setTool, setMode, f0, setRegion, clearRegion, vibratoClick,
+  create, reset, setCurve, clearCurve, playRange, apply, commit, commitCurve, setTool, setMode, f0, setRegion, clearRegion, vibratoClick,
   offsetClick, regionAt, VIB_RATE, VIB_STEP, OFFSET_STEP, select, selectAll, addNote, del, move, resize, split, join, rest, lyrics, undo, redo,
   copy, cut, paste, duplicate, press, drag, release, dblclick, cancel, key, KEY, CHAR, NOTE_TOOLS, F0_TOOLS,
 };
