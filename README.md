@@ -23,6 +23,13 @@ This is a repository for running a pretrained TCSinger 2 model to Max/MSP and Ma
 
 **Exporting your own TCSinger 2 models for Max/MSP**: See the [Exporting the model for MaxMSP](#exporting-the-model-for-maxmsp) section below.
 
+## Exported model
+
+The exported TCSinger 2 model is available on [Hugging Face](https://huggingface.co/shuoyang-zheng/TCSinger-2-MaxMSP). It is not the offical TCSinger 2 checkpoint, it is a reproduction trained on the following datasets: 
+ - [GTSinger](https://github.com/AaronZ345/GTSinger)
+ - [M4Singer](https://github.com/M4Singer/M4Singer)
+ - [Opencpop](https://github.com/wenet-e2e/opencpop)
+ - [OpenSinger](https://github.com/Multi-Singer/Multi-Singer.github.io)
 
 ## Below is the modified README.md based on the original TCSinger 2 repository.
 
