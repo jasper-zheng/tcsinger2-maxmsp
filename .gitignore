@@ -51,7 +51,7 @@ UI_WORK_PACKAGES.md
 # (scripts/build_max_js_data.py) and the model symlinks next to the patch
 /export/artifacts/
 # /export/max/js/lib/data/
-/export/max/js/tcsinger2_*
+/export/max/tcsinger2_*
 # conditions files that scripts/score_to_max.py writes next to each score
 *.max.json
 # the checks of the export work packages (EXPORTING_WORK_PACKAGES.md), their reference data and results
@@ -64,3 +64,7 @@ reference.png
 
 !tcsinger2_demo.maxpat
 !TCSinger2_UI.amxd
+
+scripts-old
+
+releases
